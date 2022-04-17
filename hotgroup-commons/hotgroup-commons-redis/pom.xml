@@ -4,9 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.hotgroup</groupId>
-        <artifactId>hotgroup-system-parent</artifactId>
+        <artifactId>hotgroup-commons</artifactId>
         <version>0.0.1</version>
-        <relativePath/>
     </parent>
 
     <artifactId>hotgroup-commons-redis</artifactId>

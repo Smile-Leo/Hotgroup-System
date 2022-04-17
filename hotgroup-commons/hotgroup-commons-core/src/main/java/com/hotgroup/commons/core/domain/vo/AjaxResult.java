@@ -2,6 +2,8 @@ package com.hotgroup.commons.core.domain.vo;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hotgroup.commons.core.constant.HttpStatus;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
@@ -10,15 +12,19 @@ import java.util.List;
  * @author Lzw
  */
 @Data
+@ApiModel("通用返回对象")
 public class AjaxResult<T> {
     private static final long serialVersionUID = 1L;
-
+    @ApiModelProperty("状态码")
     private int code;
+    @ApiModelProperty("提醒消息")
     private String msg;
-    //0未加密, 1已加密
+    @ApiModelProperty("是否加密码消息：0未加密, 1已加密")
     private int encryption;
+    @ApiModelProperty("数据对象")
     private T data;
 
+    @ApiModelProperty("分页总数")
     private long total;
 
     public AjaxResult() {
