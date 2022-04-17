@@ -1,4 +1,4 @@
-package com.hotgroup.manage.dao.mapper;
+package com.hotgroup.manage.core.mapper;
 
 import com.hotgroup.manage.domain.entity.SysRoleMenu;
 

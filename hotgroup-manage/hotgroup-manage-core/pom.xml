@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
 
-    <artifactId>hotgroup-manage-dao</artifactId>
+    <artifactId>hotgroup-manage-core</artifactId>
 
     <dependencies>
 

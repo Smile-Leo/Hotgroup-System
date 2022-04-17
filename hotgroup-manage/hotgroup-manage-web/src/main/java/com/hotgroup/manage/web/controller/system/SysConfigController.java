@@ -6,6 +6,10 @@ import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.manage.api.ISysConfigService;
 import com.hotgroup.manage.domain.entity.SysConfig;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author Lzw
  */
+@Api("参数配置")
+@Tag(name = "参数配置")
 @RestController
 @RequestMapping("/system/config")
 public class SysConfigController {
@@ -25,6 +31,8 @@ public class SysConfigController {
     /**
      * 获取参数配置列表
      */
+    @ApiOperation("参数列表")
+    @Operation(method = "参数列表")
     @PreAuthorize("@ss.hasPermi('system:config:list')")
     @GetMapping("list")
     public AjaxResult<?> list(SysConfig config) {

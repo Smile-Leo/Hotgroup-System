@@ -1,4 +1,4 @@
-package com.hotgroup.manage.dao.service.impl;
+package com.hotgroup.manage.core.service;
 
 import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.spring.SpringUtils;

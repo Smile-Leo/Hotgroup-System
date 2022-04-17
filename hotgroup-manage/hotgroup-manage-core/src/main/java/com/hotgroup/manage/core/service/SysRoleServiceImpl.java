@@ -1,15 +1,14 @@
-package com.hotgroup.manage.dao.service.impl;
+package com.hotgroup.manage.core.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
-import com.hotgroup.commons.core.spring.SpringUtils;
 import com.hotgroup.commons.database.page.PageHelper;
 import com.hotgroup.manage.api.ISysRoleService;
-import com.hotgroup.manage.dao.mapper.SysRoleMapper;
-import com.hotgroup.manage.dao.mapper.SysRoleMenuMapper;
-import com.hotgroup.manage.dao.mapper.SysUserRoleMapper;
+import com.hotgroup.manage.core.mapper.SysRoleMapper;
+import com.hotgroup.manage.core.mapper.SysRoleMenuMapper;
+import com.hotgroup.manage.core.mapper.SysUserRoleMapper;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysRoleMenu;
 import org.springframework.beans.factory.annotation.Autowired;

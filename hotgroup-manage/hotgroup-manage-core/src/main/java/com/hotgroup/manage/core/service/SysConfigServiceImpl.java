@@ -1,4 +1,4 @@
-package com.hotgroup.manage.dao.service.impl;
+package com.hotgroup.manage.core.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,7 +8,7 @@ import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.database.page.PageHelper;
 import com.hotgroup.commons.redis.RedisCache;
 import com.hotgroup.manage.api.ISysConfigService;
-import com.hotgroup.manage.dao.mapper.SysConfigMapper;
+import com.hotgroup.manage.core.mapper.SysConfigMapper;
 import com.hotgroup.manage.domain.entity.SysConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

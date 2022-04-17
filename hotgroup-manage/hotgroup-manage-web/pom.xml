@@ -19,5 +19,6 @@
             <version>${hotgroup.version}</version>
         </dependency>
 
+
     </dependencies>
 </project>

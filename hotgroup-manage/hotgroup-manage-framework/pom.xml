@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>com.hotgroup</groupId>
-            <artifactId>hotgroup-manage-dao</artifactId>
+            <artifactId>hotgroup-manage-core</artifactId>
             <version>${hotgroup.version}</version>
         </dependency>
     </dependencies>

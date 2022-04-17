@@ -38,7 +38,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain chain)
             throws ServletException, IOException {
-        if (!tokenService.verifyToken(request)) {
+       /* if (!tokenService.verifyToken(request)) {
             expire(response);
             return;
         }
@@ -54,7 +54,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        }
+        }*/
         chain.doFilter(request, response);
     }
 
@@ -62,7 +62,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        AjaxResult ajaxResult = AjaxResult.error(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value(), "登陆用户超时,请重新登陆!");
+        AjaxResult<?> ajaxResult = AjaxResult.error(HttpStatus.PROXY_AUTHENTICATION_REQUIRED.value(), "登陆用户超时,请重新登陆!");
         response.getWriter().print(objectMapper.writeValueAsString(ajaxResult));
         response.getWriter().flush();
     }

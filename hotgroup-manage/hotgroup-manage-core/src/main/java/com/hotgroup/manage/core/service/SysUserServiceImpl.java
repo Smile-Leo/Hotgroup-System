@@ -1,4 +1,4 @@
-package com.hotgroup.manage.dao.service.impl;
+package com.hotgroup.manage.core.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,9 +8,9 @@ import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.commons.database.page.PageHelper;
 import com.hotgroup.manage.api.ISysConfigService;
 import com.hotgroup.manage.api.ISysUserService;
-import com.hotgroup.manage.dao.mapper.SysRoleMapper;
-import com.hotgroup.manage.dao.mapper.SysUserMapper;
-import com.hotgroup.manage.dao.mapper.SysUserRoleMapper;
+import com.hotgroup.manage.core.mapper.SysRoleMapper;
+import com.hotgroup.manage.core.mapper.SysUserMapper;
+import com.hotgroup.manage.core.mapper.SysUserRoleMapper;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;
 import com.hotgroup.manage.domain.entity.SysUserRole;

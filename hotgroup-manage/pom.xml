@@ -14,6 +14,6 @@
         <module>hotgroup-manage-web</module>
         <module>hotgroup-manage-api</module>
         <module>hotgroup-manage-framework</module>
-        <module>hotgroup-manage-dao</module>
+        <module>hotgroup-manage-core</module>
     </modules>
 </project>

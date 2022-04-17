@@ -1,12 +1,12 @@
-package com.hotgroup.manage.dao.service.impl;
+package com.hotgroup.manage.core.service;
 
 import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.commons.core.domain.vo.TreeSelect;
 import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.manage.api.ISysMenuService;
-import com.hotgroup.manage.dao.mapper.SysMenuMapper;
-import com.hotgroup.manage.dao.mapper.SysRoleMapper;
-import com.hotgroup.manage.dao.mapper.SysRoleMenuMapper;
+import com.hotgroup.manage.core.mapper.SysMenuMapper;
+import com.hotgroup.manage.core.mapper.SysRoleMapper;
+import com.hotgroup.manage.core.mapper.SysRoleMenuMapper;
 import com.hotgroup.manage.domain.entity.SysMenu;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;

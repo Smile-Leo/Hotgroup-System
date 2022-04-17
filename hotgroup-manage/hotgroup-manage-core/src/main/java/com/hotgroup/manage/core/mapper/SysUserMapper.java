@@ -1,4 +1,4 @@
-package com.hotgroup.manage.dao.mapper;
+package com.hotgroup.manage.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hotgroup.manage.domain.entity.SysUser;
