@@ -1,4 +1,4 @@
-package com.hotgroup.manage.core.service;
+package com.hotgroup.manage.core.util;
 
 import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.spring.SpringUtils;
