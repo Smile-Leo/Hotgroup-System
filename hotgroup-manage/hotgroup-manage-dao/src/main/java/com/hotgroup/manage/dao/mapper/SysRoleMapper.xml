@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lead.system.mapper.SysRoleMapper">
+<mapper namespace="com.hotgroup.manage.dao.mapper.SysRoleMapper">
 
     <resultMap type="SysRole" id="SysRoleResult">
         <id property="roleId" column="role_id"/>
@@ -52,12 +52,7 @@
         <if test="roleKey != null and roleKey != ''">
             AND r.role_key like concat('%', #{roleKey}, '%')
         </if>
-        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
-            and date_format(r.create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
-        </if>
-        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
-            and date_format(r.create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
-        </if>
+
         <!-- 数据范围过滤 -->
         ${params.dataScope}
         order by r.role_sort

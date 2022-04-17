@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * 获取IP方法
  *
- * @author ruoyi
+ * @author Lzw
  */
 public class IpUtils {
     public static String getIpAddr(HttpServletRequest request) {

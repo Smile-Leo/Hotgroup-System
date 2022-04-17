@@ -3,7 +3,7 @@ package com.hotgroup.commons.core.enums;
 /**
  * 数据源
  *
- * @author ruoyi
+ * @author Lzw
  */
 public enum DataSourceType {
     /**

@@ -1,5 +1,6 @@
 package com.hotgroup.manage.dao.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hotgroup.manage.domain.entity.SysDictType;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -8,10 +9,10 @@ import java.util.List;
 /**
  * 字典表 数据层
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Mapper
-public interface SysDictTypeMapper {
+public interface SysDictTypeMapper  extends BaseMapper<SysDictType> {
     /**
      * 根据条件分页查询字典类型
      *

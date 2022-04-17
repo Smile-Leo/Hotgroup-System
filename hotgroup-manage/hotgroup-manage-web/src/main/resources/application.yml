@@ -1,0 +1,112 @@
+# 环境配置
+server:
+  port: 8080
+  servlet:
+    # 应用的访问路径
+    context-path: /api
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 800
+      # Tomcat启动初始化的线程数，默认值
+      min-spare: 30
+  undertow:
+    threads:
+      # 工作线程数
+      io: 4
+      # 接收任务线程池
+      worker: 500
+    # 缓冲块大小
+    buffer-size: 1024
+    # 是否直接分配内存
+    direct-buffers: true
+
+# 日志配置
+logging:
+  level:
+    com.hotgroup: debug
+    org.springframework: warn
+
+# Spring配置
+spring:
+  jackson:
+    default-property-inclusion: non-null
+  # 资源信息
+  messages:
+    # 国际化资源文件路径
+    basename: i18n/messages
+  profiles:
+    active: dev
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 10MB
+      # 设置总上传的文件大小
+      max-request-size: 20MB
+  # 服务模块
+  devtools:
+    restart:
+      # 热部署开关
+      enabled: false
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 3
+      auto-commit: true
+      idle-timeout: 10000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 30
+
+#mybatis
+mybatis-plus:
+  #mybatis配置
+  #config-location: classpath:mybatis/mybatis-config.xml
+  #mapper
+  mapper-locations: classpath*:**/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.hotgroup.**.entity,com.hotgroup.**.vo
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  global-config:
+    db-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      id-type: AUTO
+      #逻辑删除配置（下面3个配置）
+      logic-delete-field: delFlag
+      logic-delete-value: 2
+      logic-not-delete-value: 0
+
+# Swagger配置
+swagger:
+  # 是否开启swagger
+  enabled: true
+
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice/*
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+
+
+
+
+

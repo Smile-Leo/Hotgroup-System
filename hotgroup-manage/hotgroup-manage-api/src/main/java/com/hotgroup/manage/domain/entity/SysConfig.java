@@ -1,9 +1,9 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 /**
  * 参数配置表 sys_config
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Data
 @ToString
@@ -21,7 +21,7 @@ public class SysConfig extends BaseEntity {
     /**
      * 参数主键
      */
-    @Id
+    @TableId
     private Long configId;
 
     /**

@@ -1,7 +1,11 @@
 package com.hotgroup.manage.dao.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.constant.UserConstants;
+import com.hotgroup.commons.core.domain.vo.AjaxResult;
+import com.hotgroup.commons.database.page.PageHelper;
 import com.hotgroup.commons.redis.RedisCache;
 import com.hotgroup.manage.api.ISysConfigService;
 import com.hotgroup.manage.dao.mapper.SysConfigMapper;
@@ -18,7 +22,7 @@ import java.util.Objects;
 /**
  * 参数配置 服务层实现
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Service
 public class SysConfigServiceImpl implements ISysConfigService {
@@ -47,9 +51,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     public SysConfig selectConfigById(Long configId) {
-        SysConfig config = new SysConfig();
-        config.setConfigId(configId);
-        return configMapper.selectConfig(config);
+        return configMapper.selectById(configId);
     }
 
     /**
@@ -86,8 +88,13 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * @return 参数配置集合
      */
     @Override
-    public List<SysConfig> selectConfigList(SysConfig config) {
-        return configMapper.selectConfigList(config);
+    public AjaxResult<List<SysConfig>> selectConfigList(SysConfig config) {
+
+        Page<SysConfig> sysConfigPage =
+                configMapper.selectPage(PageHelper.getPage(config), Wrappers.lambdaQuery(config));
+
+        return AjaxResult.page(sysConfigPage);
+
     }
 
     /**

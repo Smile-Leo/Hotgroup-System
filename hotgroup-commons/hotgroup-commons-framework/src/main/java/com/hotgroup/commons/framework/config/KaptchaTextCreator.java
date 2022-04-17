@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 验证码文本生成器
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Slf4j
 public class KaptchaTextCreator extends DefaultTextCreator {

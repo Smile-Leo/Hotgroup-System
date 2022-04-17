@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author ZSQ
+ * @author Lzw
  */
 @Data
 public class BaseEntity implements Serializable {
@@ -44,6 +44,15 @@ public class BaseEntity implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(value = "update_Time", fill = FieldFill.UPDATE)
     private Date updateTime;
+
+
+    @JsonIgnore
+    @TableField(exist = false)
+    private transient Integer pageNum = 0;
+
+    @JsonIgnore
+    @TableField(exist = false)
+    private transient Integer pageSize = 20;
 
     @JsonIgnore
     @TableField(exist = false)

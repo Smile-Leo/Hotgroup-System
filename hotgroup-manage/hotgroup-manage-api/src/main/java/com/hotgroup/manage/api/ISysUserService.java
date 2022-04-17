@@ -1,5 +1,6 @@
 package com.hotgroup.manage.api;
 
+import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.manage.domain.entity.SysUser;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 /**
  * 用户 业务层
  *
- * @author ruoyi
+ * @author Lzw
  */
 public interface ISysUserService {
 
@@ -18,7 +19,7 @@ public interface ISysUserService {
      * @param user 用户信息
      * @return 用户信息集合信息
      */
-    List<SysUser> pageUserList(SysUser user);
+    AjaxResult<List<SysUser>> pageUserList(SysUser user);
 
 
     /**

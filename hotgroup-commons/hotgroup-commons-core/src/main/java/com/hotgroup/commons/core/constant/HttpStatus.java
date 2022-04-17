@@ -3,7 +3,7 @@ package com.hotgroup.commons.core.constant;
 /**
  * 返回状态码
  *
- * @author ruoyi
+ * @author Lzw
  */
 public class HttpStatus {
     /**

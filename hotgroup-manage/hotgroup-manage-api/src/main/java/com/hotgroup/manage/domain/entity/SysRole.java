@@ -1,11 +1,11 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 /**
  * 角色表 sys_role
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Data
 @ToString
@@ -24,7 +24,7 @@ public class SysRole extends BaseEntity {
     /**
      * 角色ID
      */
-    @Id
+    @TableId
     private Long roleId;
 
     /**

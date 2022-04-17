@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 /**
  * 安全服务工具类
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Slf4j
 public class SecurityUtils {
@@ -66,4 +66,7 @@ public class SecurityUtils {
         return getLoginUser().getUser().isAdmin();
     }
 
+    public static String getUsername() {
+        return getLoginUser().getUsername();
+    }
 }

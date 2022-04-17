@@ -3,7 +3,7 @@ package com.hotgroup.commons.core.utils;
 /**
  * ID生成器工具类
  *
- * @author ruoyi
+ * @author Lzw
  */
 public class IdUtils {
     /**

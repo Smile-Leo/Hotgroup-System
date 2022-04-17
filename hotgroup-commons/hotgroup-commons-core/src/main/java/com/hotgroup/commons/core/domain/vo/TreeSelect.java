@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Treeselect树结构实体类
  *
- * @author ruoyi
+ * @author Lzw
  */
 public class TreeSelect implements Serializable {
     private static final long serialVersionUID = 1L;

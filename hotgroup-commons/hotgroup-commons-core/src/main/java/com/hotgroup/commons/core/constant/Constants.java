@@ -3,7 +3,7 @@ package com.hotgroup.commons.core.constant;
 /**
  * 通用常量信息
  *
- * @author ruoyi
+ * @author Lzw
  */
 public class Constants {
     /**

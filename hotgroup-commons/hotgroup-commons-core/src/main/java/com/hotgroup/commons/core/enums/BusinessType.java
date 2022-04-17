@@ -3,7 +3,7 @@ package com.hotgroup.commons.core.enums;
 /**
  * 业务操作类型
  *
- * @author ruoyi
+ * @author Lzw
  */
 public enum BusinessType {
     /**

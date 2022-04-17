@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 动态数据源
  *
- * @author ruoyi
+ * @author Lzw
  */
 public class DynamicDataSource extends AbstractRoutingDataSource {
     public DynamicDataSource(DataSource defaultTargetDataSource, Map<Object, Object> targetDataSources) {

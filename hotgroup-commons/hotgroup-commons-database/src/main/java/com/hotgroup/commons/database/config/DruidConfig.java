@@ -20,26 +20,27 @@ import java.util.Map;
 /**
  * druid 配置多数据源
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Configuration
 @Slf4j
+@ConfigurationProperties(prefix = "srping.datasource")
 public class DruidConfig {
-    @Bean
-    @ConfigurationProperties("spring.datasource.druid.master")
+//    @Bean
+//    @ConfigurationProperties("spring.datasource.druid.master")
     public DataSource masterDataSource() {
         return null;
     }
 
-    @Bean
-    @ConfigurationProperties("spring.datasource.druid.slave")
-    @ConditionalOnProperty(prefix = "spring.datasource.druid.slave", name = "enabled", havingValue = "true")
+//    @Bean
+//    @ConfigurationProperties("spring.datasource.druid.slave")
+//    @ConditionalOnProperty(prefix = "spring.datasource.druid.slave", name = "enabled", havingValue = "true")
     public DataSource slaveDataSource() {
         return null;
     }
 
-    @Bean(name = "dynamicDataSource")
-    @Primary
+//    @Bean(name = "dynamicDataSource")
+//    @Primary
     public DynamicDataSource dataSource(DataSource masterDataSource) {
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(DataSourceType.MASTER.name(), masterDataSource);

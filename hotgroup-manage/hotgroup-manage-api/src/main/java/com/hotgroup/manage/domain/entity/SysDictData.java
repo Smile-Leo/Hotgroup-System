@@ -1,5 +1,6 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,7 +12,7 @@ import javax.validation.constraints.Size;
 /**
  * 字典数据表 sys_dict_data
  *
- * @author ruoyi
+ * @author Lzw
  */
 public class SysDictData extends BaseEntity {
     private static final long serialVersionUID = 1L;
@@ -19,6 +20,7 @@ public class SysDictData extends BaseEntity {
     /**
      * 字典编码
      */
+    @TableId
     private Long dictCode;
 
     /**

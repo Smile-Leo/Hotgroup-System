@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * 判断请求url和数据是否和上一次相同，
  * 如果和上次相同，则是重复提交表单。 有效时间为10秒内。
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Component
 public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
@@ -29,7 +29,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
     public final String REPEAT_TIME = "repeatTime";
 
     // 令牌自定义标识
-    @Value("${token.header}")
+    @Value("${token.header:Authorization}")
     private String header;
     @Autowired
     private RedisCache redisCache;

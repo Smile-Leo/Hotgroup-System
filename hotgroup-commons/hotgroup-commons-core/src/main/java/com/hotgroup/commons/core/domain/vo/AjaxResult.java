@@ -1,22 +1,25 @@
 package com.hotgroup.commons.core.domain.vo;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.hotgroup.commons.core.constant.HttpStatus;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author Lzw
  */
 @Data
-public class AjaxResult {
+public class AjaxResult<T> {
     private static final long serialVersionUID = 1L;
-
 
     private int code;
     private String msg;
     //0未加密, 1已加密
     private int encryption;
-    private Object data;
+    private T data;
 
+    private long total;
 
     public AjaxResult() {
     }
@@ -39,7 +42,7 @@ public class AjaxResult {
      * @param msg  返回内容
      * @param data 数据对象
      */
-    public AjaxResult(int code, String msg, Object data) {
+    public AjaxResult(int code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -50,7 +53,7 @@ public class AjaxResult {
      *
      * @return 成功消息
      */
-    public static AjaxResult success() {
+    public static AjaxResult<String> success() {
         return AjaxResult.success("操作成功");
     }
 
@@ -59,7 +62,7 @@ public class AjaxResult {
      *
      * @return 成功消息
      */
-    public static AjaxResult success(Object data) {
+    public static <T> AjaxResult<T> success(T data) {
         return AjaxResult.success("操作成功", data);
     }
 
@@ -69,7 +72,7 @@ public class AjaxResult {
      * @param msg 返回内容
      * @return 成功消息
      */
-    public static AjaxResult success(String msg) {
+    public static AjaxResult<String> success(String msg) {
         return AjaxResult.success(msg, null);
     }
 
@@ -80,8 +83,8 @@ public class AjaxResult {
      * @param data 数据对象
      * @return 成功消息
      */
-    public static AjaxResult success(String msg, Object data) {
-        return new AjaxResult(HttpStatus.SUCCESS, msg, data);
+    public static <T> AjaxResult<T> success(String msg, T data) {
+        return new AjaxResult<>(HttpStatus.SUCCESS, msg, data);
     }
 
     /**
@@ -89,7 +92,7 @@ public class AjaxResult {
      *
      * @return
      */
-    public static AjaxResult error() {
+    public static AjaxResult<String> error() {
         return AjaxResult.error("操作失败");
     }
 
@@ -99,7 +102,7 @@ public class AjaxResult {
      * @param msg 返回内容
      * @return 警告消息
      */
-    public static AjaxResult error(String msg) {
+    public static AjaxResult<String> error(String msg) {
         return AjaxResult.error(msg, null);
     }
 
@@ -110,8 +113,8 @@ public class AjaxResult {
      * @param data 数据对象
      * @return 警告消息
      */
-    public static AjaxResult error(String msg, Object data) {
-        return new AjaxResult(HttpStatus.ERROR, msg, data);
+    public static <T> AjaxResult<T> error(String msg, T data) {
+        return new AjaxResult<>(HttpStatus.ERROR, msg, data);
     }
 
     /**
@@ -121,8 +124,8 @@ public class AjaxResult {
      * @param msg  返回内容
      * @return 警告消息
      */
-    public static AjaxResult error(int code, String msg) {
-        return new AjaxResult(code, msg, null);
+    public static AjaxResult<String> error(int code, String msg) {
+        return new AjaxResult<>(code, msg, null);
     }
 
     /**
@@ -132,8 +135,26 @@ public class AjaxResult {
      * @return
      * @author Lzw
      */
-    public static AjaxResult result(boolean flag) {
+    public static AjaxResult<String> result(boolean flag) {
         return flag ? AjaxResult.success() : AjaxResult.error();
+    }
+
+    /**
+     * 分页结果
+     *
+     * @param page
+     * @return
+     */
+    public static <T> AjaxResult<List<T>> page(IPage<T> page) {
+        AjaxResult<List<T>> success = AjaxResult.success(page.getRecords());
+        success.setTotal(page.getTotal());
+        return success;
+    }
+
+    public static <T> AjaxResult<List<T>> page(Integer total, List<T> data) {
+        AjaxResult<List<T>> success = AjaxResult.success(data);
+        success.setTotal(total);
+        return success;
     }
 
 

@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 /**
  * 登录校验方法
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Component
 public class SysLoginService {

@@ -5,11 +5,6 @@ import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.manage.api.ISysDictTypeService;
 import com.hotgroup.manage.domain.entity.SysDictType;
-import com.lead.common.annotation.Log;
-import com.lead.common.core.controller.BaseController;
-import com.lead.common.core.page.TableDataInfo;
-import com.lead.common.enums.BusinessType;
-import com.lead.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -20,20 +15,18 @@ import java.util.List;
 /**
  * 数据字典信息
  *
- * @author ruoyi
+ * @author Lzw
  */
 @RestController
 @RequestMapping("/system/dict/type")
-public class SysDictTypeController extends BaseController {
+public class SysDictTypeController {
     @Autowired
     private ISysDictTypeService dictTypeService;
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysDictType dictType) {
-        startPage();
-        List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
-        return getDataTable(list);
+    public AjaxResult<?> list(SysDictType dictType) {
+        return dictTypeService.selectDictTypeList(dictType);
     }
 
 
@@ -41,8 +34,8 @@ public class SysDictTypeController extends BaseController {
      * 查询字典类型详细
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
-    @GetMapping(value = "/{dictId}")
-    public AjaxResult getInfo(@PathVariable Long dictId) {
+    @GetMapping(value = "info")
+    public AjaxResult<?> getInfo(Long dictId) {
         return AjaxResult.success(dictTypeService.selectDictTypeById(dictId));
     }
 
@@ -50,43 +43,46 @@ public class SysDictTypeController extends BaseController {
      * 新增字典类型
      */
     @PreAuthorize("@ss.hasPermi('system:dict:add')")
-    @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysDictType dict) {
+    @PostMapping("add")
+    public AjaxResult<?> add(@Validated @RequestBody SysDictType dict) {
         if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict))) {
             return AjaxResult.error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
         dict.setCreateBy(SecurityUtils.getLoginUser().getUsername());
-        return toAjax(dictTypeService.insertDictType(dict));
+        dictTypeService.insertDictType(dict);
+        return AjaxResult.success();
     }
 
     /**
      * 修改字典类型
      */
     @PreAuthorize("@ss.hasPermi('system:dict:edit')")
-    @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysDictType dict) {
+    @PostMapping("edit")
+    public AjaxResult<?> edit(@Validated @RequestBody SysDictType dict) {
         if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict))) {
             return AjaxResult.error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
         dict.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
-        return toAjax(dictTypeService.updateDictType(dict));
+        dictTypeService.updateDictType(dict);
+        return AjaxResult.success();
     }
 
     /**
      * 删除字典类型
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
-    @DeleteMapping("/{dictIds}")
-    public AjaxResult remove(@PathVariable Long[] dictIds) {
-        return toAjax(dictTypeService.deleteDictTypeByIds(dictIds));
+    @PostMapping("remove")
+    public AjaxResult<?> remove(Long[] dictIds) {
+        int i = dictTypeService.deleteDictTypeByIds(dictIds);
+        return AjaxResult.success();
     }
 
     /**
      * 清空缓存
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
-    @DeleteMapping("/clearCache")
-    public AjaxResult clearCache() {
+    @PostMapping("clearCache")
+    public AjaxResult<?> clearCache() {
         dictTypeService.clearCache();
         return AjaxResult.success();
     }
@@ -94,8 +90,8 @@ public class SysDictTypeController extends BaseController {
     /**
      * 获取字典选择框列表
      */
-    @GetMapping("/optionselect")
-    public AjaxResult optionselect() {
+    @GetMapping("optionselect")
+    public AjaxResult<?> optionselect() {
         List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();
         return AjaxResult.success(dictTypes);
     }

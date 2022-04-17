@@ -2,11 +2,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lead.system.mapper.SysUserMapper">
+<mapper namespace="com.hotgroup.manage.dao.mapper.SysUserMapper">
 
-    <resultMap type="com.lead.common.core.domain.entity.SysUser" id="SysUserResult">
+    <resultMap type="SysUser" id="SysUserResult">
         <id property="userId" column="user_id"/>
-        <result property="userName" column="user_name"/>
+        <result property="username" column="user_name"/>
         <result property="nickName" column="nick_name"/>
         <result property="email" column="email"/>
         <result property="phonenumber" column="phonenumber"/>
@@ -21,44 +21,14 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
-        <result property="remark" column="remark"/>
-        <result property="alias" column="alias"/>
         <result property="address" column="address"/>
-        <result property="qrCode" column="qr_code"/>
-        <result property="telephone" column="telephone"/>
-        <result property="syncSwitch" column="sync_switch"/>
-        <result property="syncStatus" column="sync_status"/>
-        <collection property="depts" javaType="java.util.List" resultMap="DeptResult"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
-        <collection property="posts" javaType="java.util.List" resultMap="PostResult"/>
-        <collection property="sysUserDepts" javaType="java.util.List" resultMap="SysUserDeptResult"/>
-    </resultMap>
-
-    <resultMap id="PostResult" type="com.lead.common.core.domain.entity.SysPost">
-        <id property="postId" column="post_id"/>
-        <result property="postName" column="post_name"/>
-    </resultMap>
-
-    <resultMap id="SysUserDeptResult" type="com.lead.common.core.domain.entity.SysUserDept">
-        <result property="postId" column="post_id"/>
-        <result property="deptId" column="dept_id"/>
-        <result property="orderNum" column="du_order_num"/>
-        <result property="postName" column="post_name"/>
-        <result property="isLeader" column="is_leader"/>
-    </resultMap>
-
-    <resultMap id="DeptResult" type="com.lead.common.core.domain.entity.SysDept">
-        <id property="deptId" column="dept_id"/>
-        <result property="parentId" column="parent_id"/>
-        <result property="deptName" column="dept_name"/>
-        <result property="fullName" column="full_name"/>
-        <result property="orderNum" column="order_num"/>
-        <result property="leader" column="leader"/>
-        <result property="status" column="dept_status"/>
     </resultMap>
 
 
-    <resultMap id="RoleResult" type="com.lead.common.core.domain.entity.SysRole">
+
+
+    <resultMap id="RoleResult" type="SysRole">
         <id property="roleId" column="role_id"/>
         <result property="roleName" column="role_name"/>
         <result property="roleKey" column="role_key"/>
@@ -68,15 +38,12 @@
     </resultMap>
 
 
-    <resultMap type="com.lead.common.core.domain.entity.SysUser" id="SysUserListResult">
+    <resultMap type="SysUser" id="SysUserListResult">
         <result property="userId" column="user_id"/>
-        <result property="userName" column="user_name"/>
+        <result property="username" column="user_name"/>
         <result property="nickName" column="nick_name"/>
-        <result property="alias" column="alias"/>
         <result property="phonenumber" column="phonenumber"/>
         <result property="email" column="email"/>
-        <result property="telephone" column="telephone"/>
-        <result property="qrCode" column="qr_code"/>
         <result property="status" column="status"/>
         <result property="sex" column="sex"/>
         <result property="address" column="address"/>
@@ -85,14 +52,6 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
-        <result property="deptIds" column="dept_ids"
-                typeHandler="com.lead.common.database.typehandler.IntegerArrayTypeHandler"/>
-        <result property="isLeaderInDept" column="is_leader_in_dept"
-                typeHandler="com.lead.common.database.typehandler.IntegerArrayTypeHandler"/>
-        <result property="orders" column="orders"
-                typeHandler="com.lead.common.database.typehandler.LongArrayTypeHandler"/>
-        <result property="deptNames" column="dept_names"
-                typeHandler="com.lead.common.database.typehandler.StringArrayTypeHandler"/>
     </resultMap>
 
     <sql id="selectUserVo">
@@ -162,7 +121,7 @@
     </select>
 
 
-    <select id="selectUserByAuth" resultType="com.lead.common.core.domain.entity.SysUser" resultMap="SysUserResult">
+    <select id="selectUserByAuth" resultType="SysUser" resultMap="SysUserResult">
         select u.user_id,
         u.user_name,
         u.nick_name,
@@ -217,29 +176,26 @@
     <select id="checkUserNameUnique" parameterType="String" resultType="int">
         select count(1)
         from sys_user
-        where user_name = #{userName}
-        limit 1
+        where user_name = #{userName} limit 1
     </select>
 
     <select id="checkPhoneUnique" parameterType="String" resultMap="SysUserResult">
         select user_id, phonenumber
         from sys_user
-        where phonenumber = #{phonenumber}
-        limit 1
+        where phonenumber = #{phonenumber} limit 1
     </select>
 
     <select id="checkEmailUnique" parameterType="String" resultMap="SysUserResult">
         select user_id, email
         from sys_user
-        where email = #{email}
-        limit 1
+        where email = #{email} limit 1
     </select>
     <select id="getUserSize" resultType="java.lang.Integer">
         select count(user_id)
         from sys_user
     </select>
 
-    <insert id="insertUser" parameterType="com.lead.common.core.domain.entity.SysUser" useGeneratedKeys="true"
+    <insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true"
             keyProperty="userId">
         insert into sys_user(
         <if test="userId != null and userId != 0">user_id,</if>
@@ -282,7 +238,7 @@
         )
     </insert>
 
-    <update id="updateUser" parameterType="com.lead.common.core.domain.entity.SysUser">
+    <update id="updateUser" parameterType="SysUser">
         update sys_user
         <set>
             <if test="userName != null and userName != ''">user_name = #{userName},</if>
@@ -308,13 +264,13 @@
         where user_id = #{userId}
     </update>
 
-    <update id="updateUserAvatar" parameterType="com.lead.common.core.domain.entity.SysUser">
+    <update id="updateUserAvatar" parameterType="SysUser">
         update sys_user
         set avatar = #{avatar}
         where user_name = #{userName}
     </update>
 
-    <update id="resetUserPwd" parameterType="com.lead.common.core.domain.entity.SysUser">
+    <update id="resetUserPwd" parameterType="SysUser">
         update sys_user
         set password = #{password}
         where user_name = #{userName}
@@ -338,7 +294,7 @@
         </foreach>
     </delete>
 
-    <select id="pageUserList" parameterType="com.lead.common.core.domain.entity.SysUser" resultMap="SysUserListResult">
+    <select id="pageUserList" parameterType="SysUser" resultMap="SysUserListResult">
         select
         u.user_id,u.sex,u.user_name,u.nick_name,u.alias,u.phonenumber,u.email,u.telephone,u.status,u.qr_code,
         u.create_time,u.create_by,u.update_time,u.update_by,
@@ -391,50 +347,6 @@
         where user_id = #{userId}
     </select>
 
-
-    <select id="importSelectUserList" parameterType="com.lead.common.core.domain.entity.SysUser"
-            resultType="com.lead.common.core.domain.vo.SysUserVo">
-        select GROUP_CONCAT(d.full_name SEPARATOR ';') AS depts,
-               u.user_id                               as userId,
-               u.nick_name                             as nickName,
-               u.user_name                             as userName,
-               u.email,
-               u.phonenumber,
-               u.telephone,
-               u.sex,
-               u.status,
-               u.login_ip                              as loginIp,
-               u.login_date                            as loginDate
-        from sys_user u
-                 left join sys_user_dept dr on u.user_id = dr.user_id
-                 left join sys_dept d on d.dept_id = dr.dept_id
-        where u.del_flag = '0'
-        GROUP BY u.user_id
-    </select>
-
-    <select id="selectUserDeptNameByUserId" parameterType="com.lead.common.core.domain.entity.SysUser"
-            resultType="com.lead.common.core.domain.entity.SysDept">
-        select d.dept_id,
-               d.dept_name
-        from sys_user u
-                 left join sys_user_dept ud on u.user_id = ud.user_id
-                 left join sys_dept d on d.dept_id = ud.dept_id
-        WHERE u.user_id = #{userId}
-          and ud.user_id is NOT NULL
-        order by ud.order_line
-    </select>
-
-    <select id="deptUsers" resultType="com.lead.common.core.domain.vo.ComboBoxVo">
-        SELECT su.user_name as id,
-        GROUP_CONCAT(ud.dept_id) as value,
-        su.nick_name as label
-        FROM sys_user su
-        LEFT JOIN sys_user_dept ud on ud.user_id = su.user_id
-        <if test="deptId != null">
-            WHERE ud.dept_id = #{deptId}
-        </if>
-        GROUP BY ud.user_id
-    </select>
 
 
 </mapper> 

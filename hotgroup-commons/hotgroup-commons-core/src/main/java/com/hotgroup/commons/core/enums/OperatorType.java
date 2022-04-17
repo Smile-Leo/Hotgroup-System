@@ -3,7 +3,7 @@ package com.hotgroup.commons.core.enums;
 /**
  * 操作人类别
  *
- * @author ruoyi
+ * @author Lzw
  */
 public enum OperatorType {
     /**

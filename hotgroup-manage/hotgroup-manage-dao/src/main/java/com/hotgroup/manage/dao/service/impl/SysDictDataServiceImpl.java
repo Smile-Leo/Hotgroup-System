@@ -1,5 +1,9 @@
 package com.hotgroup.manage.dao.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hotgroup.commons.core.domain.vo.AjaxResult;
+import com.hotgroup.commons.database.page.PageHelper;
 import com.hotgroup.manage.api.ISysDictDataService;
 import com.hotgroup.manage.dao.mapper.SysDictDataMapper;
 import com.hotgroup.manage.domain.entity.SysDictData;
@@ -11,7 +15,7 @@ import java.util.List;
 /**
  * 字典 业务层处理
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Service
 public class SysDictDataServiceImpl implements ISysDictDataService {
@@ -25,8 +29,10 @@ public class SysDictDataServiceImpl implements ISysDictDataService {
      * @return 字典数据集合信息
      */
     @Override
-    public List<SysDictData> selectDictDataList(SysDictData dictData) {
-        return dictDataMapper.selectDictDataList(dictData);
+    public AjaxResult<List<SysDictData>> selectDictDataList(SysDictData dictData) {
+        Page<SysDictData> dataPage = dictDataMapper.selectPage(PageHelper.getPage(dictData),
+                Wrappers.lambdaQuery(dictData));
+        return AjaxResult.page(dataPage);
     }
 
     /**

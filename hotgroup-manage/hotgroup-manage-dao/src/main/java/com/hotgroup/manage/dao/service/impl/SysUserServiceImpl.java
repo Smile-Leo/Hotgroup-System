@@ -1,7 +1,11 @@
 package com.hotgroup.manage.dao.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotgroup.commons.core.constant.UserConstants;
+import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
+import com.hotgroup.commons.database.page.PageHelper;
 import com.hotgroup.manage.api.ISysConfigService;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.dao.mapper.SysRoleMapper;
@@ -17,13 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * 用户 业务层处理
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Service
 @Slf4j
@@ -46,8 +51,11 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 用户信息集合信息
      */
     @Override
-    public List<SysUser> pageUserList(SysUser user) {
-        return userMapper.pageUserList(user);
+    public AjaxResult<List<SysUser>> pageUserList(SysUser user) {
+
+        Page<SysUser> userPage = userMapper.selectPage(PageHelper.getPage(user), Wrappers.lambdaQuery(user));
+
+        return AjaxResult.page(userPage);
     }
 
     /**
@@ -331,9 +339,7 @@ public class SysUserServiceImpl implements ISysUserService {
             user.setUserId(userId);
             checkUserAllowed(user);
         }
-        for (Long userId : userIds) {
-            this.deleteUserById(userId);
-        }
+        userMapper.deleteBatchIds(Arrays.asList(userIds));
         return userIds.length;
     }
 

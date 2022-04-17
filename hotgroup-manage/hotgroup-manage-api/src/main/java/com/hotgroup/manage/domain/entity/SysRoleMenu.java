@@ -6,7 +6,7 @@ import lombok.ToString;
 /**
  * 角色和菜单关联 sys_role_menu
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Data
 @ToString

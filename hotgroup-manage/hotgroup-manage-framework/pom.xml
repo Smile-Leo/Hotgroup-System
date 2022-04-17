@@ -24,5 +24,10 @@
             <artifactId>hotgroup-manage-api</artifactId>
             <version>${hotgroup.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-manage-dao</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
     </dependencies>
 </project>

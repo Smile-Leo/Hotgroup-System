@@ -1,7 +1,11 @@
 package com.hotgroup.manage.dao.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotgroup.commons.core.constant.UserConstants;
+import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.spring.SpringUtils;
+import com.hotgroup.commons.database.page.PageHelper;
 import com.hotgroup.manage.api.ISysRoleService;
 import com.hotgroup.manage.dao.mapper.SysRoleMapper;
 import com.hotgroup.manage.dao.mapper.SysRoleMenuMapper;
@@ -17,7 +21,7 @@ import java.util.*;
 /**
  * 角色 业务层处理
  *
- * @author ruoyi
+ * @author Lzw
  */
 @Service
 public class SysRoleServiceImpl implements ISysRoleService {
@@ -38,8 +42,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 角色数据集合信息
      */
     @Override
-    public List<SysRole> selectRoleList(SysRole role) {
-        return roleMapper.selectRoleList(role);
+    public AjaxResult<List<SysRole>> selectRoleList(SysRole role) {
+
+        Page<SysRole> rolePage = roleMapper.selectPage(PageHelper.getPage(role), Wrappers.lambdaQuery(role));
+        return AjaxResult.page(rolePage);
     }
 
     /**
@@ -67,7 +73,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public List<SysRole> selectRoleAll() {
-        return SpringUtils.getAopProxy(this).selectRoleList(new SysRole());
+        return roleMapper.selectRoleAll();
     }
 
     /**

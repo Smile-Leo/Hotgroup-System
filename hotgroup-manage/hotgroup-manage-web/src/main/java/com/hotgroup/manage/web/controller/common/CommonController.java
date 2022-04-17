@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 通用请求处理
  *
- * @author ruoyi
+ * @author Lzw
  */
 @RestController
 public class CommonController {

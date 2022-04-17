@@ -29,12 +29,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- pagehelper 分页插件 -->
-<!--        <dependency>-->
-<!--            <groupId>com.github.pagehelper</groupId>-->
-<!--            <artifactId>pagehelper-spring-boot-starter</artifactId>-->
-<!--        </dependency>-->
-
         <!-- 自定义验证注解 -->
         <dependency>
             <groupId>javax.validation</groupId>
@@ -82,6 +76,12 @@
             <groupId>com.hotgroup</groupId>
             <artifactId>hotgroup-commons-redis</artifactId>
             <version>${hotgroup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

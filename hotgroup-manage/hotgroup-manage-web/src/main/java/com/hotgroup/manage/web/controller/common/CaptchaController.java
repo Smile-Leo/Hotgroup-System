@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 验证码操作处理
  *
- * @author ruoyi
+ * @author Lzw
  */
 @RestController
 public class CaptchaController {
@@ -37,14 +37,14 @@ public class CaptchaController {
     private RedisCache redisCache;
 
     // 验证码类型
-    @Value("${lead.captchaType}")
+    @Value("${lead.captchaType:char}")
     private String captchaType;
 
     /**
      * 生成验证码
      */
     @GetMapping("/captchaImage")
-    public AjaxResult getCode(HttpServletResponse response) {
+    public AjaxResult<?> getCode(HttpServletResponse response) {
 
         // 保存验证码信息
         String uuid = IdUtils.simpleUUID();

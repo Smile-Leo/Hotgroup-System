@@ -1,5 +1,6 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hotgroup.commons.core.domain.model.IUser;
@@ -9,7 +10,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Null;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 用户对象 sys_user
  *
- * @author ruoyi
+ * @author Lzw
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -33,7 +33,7 @@ public class SysUser extends BaseEntity implements IUser {
      * 用户ID
      */
     @Null(message = "userId自动生成", groups = InsertGroup.class)
-    @Id
+    @TableId
     private Long userId;
 
     /**
@@ -41,7 +41,7 @@ public class SysUser extends BaseEntity implements IUser {
      */
     @Size(max = 64, message = "用户账号长度不能超过64个字符")
     @Pattern(regexp = "^[A-Za-z0-9_-]+$", message = "非法参数,用户名称不能含有中文及特殊字符")
-    private String userName;
+    private String username;
 
     /**
      * 用户昵称
@@ -128,7 +128,7 @@ public class SysUser extends BaseEntity implements IUser {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override

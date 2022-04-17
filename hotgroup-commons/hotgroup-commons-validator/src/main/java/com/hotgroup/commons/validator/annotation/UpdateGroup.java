@@ -5,7 +5,7 @@ import javax.validation.groups.Default;
 /**
  * 更新组
  *
- * @author ZSQ
+ * @author Lzw
  */
 public interface UpdateGroup extends Default {
 
