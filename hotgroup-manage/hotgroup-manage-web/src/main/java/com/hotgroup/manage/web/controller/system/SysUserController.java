@@ -8,6 +8,7 @@ import com.hotgroup.manage.api.ISysRoleService;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;
+import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/system/user")
+@Api(tags = "用户管理")
 public class SysUserController {
     @Autowired
     private ISysUserService userService;
@@ -39,7 +41,7 @@ public class SysUserController {
      * 获取用户列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
-    @GetMapping("/list")
+    @GetMapping("list")
     public AjaxResult<?> list(SysUser user) {
         return userService.pageUserList(user);
     }
@@ -65,23 +67,6 @@ public class SysUserController {
     }
 
     /**
-     * 新增用户检索手机 邮箱是否已存在
-     */
-    @PostMapping("/checkUser")
-    public AjaxResult<?> checkUser(@RequestBody SysUser user) {
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUsername()))) {
-            return AjaxResult.error("登录账号已存在");
-        }
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("手机号码已存在");
-        }
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
-            return AjaxResult.error("邮箱账号已存在");
-        }
-        return AjaxResult.success();
-    }
-
-    /**
      * 新增用户
      */
     @PreAuthorize("@ss.hasPermi('system:user:add')")
@@ -99,7 +84,6 @@ public class SysUserController {
         if (StringUtils.isEmpty(user.getPassword())) {
             return AjaxResult.error("新增用户'" + user.getUsername() + "'失败，密码不能为空");
         }
-
 
         user.setUserId(null);
         user.setCreateBy(SecurityUtils.getUsername());

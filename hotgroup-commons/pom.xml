@@ -16,5 +16,6 @@
         <module>hotgroup-commons-framework</module>
         <module>hotgroup-commons-redis</module>
         <module>hotgroup-commons-validator</module>
+        <module>hotgroup-commons-storage</module>
     </modules>
 </project>

@@ -8,14 +8,16 @@ import com.hotgroup.commons.core.utils.ServletUtils;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysUser;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/system/user/profile")
 @RequiredArgsConstructor
+@Api(tags = "个人信息")
 public class SysProfileController {
     private final ISysUserService userService;
     private final TokenService tokenService;
@@ -37,6 +40,7 @@ public class SysProfileController {
      * 个人信息
      */
     @GetMapping("info")
+    @ApiOperation("info")
     public AjaxResult<?> profile() {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         SysUser user = (SysUser) loginUser.getUser();
@@ -50,6 +54,7 @@ public class SysProfileController {
      * 修改用户
      */
     @PostMapping("edit")
+    @ApiOperation("修改")
     public AjaxResult<?> updateProfile(@Validated @RequestBody SysUser user) {
 
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
@@ -84,6 +89,7 @@ public class SysProfileController {
      * 重置密码
      */
     @PostMapping("updatePwd")
+    @ApiOperation("重置密码")
     public AjaxResult<?> updatePwd(String oldPassword, String newPassword) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         String userName = loginUser.getUsername();
@@ -104,17 +110,11 @@ public class SysProfileController {
      * 头像上传
      */
     @PostMapping("avatar")
-    public AjaxResult<?> avatar(MultipartFile file) throws IOException {
-        if (!file.isEmpty()) {
-            LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-//            String avatar = FileUploadUtils.upload(LeadConfig.getAvatarPath(), file);
-//            if (userService.updateUserAvatar(loginUser.getUsername(), avatar)) {
-//                AjaxResult ajax = AjaxResult.success();
-//                ajax.put("imgUrl", avatar);
-//                return ajax;
-            return AjaxResult.success();
-        }
+    @ApiOperation("上传头像")
+    public AjaxResult<?> avatar(@Validated @NotBlank String url) throws IOException {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        userService.updateUserAvatar(loginUser.getUsername(), url);
+        return AjaxResult.success();
 
-        return AjaxResult.error("上传图片异常，请联系管理员");
     }
 }

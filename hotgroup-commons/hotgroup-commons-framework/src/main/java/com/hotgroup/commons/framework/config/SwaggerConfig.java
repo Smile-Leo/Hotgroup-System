@@ -14,12 +14,15 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.HttpAuthenticationScheme;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
 import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,13 +70,14 @@ public class SwaggerConfig {
 
     @Bean
     public Docket createRestApi() {
+        final ArrayList<SecurityScheme> schemes = new ArrayList<>(1);
+        schemes.add(HttpAuthenticationScheme.JWT_BEARER_BUILDER.name("token").build());
         return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo())
                 .select()
-//                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 .paths(PathSelectors.any())
-//                .paths(PathSelectors.ant("/**"))
-                .build();
+                .build()
+                .securitySchemes(schemes);
     }
 
     private ApiInfo apiInfo() {

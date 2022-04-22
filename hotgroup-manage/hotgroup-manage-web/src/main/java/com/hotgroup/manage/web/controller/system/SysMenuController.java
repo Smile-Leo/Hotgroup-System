@@ -9,6 +9,8 @@ import com.hotgroup.commons.core.utils.ServletUtils;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.ISysMenuService;
 import com.hotgroup.manage.domain.entity.SysMenu;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,10 +28,10 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/system/menu")
+@Api(tags = "菜单信息")
 public class SysMenuController {
     @Autowired
     private ISysMenuService menuService;
-
     @Autowired
     private TokenService tokenService;
 
@@ -37,7 +39,8 @@ public class SysMenuController {
      * 获取菜单列表
      */
     @PreAuthorize("@ss.hasPermi('system:menu:list')")
-    @GetMapping("/list")
+    @GetMapping("list")
+    @ApiOperation("列表")
     public AjaxResult<?> list(SysMenu menu) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         Long userId = loginUser.getUser().getId();
@@ -49,6 +52,7 @@ public class SysMenuController {
      * 根据菜单编号获取详细信息
      */
     @GetMapping(value = "info")
+    @ApiOperation("信息")
     public AjaxResult<?> getInfo(Long menuId) {
         return AjaxResult.success(menuService.selectMenuById(menuId));
     }
@@ -57,6 +61,7 @@ public class SysMenuController {
      * 获取菜单下拉树列表
      */
     @GetMapping("treeselect")
+    @ApiOperation("树结构")
     public AjaxResult<?> treeselect(SysMenu menu) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         Long userId = loginUser.getUser().getId();
@@ -68,6 +73,7 @@ public class SysMenuController {
      * 加载对应角色菜单列表树
      */
     @GetMapping(value = "/roleMenuTreeselect")
+    @ApiOperation("角色对应树结构")
     public AjaxResult<?> roleMenuTreeselect(Long roleId) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         List<SysMenu> menus = menuService.selectMenuList(loginUser.getUser().getId());
@@ -83,6 +89,7 @@ public class SysMenuController {
      */
     @PreAuthorize("@ss.hasPermi('system:menu:add')")
     @PostMapping("add")
+    @ApiOperation("新增")
     public AjaxResult<?> add(@Validated @RequestBody SysMenu menu) {
         if (UserConstants.NOT_UNIQUE.equals(menuService.checkMenuNameUnique(menu))) {
             return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
@@ -100,6 +107,7 @@ public class SysMenuController {
      */
     @PreAuthorize("@ss.hasPermi('system:menu:edit')")
     @PostMapping("edit")
+    @ApiOperation("修改")
     public AjaxResult<?> edit(@Validated @RequestBody SysMenu menu) {
         if (UserConstants.NOT_UNIQUE.equals(menuService.checkMenuNameUnique(menu))) {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
@@ -119,6 +127,7 @@ public class SysMenuController {
      */
     @PreAuthorize("@ss.hasPermi('system:menu:remove')")
     @PostMapping("remove")
+    @ApiOperation("删除")
     public AjaxResult<?> remove(Long menuId) {
         if (menuService.hasChildByMenuId(menuId)) {
             return AjaxResult.error("存在子菜单,不允许删除");

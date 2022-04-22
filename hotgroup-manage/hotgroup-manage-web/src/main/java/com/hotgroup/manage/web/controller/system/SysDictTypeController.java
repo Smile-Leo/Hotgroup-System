@@ -5,6 +5,8 @@ import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.manage.api.ISysDictTypeService;
 import com.hotgroup.manage.domain.entity.SysDictType;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -19,12 +21,14 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/system/dict/type")
+@Api(tags = "字典类型信息")
 public class SysDictTypeController {
     @Autowired
     private ISysDictTypeService dictTypeService;
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
-    @GetMapping("/list")
+    @GetMapping("list")
+    @ApiOperation("列表")
     public AjaxResult<?> list(SysDictType dictType) {
         return dictTypeService.selectDictTypeList(dictType);
     }
@@ -35,6 +39,7 @@ public class SysDictTypeController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
     @GetMapping(value = "info")
+    @ApiOperation("信息")
     public AjaxResult<?> getInfo(Long dictId) {
         return AjaxResult.success(dictTypeService.selectDictTypeById(dictId));
     }
@@ -44,6 +49,7 @@ public class SysDictTypeController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:add')")
     @PostMapping("add")
+    @ApiOperation("新增")
     public AjaxResult<?> add(@Validated @RequestBody SysDictType dict) {
         if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict))) {
             return AjaxResult.error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
@@ -58,6 +64,7 @@ public class SysDictTypeController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:edit')")
     @PostMapping("edit")
+    @ApiOperation("修改")
     public AjaxResult<?> edit(@Validated @RequestBody SysDictType dict) {
         if (UserConstants.NOT_UNIQUE.equals(dictTypeService.checkDictTypeUnique(dict))) {
             return AjaxResult.error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
@@ -72,6 +79,7 @@ public class SysDictTypeController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @PostMapping("remove")
+    @ApiOperation("删除")
     public AjaxResult<?> remove(Long[] dictIds) {
         int i = dictTypeService.deleteDictTypeByIds(dictIds);
         return AjaxResult.success();
@@ -82,6 +90,7 @@ public class SysDictTypeController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @PostMapping("clearCache")
+    @ApiOperation("清空字典缓存")
     public AjaxResult<?> clearCache() {
         dictTypeService.clearCache();
         return AjaxResult.success();
@@ -91,6 +100,7 @@ public class SysDictTypeController {
      * 获取字典选择框列表
      */
     @GetMapping("optionselect")
+    @ApiOperation("所有类型")
     public AjaxResult<?> optionselect() {
         List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();
         return AjaxResult.success(dictTypes);

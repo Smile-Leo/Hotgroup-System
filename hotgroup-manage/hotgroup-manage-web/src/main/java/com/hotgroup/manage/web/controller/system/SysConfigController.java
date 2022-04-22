@@ -40,6 +40,7 @@ public class SysConfigController {
     /**
      * 根据参数编号获取详细信息
      */
+    @ApiOperation("参数信息")
     @PreAuthorize("@ss.hasPermi('system:config:query')")
     @GetMapping("info")
     public AjaxResult<?> getInfo(Long configId) {
@@ -49,6 +50,7 @@ public class SysConfigController {
     /**
      * 根据参数键名查询参数值
      */
+    @ApiOperation("key查信息")
     @GetMapping(value = "/configKey")
     public AjaxResult<?> getConfigKey(String configKey) {
         return AjaxResult.success(configService.selectConfigByKey(configKey));
@@ -57,6 +59,7 @@ public class SysConfigController {
     /**
      * 新增参数配置
      */
+    @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('system:config:add')")
     @PostMapping("add")
     @RepeatSubmit
@@ -72,6 +75,7 @@ public class SysConfigController {
     /**
      * 修改参数配置
      */
+    @ApiOperation("修改")
     @PreAuthorize("@ss.hasPermi('system:config:edit')")
     @PostMapping("edit")
     public AjaxResult<?> edit(@Validated @RequestBody SysConfig config) {
@@ -86,6 +90,7 @@ public class SysConfigController {
     /**
      * 删除参数配置
      */
+    @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @PostMapping("remove")
     public AjaxResult<?> remove(Long[] configIds) {
@@ -96,6 +101,7 @@ public class SysConfigController {
     /**
      * 清空缓存
      */
+    @ApiOperation("清除缓存")
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @PostMapping("clearCache")
     public AjaxResult<?> clearCache() {

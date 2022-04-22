@@ -2,6 +2,8 @@ package com.hotgroup.manage.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.hotgroup.commons.database.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
@@ -15,6 +17,7 @@ import javax.validation.constraints.Size;
  */
 @Data
 @ToString
+@ApiModel("参数配置对象")
 public class SysConfig extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -22,6 +25,7 @@ public class SysConfig extends BaseEntity {
      * 参数主键
      */
     @TableId
+    @ApiModelProperty("id")
     private Long configId;
 
     /**
@@ -29,6 +33,7 @@ public class SysConfig extends BaseEntity {
      */
     @NotBlank(message = "参数名称不能为空")
     @Size(min = 0, max = 100, message = "参数名称不能超过100个字符")
+    @ApiModelProperty("配置名")
     private String configName;
 
     /**
@@ -36,6 +41,7 @@ public class SysConfig extends BaseEntity {
      */
     @NotBlank(message = "参数键名长度不能为空")
     @Size(min = 0, max = 100, message = "参数键名长度不能超过100个字符")
+    @ApiModelProperty("配置主键")
     private String configKey;
 
     /**
@@ -44,11 +50,13 @@ public class SysConfig extends BaseEntity {
 
     @NotBlank(message = "参数键值不能为空")
     @Size(min = 0, max = 500, message = "参数键值长度不能超过500个字符")
+    @ApiModelProperty("配置值")
     private String configValue;
 
     /**
      * 系统内置（Y是 N否）
      */
+    @ApiModelProperty("是否系统内置")
     private String configType;
 
 

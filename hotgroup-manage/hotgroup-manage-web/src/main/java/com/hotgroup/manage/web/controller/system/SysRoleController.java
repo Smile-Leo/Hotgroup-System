@@ -8,6 +8,8 @@ import com.hotgroup.manage.api.ISysRoleService;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.framework.service.SysPermissionService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -20,18 +22,10 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/system/role")
+@Api(tags = "角色管理")
 public class SysRoleController {
     @Autowired
     private ISysRoleService roleService;
-
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private SysPermissionService permissionService;
-
-    @Autowired
-    private ISysUserService userService;
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("list")

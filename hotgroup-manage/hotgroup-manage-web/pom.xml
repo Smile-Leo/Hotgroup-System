@@ -18,6 +18,10 @@
             <version>${hotgroup.version}</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-commons-storage</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
     </dependencies>
 </project>
