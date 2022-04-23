@@ -1,4 +1,4 @@
-package com.hotgroup.manage.framework.config;
+package com.hotgroup.commons.framework.config;
 
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.time.DateUtils;

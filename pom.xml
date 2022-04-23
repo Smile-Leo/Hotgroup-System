@@ -20,6 +20,8 @@
     <modules>
         <module>hotgroup-commons</module>
         <module>hotgroup-manage</module>
+        <module>hotgroup-customer</module>
+
     </modules>
 
     <dependencyManagement>
