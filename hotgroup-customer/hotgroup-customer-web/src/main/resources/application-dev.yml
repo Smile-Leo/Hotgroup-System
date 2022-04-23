@@ -21,3 +21,18 @@ minio:
   access-key: admin
   secret-key: admin@1234
   default-bucket: store
+
+
+wx:
+  miniapp:
+    configs:
+      - appid: wx395bde5a534e9b9b #微信小程序的appid
+        secret: 88dacf11db463fc1335d5dccb204067d #微信小程序的Secret
+        token: #微信小程序消息服务器配置的token
+        aesKey: #微信小程序消息服务器配置的EncodingAESKey
+        msgDataFormat: JSON
+
+logging:
+  level:
+    com.hotgroup: debug
+    cn.binarywang.wx.miniapp: debug

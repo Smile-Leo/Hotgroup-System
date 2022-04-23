@@ -5,10 +5,13 @@ import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.IdUtils;
 import com.hotgroup.commons.redis.RedisCache;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -26,6 +29,8 @@ import java.util.concurrent.TimeUnit;
  * @author Lzw
  */
 @RestController
+@Api(tags = "验证码")
+@RequestMapping("common/captcha")
 public class CaptchaController {
     @Resource(name = "captchaProducer")
     private Producer captchaProducer;
@@ -43,7 +48,8 @@ public class CaptchaController {
     /**
      * 生成验证码
      */
-    @GetMapping("/captchaImage")
+    @GetMapping("create")
+    @ApiOperation("生成base64验证码")
     public AjaxResult<?> getCode(HttpServletResponse response) {
 
         // 保存验证码信息

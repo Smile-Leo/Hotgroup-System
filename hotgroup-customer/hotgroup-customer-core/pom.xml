@@ -18,6 +18,19 @@
     </properties>
 
     <dependencies>
+
+
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-commons-database</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-customer-api</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-miniapp</artifactId>
@@ -33,5 +46,15 @@
             <artifactId>weixin-java-open</artifactId>
             <version>${weixin-version}</version>
         </dependency>
+
+
+        <!-- 初版使用数据库耦合,后期使用dubbo调用-->
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-manage-core</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
+
+
     </dependencies>
 </project>

@@ -21,3 +21,8 @@ minio:
   access-key: admin
   secret-key: admin@1234
   default-bucket: store
+
+
+logging:
+  level:
+    com.hotgroup: debug

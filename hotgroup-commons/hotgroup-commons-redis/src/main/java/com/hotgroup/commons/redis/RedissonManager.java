@@ -14,8 +14,8 @@ import org.springframework.util.Assert;
 /**
  * Redisson核心配置，用于提供初始化的redisson实例
  *
- * @author pangu
- * @date 2020-10-22
+ * @author pangu Lzw
+ * @date 2021-10-22
  */
 @Slf4j
 public class RedissonManager {

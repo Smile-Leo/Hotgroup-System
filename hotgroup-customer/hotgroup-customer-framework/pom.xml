@@ -22,5 +22,10 @@
             <artifactId>hotgroup-commons-framework</artifactId>
             <version>${hotgroup.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-customer-core</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
     </dependencies>
 </project>
