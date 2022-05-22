@@ -1,4 +1,4 @@
-package com.hotgroup.customer.web.controller;
+package com.hotgroup.customer.web.controller.wx;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;

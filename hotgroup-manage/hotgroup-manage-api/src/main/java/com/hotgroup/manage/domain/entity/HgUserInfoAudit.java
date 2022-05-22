@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
+import com.hotgroup.commons.validator.annotation.IntSelection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -45,7 +46,7 @@ public class HgUserInfoAudit extends BaseEntity {
     private String userInfoJson;
 
     /**
-     * 状态（1正常 0停用）
+     * 状态（0待审核 1审核成功 2审核失败）
      */
     @Size(min = 1, max = 1, message = "状态有误")
     private Integer status;

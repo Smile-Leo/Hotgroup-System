@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+
 /**
  * 通用请求处理
  *
@@ -36,10 +38,12 @@ public class CommonController {
     public AjaxResult<?> uploadFile(MultipartFile file) throws Exception {
         try {
             MediaTypeEnum mediaTypeEnum = MediaTypeEnum.valueOf(file.getContentType());
-            String add = storageService.add(file.getName(), mediaTypeEnum, file);
+            String add = storageService.add(file.getName(), mediaTypeEnum, file.getInputStream());
             return AjaxResult.success(add);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
+        } finally {
+            Files.deleteIfExists(file.getResource().getFile().toPath());
         }
     }
 

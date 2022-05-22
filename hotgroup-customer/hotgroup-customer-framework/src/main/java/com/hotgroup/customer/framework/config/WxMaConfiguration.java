@@ -128,7 +128,7 @@ public class WxMaConfiguration {
                             .toUser(wxMessage.getFromUser())
                             .build());
         } catch (WxErrorException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return null;
@@ -145,7 +145,7 @@ public class WxMaConfiguration {
                             .toUser(wxMessage.getFromUser())
                             .build());
         } catch (WxErrorException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
 
         return null;
