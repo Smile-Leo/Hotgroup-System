@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import java.util.Map;
  * @author Lzw
  */
 @Data
+@MappedSuperclass
 public class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -23,6 +26,7 @@ public class BaseEntity implements Serializable {
      * 创建者
      */
     @TableField(value = "create_by", fill = FieldFill.INSERT) // 新增执行
+    @Column(name = "create_by", length = 20)
     private String createBy;
 
     /**
@@ -30,12 +34,14 @@ public class BaseEntity implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @Column(name = "create_time", length = 20)
     private Date createTime;
 
     /**
      * 更新者
      */
     @TableField(value = "update_by", fill = FieldFill.UPDATE) // 更新执行
+    @Column(name = "update_by", length = 20)
     private String updateBy;
 
     /**
@@ -43,6 +49,7 @@ public class BaseEntity implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(value = "update_Time", fill = FieldFill.UPDATE)
+    @Column(name = "update_Time", length = 20)
     private Date updateTime;
 
 

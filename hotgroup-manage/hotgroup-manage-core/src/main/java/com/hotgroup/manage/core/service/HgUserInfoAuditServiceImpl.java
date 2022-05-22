@@ -49,8 +49,7 @@ public class HgUserInfoAuditServiceImpl implements IHgUserInfoAuditService {
         if (hgUserInfoAudit.getStatus() != null && hgUserInfoAudit.getStatus() == 1) {//审核成功
             HgUser oldUser = hgUserMapper.selectById(hgUserInfoAudit.getUserId());
             if (oldUser != null) {
-                HgUser newUser = objectMapper.readValue(hgUserInfoAudit.getUserInfoJson(), HgUser.class);//将修改后的数据赋值给user
-                BeanUtils.copyProperties(newUser,oldUser);
+                //BeanUtils.copyProperties(newUser,oldUser);
                 hgUserMapper.updateById(oldUser);
             }
         }
