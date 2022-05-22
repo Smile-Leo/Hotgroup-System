@@ -1,4 +1,4 @@
-package com.hotgroup.customer.web.controller;
+package com.hotgroup.customer.web.controller.wx;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.constant.WxMaConstants;
@@ -57,7 +57,7 @@ public class WxMaMediaController {
             try {
                 MultipartFile file = multiRequest.getFile(it.next());
                 File newFile = new File(Files.createTempDir(), file.getOriginalFilename());
-                this.logger.info("filePath is ：" + newFile.toString());
+                this.logger.info("filePath is ：" + newFile);
                 file.transferTo(newFile);
                 WxMediaUploadResult uploadResult = wxService.getMediaService()
                         .uploadMedia(WxMaConstants.KefuMsgType.IMAGE, newFile);

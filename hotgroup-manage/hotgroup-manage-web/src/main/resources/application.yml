@@ -28,6 +28,7 @@ logging:
   level:
     com.hotgroup: debug
     org.springframework: warn
+    net.bramp.ffmpeg: error
 
 # Spring配置
 spring:
