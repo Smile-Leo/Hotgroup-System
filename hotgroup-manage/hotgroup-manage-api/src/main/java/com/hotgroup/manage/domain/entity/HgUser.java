@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,8 +15,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 用户对象 user
@@ -26,8 +23,11 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "Hg_user")
+@Table(name = "Hg_user", uniqueConstraints = @UniqueConstraint(columnNames = {"account", "phone"}))
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class HgUser extends BaseEntity implements IUser {
 
     private static final long serialVersionUID = 1L;
@@ -132,6 +132,12 @@ public class HgUser extends BaseEntity implements IUser {
     @Pattern(regexp = "^$|^[\\u4E00-\\u9FA5A-Za-z0-9_ .-]+$", message = "非法参数,地址只能由字母,数字,空格._-组成")
     @Column(name = "address", length = 255)
     private String address;
+
+    @Column(name = "openId", length = 255)
+    private String openId;
+
+    @Column(name = "unionId", length = 255)
+    private String unionId;
 
     /**
      * 帐号状态（1正常 0停用）

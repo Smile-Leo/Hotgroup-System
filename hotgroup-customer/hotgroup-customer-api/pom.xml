@@ -16,4 +16,14 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-commons-database</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
+
+
+    </dependencies>
 </project>
