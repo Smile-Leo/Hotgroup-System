@@ -65,13 +65,11 @@ spring:
 
   #jpa
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect  #不加这句则默认为myisam引擎
     hibernate:
       ddl-auto: update
       show-sql: false
       naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
 
   mvc:
     pathmatch:

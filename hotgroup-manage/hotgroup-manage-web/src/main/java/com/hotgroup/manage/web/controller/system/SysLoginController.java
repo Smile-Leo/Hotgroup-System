@@ -1,5 +1,6 @@
 package com.hotgroup.manage.web.controller.system;
 
+import com.hotgroup.commons.core.domain.model.LoginBody;
 import com.hotgroup.commons.core.domain.model.LoginUser;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.ServletUtils;
@@ -9,7 +10,6 @@ import com.hotgroup.manage.domain.entity.SysMenu;
 import com.hotgroup.manage.domain.entity.SysUser;
 import com.hotgroup.manage.framework.service.SysLoginService;
 import com.hotgroup.manage.framework.service.SysPermissionService;
-import com.lead.common.core.domain.model.LoginBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

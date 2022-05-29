@@ -23,7 +23,7 @@ import javax.validation.constraints.Size;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "Hg_user", uniqueConstraints = @UniqueConstraint(columnNames = {"account", "phone"}))
+@Table(name = "Hg_user")
 @Entity
 @Builder
 @AllArgsConstructor
@@ -46,7 +46,7 @@ public class HgUser extends BaseEntity implements IUser {
      */
     @Size(max = 64, message = "用户账号长度不能超过64个字符")
     @Pattern(regexp = "^[A-Za-z0-9_-]+$", message = "非法参数,账号不能含有中文及特殊字符")
-    @Column(name = "account", length = 20)
+    @Column(unique = true)
     private String account;
 
     /**
@@ -55,7 +55,7 @@ public class HgUser extends BaseEntity implements IUser {
     @JsonIgnore
     @JsonProperty
     @Size(groups = {InsertGroup.class}, min = 6, max = 32, message = "密码使用6-32位字母")
-    @Column(name = "password", length = 20)
+    @Column(length = 20)
     private String password;
 
     /**
@@ -63,28 +63,27 @@ public class HgUser extends BaseEntity implements IUser {
      */
     @Size(max = 32, message = "用户名称长度不能超过32个字符")
     @Pattern(regexp = "^[\\u4E00-\\u9FA5A-Za-z0-9~！@#￥%…&*（）—+\\-=·【】、；‘，。{}|：《》？!$^()_+-=`:\";'<>?,./]+$", message = "非法参数,用户昵称不能含有特殊字符")
-    @Column(name = "user_name", length = 20)
     private String userName;
 
     /**
      * 用户性别 1男 0女
      */
     @Size(min = 1, max = 1, message = "用户性别有误")
-    @Column(name = "gender", length = 1)
+    @Column(length = 1)
     private Integer gender;
 
     /**
      * 手机号码
      */
     @Size(min = 11, max = 11, message = "手机号码使用11位数字")
-    @Column(name = "phone", length = 20)
+    @Column(length = 20, unique = true)
     private String phone;
 
     /**
      * 用户头像
      */
     @Size(max = 255, message = "头像长度不能超过255个字符")
-    @Column(name = "head_img", length = 255)
+    @Column(length = 255)
     private String headImg;
 
     /**
@@ -92,7 +91,7 @@ public class HgUser extends BaseEntity implements IUser {
      */
     @Email(message = "邮箱格式不正确")
     @Size(max = 64, message = "邮箱长度不能超过64个字符")
-    @Column(name = "email", length = 100)
+    @Column(length = 100)
     private String email;
 
     /**
@@ -100,7 +99,7 @@ public class HgUser extends BaseEntity implements IUser {
      */
     @Size(min = 18, max = 18, message = "身份证号长度使用18位数字")
     @Pattern(regexp = "^[A-Za-z0-9_-]+$", message = "身份证号长度使用18位数字")
-    @Column(name = "id_number", length = 40)
+    @Column(length = 40)
     private String idNumber;
 
     /**
@@ -108,21 +107,21 @@ public class HgUser extends BaseEntity implements IUser {
      */
     @Size(max = 32, message = "用户真实名称长度不能超过32个字符")
     @Pattern(regexp = "^[\\u4E00-\\u9FA5A-Za-z0-9~！@#￥%…&*（）—+\\-=·【】、；‘，。{}|：《》？!$^()_+-=`:\";'<>?,./]+$", message = "非法参数,用户真实名称不能含有特殊字符")
-    @Column(name = "real_name", length = 20)
+    @Column(length = 20)
     private String realName;
 
     /**
      * 用户类型 1主播 0普通⽤户
      */
     @Size(min = 1, max = 1, message = "用户类型有误")
-    @Column(name = "type", length = 1)
+    @Column(length = 1)
     private Integer type;
 
     /**
      * 用户标签
      */
     @Size(max = 255, message = "用户标签不能超过255个字符")
-    @Column(name = "tags", length = 255)
+    @Column(length = 255)
     private String tags;
 
     /**
@@ -133,17 +132,17 @@ public class HgUser extends BaseEntity implements IUser {
     @Column(name = "address", length = 255)
     private String address;
 
-    @Column(name = "openId", length = 255)
+    @Column(unique = true)
     private String openId;
 
-    @Column(name = "unionId", length = 255)
+    @Column(unique = true)
     private String unionId;
 
     /**
      * 帐号状态（1正常 0停用）
      */
     @Size(min = 1, max = 1, message = "用户状态有误")
-    @Column(name = "status", length = 1)
+    @Column(length = 1)
     private Integer status;
 
     @Override

@@ -53,6 +53,15 @@ spring:
       # 超过1Mb，就IO到临时目录
       file-size-threshold: 1MB
 
+  #jpa
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: false
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+
+
   # 服务模块
   devtools:
     restart:
