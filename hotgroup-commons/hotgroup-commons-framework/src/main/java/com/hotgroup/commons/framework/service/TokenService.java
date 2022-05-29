@@ -2,16 +2,20 @@ package com.hotgroup.commons.framework.service;
 
 import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.domain.model.LoginUser;
-import com.hotgroup.commons.core.utils.IdUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,13 +31,15 @@ public class TokenService {
     private String header;
 
     // 令牌秘钥
-    @Value("${token.secret:abcdefghijklmnopqrstuvwxyz}")
+    @Value("${token.secret:2Avu0QmIiFmEdCQFmuRQvw==}")
     private String secret;
 
     // 令牌有效期（默认30分钟）
     @Value("${token.expireTime:30}")
     private int expireTime;
 
+    @Autowired
+    UserDetailsService userDetailsService;
 
     /**
      * 获取用户身份信息
@@ -46,7 +52,8 @@ public class TokenService {
         if (StringUtils.isNotEmpty(token)) {
             Claims claims = parseToken(token);
             // 解析对应的权限以及用户信息
-            return (LoginUser) claims.get(Constants.LOGIN_USER_KEY);
+            String username = String.valueOf(claims.get(Constants.LOGIN_USER_KEY));
+            return (LoginUser) userDetailsService.loadUserByUsername(username);
         }
         return null;
     }
@@ -59,10 +66,8 @@ public class TokenService {
      * @return 令牌
      */
     public String createToken(LoginUser loginUser) {
-        String token = IdUtils.fastUUID();
-        loginUser.setToken(token);
         Map<String, Object> claims = new HashMap<>();
-        claims.put(Constants.LOGIN_USER_KEY, token);
+        claims.put(Constants.LOGIN_USER_KEY, loginUser.getUsername());
         return createToken(claims);
     }
 
@@ -74,8 +79,13 @@ public class TokenService {
      * @return 令牌
      */
     private String createToken(Map<String, Object> claims) {
+        LocalDateTime currentTime = LocalDateTime.now();
         return Jwts.builder()
                 .setClaims(claims)
+                .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))
+                .setExpiration(Date.from(currentTime.plusMinutes(expireTime)
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant()))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -113,7 +123,10 @@ public class TokenService {
 
     public boolean verifyToken(HttpServletRequest request) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(getToken(request));
+            String token = getToken(request);
+            if (StringUtils.isNotBlank(token)) {
+                Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            }
             return true;
         } catch (JwtException e) {
             return false;

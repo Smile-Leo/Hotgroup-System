@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new LoginUser(new IUser() {
             @Override
             public Long getId() {
-                return null;
+                return 1L;
             }
 
             @Override
@@ -44,7 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
             @Override
             public String getUsername() {
-                return null;
+                return "user1";
             }
 
             @Override

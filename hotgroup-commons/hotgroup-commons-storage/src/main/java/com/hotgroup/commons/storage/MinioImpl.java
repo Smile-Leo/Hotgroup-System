@@ -1,24 +1,21 @@
 package com.hotgroup.commons.storage;
 
 import io.minio.*;
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.ConnectionPool;
-import okhttp3.OkHttpClient;
-import org.springframework.web.multipart.MultipartFile;
+import io.minio.messages.Item;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Lzw
  * @date 2022/4/17.
  */
-@Slf4j
 public class MinioImpl implements FileStorageService {
 
     private final MinioClient minioClient;
@@ -52,26 +49,6 @@ public class MinioImpl implements FileStorageService {
         }
     }
 
-
-    @Override
-    public String add(String fileName, MediaTypeEnum fileType, MultipartFile file) throws IOException {
-        try {
-            FileInfo fileInfo = factory.ofMedia(fileType);
-            makeBucket(fileInfo);
-            minioClient.putObject(PutObjectArgs.builder()
-                    .object(fileInfo.getObject())
-                    .contentType(fileType.getContetType())
-                    .bucket(defaultBucket)
-                    .stream(file.getInputStream(), file.getSize(), -1)
-                    .build());
-
-            return fileInfo.getUrl();
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());
-        }
-
-
-    }
 
     private void makeBucket(FileInfo fileInfo) throws Exception {
         if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(defaultBucket).build())) {
@@ -123,21 +100,33 @@ public class MinioImpl implements FileStorageService {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        MinioClient client = MinioClient.builder()
-                .endpoint("http://192.168.1.4:9000")
-                .credentials("admin", "admin@1234")
-                .build();
-        FileInfoFactory store = new FileInfoFactory("store");
-        MinioImpl minio = new MinioImpl(client, "store", store);
 
+    @Override
+    public List<String> list() throws IOException {
 
-        InputStream inputStream = Files.newInputStream(Paths.get("D:\\gmp-mm-common.zip"));
-        String test = minio.add("test", MediaTypeEnum.ZIP, inputStream);
+        return list("/");
+    }
 
-        System.out.println(test.toString());
-        InputStream inputStream1 = minio.get(test);
-        System.out.println(inputStream1.toString());
+    private List<String> list(String dir) {
+        Iterable<Result<Item>> results = minioClient.listObjects(
+                ListObjectsArgs.builder().bucket(defaultBucket).prefix(dir).build());
+        Stream.Builder<String> builder = Stream.builder();
+        Iterator<Result<Item>> iterator = results.iterator();
 
+        try {
+            while (iterator.hasNext()) {
+                Result<Item> next = iterator.next();
+                if (next.get().isDir()) {
+                    List<String> list = list(next.get().objectName());
+                    list.forEach(builder::add);
+                    continue;
+                }
+                builder.add(next.get().objectName());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return builder.build().collect(Collectors.toList());
     }
 }

@@ -18,6 +18,7 @@ public enum MediaTypeEnum {
     TIFF("image/tiff"),
     PDF("application/pdf"),
     PNG("image/png"),
+    FLV("video/x-flv"),
 
     ZIP("application/x-zip-compressed"),
     FILE("application/octet-stream"),
