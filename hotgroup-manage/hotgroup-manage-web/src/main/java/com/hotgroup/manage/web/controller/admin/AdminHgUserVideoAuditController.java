@@ -1,9 +1,10 @@
 package com.hotgroup.manage.web.controller.admin;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.manage.api.IHgUserInfoAuditService;
+import com.hotgroup.manage.api.IHgUserVideoAuditService;
 import com.hotgroup.manage.domain.entity.HgUserInfoAudit;
+import com.hotgroup.manage.domain.entity.HgUserVideo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,31 +19,31 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ajm
  */
 @RestController
-@RequestMapping("/admin/userInfoAudit")
+@RequestMapping("/admin/userVideoAudit")
 @Api(tags = "用户资料审核")
-public class AdminHgUserInfoAuditController {
+public class AdminHgUserVideoAuditController {
 
     @Autowired
-    IHgUserInfoAuditService hgUserInfoAuditService;
+    IHgUserVideoAuditService hgUserVideoAuditService;
 
     /**
-     * 获取审核列表
+     * 获取列表
      */
-    @PreAuthorize("@ss.hasPermi('admin:userInfoAudit:list')")
+    @PreAuthorize("@ss.hasPermi('admin:userVideoAudit:list')")
     @GetMapping("list")
     @ApiOperation("列表")
-    public AjaxResult<?> list(HgUserInfoAudit hgUserInfoAudit) {
-        return hgUserInfoAuditService.pageList(hgUserInfoAudit);
+    public AjaxResult<?> list(HgUserVideo hgUserVideo) {
+        return hgUserVideoAuditService.pageList(hgUserVideo);
     }
 
     /**
      * 审核  auditStatus 状态（0待审核 1审核成功 2审核失败）
      */
-    @PreAuthorize("@ss.hasPermi('admin:userInfoAudit:audit')")
+    @PreAuthorize("@ss.hasPermi('admin:userVideoAudit:audit')")
     @GetMapping("audit")
     @ApiOperation("审核")
-    public AjaxResult<?> audit(HgUserInfoAudit hgUserInfoAudit) throws Exception {
-        hgUserInfoAuditService.audit(hgUserInfoAudit);
+    public AjaxResult<?> audit(HgUserVideo hgUserVideo) throws Exception {
+        hgUserVideoAuditService.audit(hgUserVideo);
         return AjaxResult.success();
     }
 }

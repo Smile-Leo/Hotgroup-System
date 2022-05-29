@@ -27,5 +27,5 @@ public interface IHgUserInfoAuditService {
      * @param hgUserInfoAudit 用户信息
      * @return 结果
      */
-    void audit(HgUserInfoAudit hgUserInfoAudit) throws JsonProcessingException;
+    void audit(HgUserInfoAudit hgUserInfoAudit) throws Exception;
 }

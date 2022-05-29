@@ -68,4 +68,10 @@ public class HgUserVideo extends BaseEntity {
     @Size(min = 1, max = 1, message = "状态有误")
     @Column(name = "status", length = 1)
     private Integer status;
+
+    /**
+     * 状态（0待审核 1审核成功 2审核失败）
+     */
+    @Column(name = "audit_status", length = 1)
+    private Integer auditStatus;
 }

@@ -114,4 +114,7 @@ public class HgUserInfoAudit extends BaseEntity {
      */
     @Column(name = "audit_status", length = 1)
     private Integer auditStatus;
+
+    @Transient
+    private transient HgUser oldHgUser;
 }

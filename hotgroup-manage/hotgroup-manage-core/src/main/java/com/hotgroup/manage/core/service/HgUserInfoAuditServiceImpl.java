@@ -39,17 +39,22 @@ public class HgUserInfoAuditServiceImpl implements IHgUserInfoAuditService {
     @Override
     public AjaxResult<List<HgUserInfoAudit>> pageList(HgUserInfoAudit hgUserInfoAudit) {
         Page<HgUserInfoAudit> page = hgUserInfoAuditMapper.selectPage(PageHelper.getPage(hgUserInfoAudit), Wrappers.lambdaQuery(hgUserInfoAudit));
+        if (page.getRecords() != null && page.getRecords().size() > 0) {
+            for (HgUserInfoAudit record : page.getRecords()) {
+                record.setOldHgUser(hgUserMapper.selectById(record.getUserId()));
+            }
+        }
         return AjaxResult.page(page);
     }
 
     @Override
     @Transactional
-    public void audit(HgUserInfoAudit hgUserInfoAudit) throws JsonProcessingException {
+    public void audit(HgUserInfoAudit hgUserInfoAudit) {
         hgUserInfoAuditMapper.updateById(hgUserInfoAudit);
         if (hgUserInfoAudit.getStatus() != null && hgUserInfoAudit.getStatus() == 1) {//审核成功
             HgUser oldUser = hgUserMapper.selectById(hgUserInfoAudit.getUserId());
             if (oldUser != null) {
-                //BeanUtils.copyProperties(newUser,oldUser);
+                BeanUtils.copyProperties(hgUserInfoAudit,oldUser);
                 hgUserMapper.updateById(oldUser);
             }
         }
