@@ -1,5 +1,7 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,6 +13,9 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
@@ -25,6 +30,7 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Entity
 public class SysUser extends BaseEntity implements IUser {
 
     private static final long serialVersionUID = 1L;
@@ -33,15 +39,16 @@ public class SysUser extends BaseEntity implements IUser {
      * 用户ID
      */
     @Null(message = "userId自动生成", groups = InsertGroup.class)
-    @TableId
-    private Long userId;
+    @TableId(type = IdType.ASSIGN_UUID)
+    @Id
+    private String userId;
 
     /**
      * 用户账号
      */
     @Size(max = 64, message = "用户账号长度不能超过64个字符")
     @Pattern(regexp = "^[A-Za-z0-9_-]+$", message = "非法参数,用户名称不能含有中文及特殊字符")
-    private String username;
+    private String userName;
 
     /**
      * 用户昵称
@@ -49,13 +56,6 @@ public class SysUser extends BaseEntity implements IUser {
     @Size(max = 32, message = "用户名称长度不能超过32个字符")
     @Pattern(regexp = "^[\\u4E00-\\u9FA5A-Za-z0-9~！@#￥%…&*（）—+\\-=·【】、；‘，。{}|：《》？!$^()_+-=`:\";'<>?,./]+$", message = "非法参数,用户昵称不能含有特殊字符")
     private String nickName;
-
-    /**
-     * 用户邮箱
-     */
-    @Email(message = "邮箱格式不正确")
-    @Size(max = 64, message = "邮箱长度不能超过64个字符")
-    private String email;
 
     /**
      * 手机号码
@@ -74,14 +74,6 @@ public class SysUser extends BaseEntity implements IUser {
      */
     @Size(max = 255, message = "头像长度不能超过255个字符")
     private String avatar;
-
-
-    /**
-     * 地址
-     */
-    @Size(max = 128, message = "地址长度不能超过128个字符")
-    @Pattern(regexp = "^$|^[\\u4E00-\\u9FA5A-Za-z0-9_ .-]+$", message = "非法参数,地址只能由字母,数字,空格._-组成")
-    private String address;
 
 
     /**
@@ -118,17 +110,19 @@ public class SysUser extends BaseEntity implements IUser {
     /**
      * 角色对象
      */
+    @Transient
+    @TableField(exist = false)
     private List<SysRole> roles;
 
 
     @Override
-    public Long getId() {
+    public String getId() {
         return userId;
     }
 
     @Override
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
     @Override
@@ -141,8 +135,8 @@ public class SysUser extends BaseEntity implements IUser {
         return isAdmin(this.userId);
     }
 
-    public static boolean isAdmin(Long userId) {
-        return userId != null && 1L == userId;
+    public static boolean isAdmin(String userId) {
+        return "1L".equals(userId);
     }
 
     @Override

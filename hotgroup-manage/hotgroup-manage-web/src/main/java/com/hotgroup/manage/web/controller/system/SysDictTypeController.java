@@ -19,8 +19,8 @@ import java.util.List;
  *
  * @author Lzw
  */
-@RestController
-@RequestMapping("/system/dict/type")
+//@RestController
+//@RequestMapping("/system/dict/type")
 @Api(tags = "字典类型信息")
 public class SysDictTypeController {
     @Autowired

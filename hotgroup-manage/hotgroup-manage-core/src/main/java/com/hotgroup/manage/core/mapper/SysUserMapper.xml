@@ -77,27 +77,15 @@
                u.remark,
                u.sync_switch,
                u.sync_status,
-               d.dept_id,
-               d.parent_id,
-               d.dept_name,
-               d.order_num,
-               d.status     as dept_status,
                r.role_id,
                r.role_name,
                r.role_key,
                r.role_sort,
                r.data_scope,
-               r.status     as role_status,
+               r.status as role_status,
                u.sync_switch,
-               u.address,
-               dr.post_id,
-               dr.is_leader,
-               p.post_name,
-               dr.order_num AS du_order_num
+               u.address
         from sys_user u
-                 left join sys_user_dept dr on u.user_id = dr.user_id
-                 left join sys_post p on p.post_id = dr.post_id
-                 left join sys_dept d on d.dept_id = dr.dept_id
                  left join sys_user_role ur on u.user_id = ur.user_id
                  left join sys_role r on r.role_id = ur.role_id
     </sql>
@@ -114,7 +102,7 @@
         order by dr.order_line
     </select>
 
-    <select id="selectUserById" parameterType="Long" resultMap="SysUserResult">
+    <select id="selectUserById" parameterType="String" resultMap="SysUserResult">
         <include refid="selectUserVo"/>
         where u.user_id = #{userId}
         order by dr.order_line
@@ -185,11 +173,6 @@
         where phonenumber = #{phonenumber} limit 1
     </select>
 
-    <select id="checkEmailUnique" parameterType="String" resultMap="SysUserResult">
-        select user_id, email
-        from sys_user
-        where email = #{email} limit 1
-    </select>
     <select id="getUserSize" resultType="java.lang.Integer">
         select count(user_id)
         from sys_user
@@ -281,13 +264,13 @@
         where user_name = #{username}
     </update>
 
-    <delete id="deleteUserById" parameterType="Long">
+    <delete id="deleteUserById" parameterType="String">
         delete
         from sys_user
         where user_id = #{userId}
     </delete>
 
-    <delete id="deleteUserByIds" parameterType="Long">
+    <delete id="deleteUserByIds" parameterType="String">
         update sys_user set del_flag = '2' where user_id in
         <foreach collection="array" item="userId" open="(" separator="," close=")">
             #{userId}
@@ -341,7 +324,7 @@
         </if>
         min(d.parent_id),min(d.order_num) desc, max(ud.order_num) desc, CONVERT(u.nick_name USING gbk) ASC
     </select>
-    <select id="selectUserRoleIds" resultType="java.lang.Long">
+    <select id="selectUserRoleIds" resultType="java.lang.String">
         select role_id
         from sys_user_role
         where user_id = #{userId}

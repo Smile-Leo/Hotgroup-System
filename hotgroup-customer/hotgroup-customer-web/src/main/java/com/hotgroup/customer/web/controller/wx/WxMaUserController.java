@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,7 @@ public class WxMaUserController {
 
     @GetMapping("login")
     @ApiOperation("小程序登陆")
+    @Validated
     public AjaxResult<?> login(@PathVariable String appid, @NotBlank String code, @NotBlank String signature,
                                @NotBlank String rawData, @NotBlank String encryptedData, @NotBlank String iv) {
 

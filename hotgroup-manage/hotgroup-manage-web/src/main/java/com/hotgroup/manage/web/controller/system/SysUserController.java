@@ -24,13 +24,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 用户信息
+ * 管理用户信息
  *
  * @author Lzw
  */
-@RestController
-@RequestMapping("/system/user")
-@Api(tags = "用户管理")
+//@RestController
+//@RequestMapping("/system/user")
+@Api(tags = "管理员管理")
 public class SysUserController {
     @Autowired
     private ISysUserService userService;
@@ -52,7 +52,7 @@ public class SysUserController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping("info")
-    public AjaxResult<?> getInfo(@Validated @NotNull Long userId) {
+    public AjaxResult<?> getInfo(@Validated @NotNull String userId) {
         Map<String, Object> ajax = new HashMap<>(2);
         List<SysRole> roles = roleService.selectRoleAll();
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream()
@@ -72,17 +72,14 @@ public class SysUserController {
     @PreAuthorize("@ss.hasPermi('system:user:add')")
     @PostMapping("add")
     public AjaxResult<?> add(@Validated(value = {InsertGroup.class}) @RequestBody SysUser user) {
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUsername()))) {
-            return AjaxResult.error("新增用户'" + user.getUsername() + "'失败，登录账号已存在");
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserName()))) {
+            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，登录账号已存在");
         }
         if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("新增用户'" + user.getUsername() + "'失败，手机号码已存在");
-        }
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
-            return AjaxResult.error("新增用户'" + user.getUsername() + "'失败，邮箱账号已存在");
+            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
         if (StringUtils.isEmpty(user.getPassword())) {
-            return AjaxResult.error("新增用户'" + user.getUsername() + "'失败，密码不能为空");
+            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，密码不能为空");
         }
 
         user.setUserId(null);
@@ -100,22 +97,20 @@ public class SysUserController {
     @PostMapping("edit")
     public AjaxResult<?> edit(@Validated @RequestBody SysUser user) {
         userService.checkUserAllowed(user);
-        if (StringUtils.isEmpty(user.getPhonenumber()) && StringUtils.isEmpty(user.getEmail())) {
-            return AjaxResult.error("修改用户'" + user.getUsername() + "'失败，手机号码和邮箱不能同时为空");
+        if (StringUtils.isEmpty(user.getPhonenumber())) {
+            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码为空");
         }
         if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUsername() + "'失败，手机号码已存在");
+            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUsername() + "'失败，邮箱账号已存在");
-        }
+
 
         //防止修改账号
         SysUser sysUser = userService.selectUserById(user.getUserId());
         if (sysUser == null) {
-            return AjaxResult.error("修改用户'" + user.getUsername() + "'失败，账号不存在");
+            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，账号不存在");
         }
-        user.setUsername(sysUser.getUsername());
+        user.setUserName(sysUser.getUserName());
         user.setUpdateBy(SecurityUtils.getUsername());
 
         userService.updateSysUser(user);
@@ -127,7 +122,7 @@ public class SysUserController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:remove')")
     @PostMapping("remove")
-    public AjaxResult<?> remove(@Validated @NotEmpty Long[] userIds) {
+    public AjaxResult<?> remove(@Validated @NotEmpty String[] userIds) {
 
         userService.deleteUserByIds(userIds);
 

@@ -1,5 +1,7 @@
 package com.hotgroup.commons.core.domain.model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 用户登录对象
  *

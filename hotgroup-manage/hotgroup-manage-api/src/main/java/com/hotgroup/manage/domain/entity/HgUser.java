@@ -1,5 +1,6 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +11,10 @@ import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
@@ -23,7 +27,7 @@ import javax.validation.constraints.Size;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "Hg_user")
+@Table
 @Entity
 @Builder
 @AllArgsConstructor
@@ -36,10 +40,9 @@ public class HgUser extends BaseEntity implements IUser {
      * ID
      */
     @Null(message = "userId自动生成", groups = InsertGroup.class)
-    @TableId
+    @TableId(type = IdType.ASSIGN_UUID)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     /**
      * 用户账号
@@ -83,7 +86,6 @@ public class HgUser extends BaseEntity implements IUser {
      * 用户头像
      */
     @Size(max = 255, message = "头像长度不能超过255个字符")
-    @Column(length = 255)
     private String headImg;
 
     /**
@@ -121,7 +123,6 @@ public class HgUser extends BaseEntity implements IUser {
      * 用户标签
      */
     @Size(max = 255, message = "用户标签不能超过255个字符")
-    @Column(length = 255)
     private String tags;
 
     /**
@@ -129,7 +130,6 @@ public class HgUser extends BaseEntity implements IUser {
      */
     @Size(max = 128, message = "地址长度不能超过128个字符")
     @Pattern(regexp = "^$|^[\\u4E00-\\u9FA5A-Za-z0-9_ .-]+$", message = "非法参数,地址只能由字母,数字,空格._-组成")
-    @Column(name = "address", length = 255)
     private String address;
 
     @Column(unique = true)
@@ -146,12 +146,12 @@ public class HgUser extends BaseEntity implements IUser {
     private Integer status;
 
     @Override
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     @Override
-    public String getUsername() {
+    public String getUserName() {
         return userName;
     }
 
@@ -165,8 +165,8 @@ public class HgUser extends BaseEntity implements IUser {
         return isAdmin(this.id);
     }
 
-    public static boolean isAdmin(Long userId) {
-        return userId != null && 1L == userId;
+    public static boolean isAdmin(String userId) {
+        return "1L".equals(userId);
     }
 
     @Override

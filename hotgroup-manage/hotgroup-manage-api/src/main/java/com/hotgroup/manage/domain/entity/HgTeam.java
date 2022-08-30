@@ -1,5 +1,6 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
@@ -27,17 +28,16 @@ public class HgTeam extends BaseEntity {
     /**
      * ID
      */
-    @Null(message = "Id自动生成", groups = InsertGroup.class)
-    @TableId
+    @Null(message = "userId自动生成", groups = InsertGroup.class)
+    @TableId(type = IdType.ASSIGN_UUID)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     /**
      * 用户id
      */
     @Column(name = "user_id", length = 11)
-    private Long userId;
+    private String userId;
 
     /**
      * 分类id

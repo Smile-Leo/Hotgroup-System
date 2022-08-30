@@ -17,7 +17,7 @@ public interface SysUserRoleMapper {
      * @param userId 用户ID
      * @return 结果
      */
-    public int deleteUserRoleByUserId(Long userId);
+    public int deleteUserRoleByUserId(String userId);
 
     /**
      * 批量删除用户和角色关联
@@ -25,7 +25,7 @@ public interface SysUserRoleMapper {
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteUserRole(Long[] ids);
+    public int deleteUserRole(String[] ids);
 
     /**
      * 通过角色ID查询角色使用数量

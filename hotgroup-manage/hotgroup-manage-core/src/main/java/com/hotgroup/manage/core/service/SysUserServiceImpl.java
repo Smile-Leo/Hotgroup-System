@@ -1,5 +1,6 @@
 package com.hotgroup.manage.core.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotgroup.commons.core.constant.UserConstants;
@@ -66,7 +67,7 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     public SysUser selectUserByUserName(String userName) {
-        return userMapper.selectUserByUserName(userName);
+        return userMapper.selectOne(Wrappers.lambdaQuery(SysUser.class).eq(SysUser::getUserName,userName));
     }
 
     @Override
@@ -81,7 +82,7 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 用户对象信息
      */
     @Override
-    public SysUser selectUserById(Long userId) {
+    public SysUser selectUserById(String userId) {
         return userMapper.selectUserById(userId);
     }
 
@@ -91,7 +92,7 @@ public class SysUserServiceImpl implements ISysUserService {
      * @param userId
      * @return
      */
-    public SysUser selectUserByAuth(Long userId) {
+    public SysUser selectUserByAuth(String userId) {
         SysUser sysUser = new SysUser();
         sysUser.setUserId(userId);
         return userMapper.selectUserByAuth(sysUser);
@@ -104,7 +105,7 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 结果
      */
     @Override
-    public String selectUserRoleGroup(Long userId) {
+    public String selectUserRoleGroup(String userId) {
         List<SysRole> list = roleMapper.selectRolesByUserId(userId);
         StringBuilder idsStr = new StringBuilder();
         for (SysRole role : list) {
@@ -143,32 +144,14 @@ public class SysUserServiceImpl implements ISysUserService {
         if (StringUtils.isEmpty(user.getPhonenumber())) {
             return UserConstants.UNIQUE;
         }
-        Long userId = Objects.isNull(user.getUserId()) ? -1L : user.getUserId();
+        String userId = Objects.isNull(user.getUserId()) ? "1L" : user.getUserId();
         SysUser info = userMapper.checkPhoneUnique(user.getPhonenumber());
-        if (Objects.nonNull(info) && info.getUserId().longValue() != userId.longValue()) {
+        if (Objects.nonNull(info) && !info.getUserId().equals(userId)) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
     }
 
-    /**
-     * 校验email是否唯一
-     *
-     * @param user 用户信息
-     * @return
-     */
-    @Override
-    public String checkEmailUnique(SysUser user) {
-        if (StringUtils.isEmpty(user.getEmail())) {
-            return UserConstants.UNIQUE;
-        }
-        Long userId = Objects.isNull(user.getUserId()) ? -1L : user.getUserId();
-        SysUser info = userMapper.checkEmailUnique(user.getEmail());
-        if (Objects.nonNull(info) && info.getUserId().longValue() != userId.longValue()) {
-            return UserConstants.NOT_UNIQUE;
-        }
-        return UserConstants.UNIQUE;
-    }
 
     /**
      * 校验用户是否允许操作
@@ -205,7 +188,7 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Override
     public int updateSysUser(SysUser user) {
-        Long userId = user.getUserId();
+        String userId = user.getUserId();
 
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
@@ -318,7 +301,7 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int deleteUserById(Long userId) {
+    public int deleteUserById(String userId) {
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
 
@@ -333,8 +316,8 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int deleteUserByIds(Long[] userIds) {
-        for (Long userId : userIds) {
+    public int deleteUserByIds(String[] userIds) {
+        for (String userId : userIds) {
             SysUser user = new SysUser();
             user.setUserId(userId);
             checkUserAllowed(user);

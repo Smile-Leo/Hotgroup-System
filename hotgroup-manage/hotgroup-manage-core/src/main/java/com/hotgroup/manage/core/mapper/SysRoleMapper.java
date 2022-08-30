@@ -25,7 +25,7 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * @param userId 用户ID
      * @return 角色列表
      */
-    List<SysRole> selectRolePermissionByUserId(Long userId);
+    List<SysRole> selectRolePermissionByUserId(String userId);
 
     /**
      * 查询所有角色
@@ -40,7 +40,7 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * @param userId 用户ID
      * @return 选中角色ID列表
      */
-    List<Integer> selectRoleListByUserId(Long userId);
+    List<Integer> selectRoleListByUserId(String userId);
 
     /**
      * 通过角色ID查询角色
@@ -56,7 +56,7 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      * @param userId 用户ID
      * @return 角色列表
      */
-    List<SysRole> selectRolesByUserId(Long userId);
+    List<SysRole> selectRolesByUserId(String userId);
 
     /**
      * 校验角色名称是否唯一

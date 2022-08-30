@@ -1,5 +1,6 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
@@ -16,7 +17,7 @@ import javax.validation.constraints.Null;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "Hg_user_info_audit")
+@Table
 @Entity
 public class HgUserInfoAudit extends BaseEntity {
 
@@ -26,10 +27,9 @@ public class HgUserInfoAudit extends BaseEntity {
      * ID
      */
     @Null(message = "Id自动生成", groups = InsertGroup.class)
-    @TableId
+    @TableId(type = IdType.ASSIGN_UUID)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     /**
      * 用户id
@@ -114,6 +114,7 @@ public class HgUserInfoAudit extends BaseEntity {
      */
     @Column(name = "audit_status", length = 1)
     private Integer auditStatus;
+
 
     @Transient
     private transient HgUser oldHgUser;

@@ -41,8 +41,7 @@ public class DictUtils {
     public static List<SysDictData> getDictCache(String key) {
         Object cacheObj = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
         if (Objects.nonNull(cacheObj)) {
-            List<SysDictData> dictDatas = (List<SysDictData>) cacheObj;
-            return dictDatas;
+            return (List<SysDictData>) cacheObj;
         }
         return null;
     }

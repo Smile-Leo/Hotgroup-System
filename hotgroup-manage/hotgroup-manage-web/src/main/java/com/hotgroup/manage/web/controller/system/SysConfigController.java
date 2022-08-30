@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.*;
  * @author Lzw
  */
 @Api(tags = "参数配置")
-@RestController
-@RequestMapping("/system/config")
+//@RestController
+//@RequestMapping("/system/config")
 public class SysConfigController {
     @Autowired
     private ISysConfigService configService;

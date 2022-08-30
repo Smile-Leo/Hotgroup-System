@@ -58,7 +58,7 @@
         order by r.role_sort
     </select>
 
-    <select id="selectRolePermissionByUserId" parameterType="Long" resultMap="SysRoleResult">
+    <select id="selectRolePermissionByUserId" parameterType="String" resultMap="SysRoleResult">
         <include refid="selectRoleVo"/>
         WHERE r.del_flag = '0' and ur.user_id = #{userId}
     </select>
@@ -80,7 +80,7 @@
         where r.role_id = #{roleId}
     </select>
 
-    <select id="selectRolesByUserId" parameterType="Long" resultMap="SysRoleResult">
+    <select id="selectRolesByUserId" parameterType="String" resultMap="SysRoleResult">
         <include refid="selectRoleVo"/>
         WHERE r.del_flag = '0' and u.user_id = #{userId}
     </select>

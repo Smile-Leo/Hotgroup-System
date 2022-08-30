@@ -24,6 +24,11 @@
             <version>${hotgroup.version}</version>
         </dependency>
 
-
+        <!-- 初版使用数据库耦合,后期使用dubbo调用-->
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-manage-core</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
     </dependencies>
 </project>

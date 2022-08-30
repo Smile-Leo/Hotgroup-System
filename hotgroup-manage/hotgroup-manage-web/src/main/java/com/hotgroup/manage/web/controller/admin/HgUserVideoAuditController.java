@@ -1,10 +1,8 @@
 package com.hotgroup.manage.web.controller.admin;
 
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
-import com.hotgroup.manage.api.IHgUserInfoAuditService;
 import com.hotgroup.manage.api.IHgUserVideoAuditService;
-import com.hotgroup.manage.domain.entity.HgUserInfoAudit;
-import com.hotgroup.manage.domain.entity.HgUserVideo;
+import com.hotgroup.manage.domain.entity.HgUserVideoAudit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
  * @author ajm
  */
 @RestController
-@RequestMapping("/admin/userVideoAudit")
-@Api(tags = "用户资料审核")
-public class AdminHgUserVideoAuditController {
+@RequestMapping("/admin/hg/userVideoAudit")
+@Api(tags = "用户视频审核")
+public class HgUserVideoAuditController {
 
     @Autowired
     IHgUserVideoAuditService hgUserVideoAuditService;
@@ -32,8 +30,8 @@ public class AdminHgUserVideoAuditController {
     @PreAuthorize("@ss.hasPermi('admin:userVideoAudit:list')")
     @GetMapping("list")
     @ApiOperation("列表")
-    public AjaxResult<?> list(HgUserVideo hgUserVideo) {
-        return hgUserVideoAuditService.pageList(hgUserVideo);
+    public AjaxResult<?> list(HgUserVideoAudit hgUserVideoAudit) {
+        return hgUserVideoAuditService.pageList(hgUserVideoAudit);
     }
 
     /**
@@ -42,8 +40,8 @@ public class AdminHgUserVideoAuditController {
     @PreAuthorize("@ss.hasPermi('admin:userVideoAudit:audit')")
     @GetMapping("audit")
     @ApiOperation("审核")
-    public AjaxResult<?> audit(HgUserVideo hgUserVideo) throws Exception {
-        hgUserVideoAuditService.audit(hgUserVideo);
+    public AjaxResult<?> audit(HgUserVideoAudit hgUserVideoAudit) throws Exception {
+        hgUserVideoAuditService.audit(hgUserVideoAudit);
         return AjaxResult.success();
     }
 }

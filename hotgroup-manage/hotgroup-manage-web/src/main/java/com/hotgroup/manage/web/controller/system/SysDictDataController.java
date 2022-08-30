@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author Lzw
  */
-@RestController
-@RequestMapping("/system/dict/data")
+//@RestController
+//@RequestMapping("/system/dict/data")
 @Api(tags = "数据字典")
 public class SysDictDataController {
     @Autowired

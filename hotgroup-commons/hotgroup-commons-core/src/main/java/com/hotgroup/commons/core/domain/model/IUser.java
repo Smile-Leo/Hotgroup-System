@@ -6,11 +6,11 @@ package com.hotgroup.commons.core.domain.model;
  */
 public interface IUser {
 
-    Long getId();
+    String getId();
 
     String getPassword();
 
-    String getUsername();
+    String getUserName();
 
     boolean isEnabled();
 

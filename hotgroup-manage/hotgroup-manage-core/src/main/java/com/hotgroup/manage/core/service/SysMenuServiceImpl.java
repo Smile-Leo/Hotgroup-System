@@ -10,7 +10,6 @@ import com.hotgroup.manage.core.mapper.SysRoleMenuMapper;
 import com.hotgroup.manage.domain.entity.SysMenu;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;
-import com.hotgroup.manage.domain.vo.MetaVo;
 import com.hotgroup.manage.domain.vo.RouterVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> selectMenuList(Long userId) {
+    public List<SysMenu> selectMenuList(String userId) {
         return selectMenuList(new SysMenu(), userId);
     }
 
@@ -55,7 +54,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> selectMenuList(SysMenu menu, Long userId) {
+    public List<SysMenu> selectMenuList(SysMenu menu, String userId) {
         List<SysMenu> menuList = null;
         // 管理员显示所有菜单信息
         if (SysUser.isAdmin(userId)) {
@@ -74,7 +73,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 权限列表
      */
     @Override
-    public Set<String> selectMenuPermsByUserId(Long userId) {
+    public Set<String> selectMenuPermsByUserId(String userId) {
         List<String> perms = menuMapper.selectMenuPermsByUserId(userId);
         Set<String> permsSet = new HashSet<>();
         for (String perm : perms) {
@@ -92,7 +91,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> selectMenuTreeByUserId(Long userId) {
+    public List<SysMenu> selectMenuTreeByUserId(String userId) {
         List<SysMenu> menus = null;
         if (SecurityUtils.isAdmin()) {
             menus = menuMapper.selectMenuTreeAll();
@@ -124,31 +123,32 @@ public class SysMenuServiceImpl implements ISysMenuService {
     public List<RouterVo> buildMenus(List<SysMenu> menus) {
         List<RouterVo> routers = new LinkedList<RouterVo>();
         for (SysMenu menu : menus) {
-            RouterVo router = new RouterVo();
-            router.setHidden("1".equals(menu.getVisible()));
-            router.setName(getRouteName(menu));
-            router.setPath(getRouterPath(menu));
-            router.setComponent(getComponent(menu));
-            router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache())));
+            RouterVo router = getRouterVo(menu);
             List<SysMenu> cMenus = menu.getChildren();
             if (!cMenus.isEmpty() && UserConstants.TYPE_DIR.equals(menu.getMenuType())) {
-                router.setAlwaysShow(true);
                 router.setRedirect("noRedirect");
                 router.setChildren(buildMenus(cMenus));
             } else if (isMeunFrame(menu)) {
                 List<RouterVo> childrenList = new ArrayList<RouterVo>();
-                RouterVo children = new RouterVo();
-                children.setPath(menu.getPath());
-                children.setComponent(menu.getComponent());
-                children.setName(StringUtils.capitalize(menu.getPath()));
-                children.setMeta(
-                        new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache())));
+                RouterVo children = getRouterVo(menu);
                 childrenList.add(children);
                 router.setChildren(childrenList);
             }
             routers.add(router);
         }
         return routers;
+    }
+
+    private RouterVo getRouterVo(SysMenu menu) {
+        RouterVo router = new RouterVo();
+        router.setDisable("1".equals(menu.getVisible()));
+        router.setName(menu.getMenuName());
+        router.setPath(getRouterPath(menu));
+        router.setComponent(getComponent(menu));
+        router.setIcon(menu.getIcon());
+        router.setNoCache(StringUtils.equals("1", menu.getIsCache()));
+        router.setTitle(getRouteName(menu));
+        return router;
     }
 
     /**

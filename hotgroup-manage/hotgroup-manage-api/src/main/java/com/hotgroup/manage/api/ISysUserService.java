@@ -41,7 +41,7 @@ public interface ISysUserService {
      * @param userId 用户ID
      * @return 用户对象信息
      */
-    SysUser selectUserById(Long userId);
+    SysUser selectUserById(String userId);
 
 
     /**
@@ -50,7 +50,7 @@ public interface ISysUserService {
      * @param userId
      * @return
      */
-    SysUser selectUserByAuth(Long userId);
+    SysUser selectUserByAuth(String userId);
 
     /**
      * 根据用户ID查询用户所属角色组
@@ -58,7 +58,7 @@ public interface ISysUserService {
      * @param userId 用户名
      * @return 结果
      */
-    String selectUserRoleGroup(Long userId);
+    String selectUserRoleGroup(String userId);
 
 
     /**
@@ -77,13 +77,6 @@ public interface ISysUserService {
      */
     String checkPhoneUnique(SysUser user);
 
-    /**
-     * 校验email是否唯一
-     *
-     * @param user 用户信息
-     * @return 结果
-     */
-    String checkEmailUnique(SysUser user);
 
     /**
      * 校验用户是否允许操作
@@ -164,7 +157,7 @@ public interface ISysUserService {
      * @param userId 用户ID
      * @return 结果
      */
-    int deleteUserById(Long userId);
+    int deleteUserById(String userId);
 
     /**
      * 批量删除用户信息
@@ -172,7 +165,7 @@ public interface ISysUserService {
      * @param userIds 需要删除的用户ID
      * @return 结果
      */
-    int deleteUserByIds(Long[] userIds);
+    int deleteUserByIds(String[] userIds);
 
     /**
      * 获取用户总数
@@ -180,8 +173,6 @@ public interface ISysUserService {
      * @return
      */
     int getUserSize();
-
-
 
 
 }

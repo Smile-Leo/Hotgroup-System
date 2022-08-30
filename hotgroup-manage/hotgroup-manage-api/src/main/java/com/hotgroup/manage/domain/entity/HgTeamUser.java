@@ -1,12 +1,16 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
@@ -26,23 +30,21 @@ public class HgTeamUser extends BaseEntity {
     /**
      * ID
      */
-    @Null(message = "Id自动生成", groups = InsertGroup.class)
-    @TableId
+    @Null(message = "userId自动生成", groups = InsertGroup.class)
+    @TableId(type = IdType.ASSIGN_UUID)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
     /**
      * 团队id
      */
     @Column(name = "team_id", length = 11)
-    private Long teamId;
+    private String teamId;
 
     /**
      * 用户id
      */
     @Column(name = "user_id", length = 11)
-    private Long userId;
+    private String userId;
 
     /**
      * 状态（1正常 0停用）

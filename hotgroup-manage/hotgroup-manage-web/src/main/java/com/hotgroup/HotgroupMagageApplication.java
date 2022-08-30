@@ -1,4 +1,4 @@
-package com.hotgroup.customer;
+package com.hotgroup;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -14,9 +14,8 @@ import org.springframework.context.annotation.ComponentScan;
 //        DataSourceAutoConfiguration.class
 })
 @Slf4j
-@ComponentScan(basePackages = "com.hotgroup")
-public class HotgroupCustomerApplication {
+public class HotgroupMagageApplication {
     public static void main(String[] args) {
-        SpringApplication.run(HotgroupCustomerApplication.class, args);
+        SpringApplication.run(HotgroupMagageApplication.class, args);
     }
 }

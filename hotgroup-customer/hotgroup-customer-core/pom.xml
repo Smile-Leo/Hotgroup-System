@@ -14,7 +14,7 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <weixin-version>4.3.0</weixin-version>
+        <weixin-version>4.3.2.B</weixin-version>
     </properties>
 
     <dependencies>
@@ -47,12 +47,6 @@
             <version>${weixin-version}</version>
         </dependency>
 
-        <!-- 初版使用数据库耦合,后期使用dubbo调用-->
-        <dependency>
-            <groupId>com.hotgroup</groupId>
-            <artifactId>hotgroup-manage-core</artifactId>
-            <version>${hotgroup.version}</version>
-        </dependency>
 
     </dependencies>
 </project>

@@ -3,7 +3,6 @@ package com.hotgroup.customer.web.controller.wx;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.constant.WxMaConstants;
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
 import com.hotgroup.customer.framework.config.WxMaConfiguration;
 import io.swagger.annotations.Api;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
@@ -18,6 +17,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,7 +56,8 @@ public class WxMaMediaController {
         while (it.hasNext()) {
             try {
                 MultipartFile file = multiRequest.getFile(it.next());
-                File newFile = new File(Files.createTempDir(), file.getOriginalFilename());
+                assert file != null;
+                File newFile = Files.createTempFile(file.getName(),file.getContentType()).toFile();
                 this.logger.info("filePath is ：" + newFile);
                 file.transferTo(newFile);
                 WxMediaUploadResult uploadResult = wxService.getMediaService()

@@ -1,5 +1,6 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
@@ -28,28 +29,27 @@ public class HgOrder extends BaseEntity {
      * ID
      */
     @Null(message = "Id自动生成", groups = InsertGroup.class)
-    @TableId
+    @TableId(type = IdType.ASSIGN_UUID)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     /**
      * 团队id
      */
     @Column(name = "team_id", length = 11)
-    private Long teamId;
+    private String teamId;
 
     /**
      * 用户id
      */
     @Column(name = "user_id", length = 11)
-    private Long userId;
+    private String userId;
 
     /**
      * 团队创建者id
      */
     @Column(name = "team_creator", length = 11)
-    private Long teamCreator;
+    private String teamCreator;
 
     /**
      * 订单号

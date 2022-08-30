@@ -2,18 +2,13 @@ package com.hotgroup.manage.core.service;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.database.page.PageHelper;
-import com.hotgroup.manage.api.IHgUserInfoAuditService;
 import com.hotgroup.manage.api.IHgUserVideoAuditService;
-import com.hotgroup.manage.core.mapper.HgUserInfoAuditMapper;
-import com.hotgroup.manage.core.mapper.HgUserMapper;
-import com.hotgroup.manage.core.mapper.HgUserVideoMapper;
-import com.hotgroup.manage.domain.entity.HgUser;
-import com.hotgroup.manage.domain.entity.HgUserInfoAudit;
-import com.hotgroup.manage.domain.entity.HgUserVideo;
-import org.springframework.beans.BeanUtils;
+import com.hotgroup.manage.core.mapper.HgUserVideoAuditMapper;
+import com.hotgroup.manage.domain.entity.HgUserVideoAudit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,27 +21,31 @@ import java.util.List;
  * @author ajm
  */
 @Service
-public class HgUserVideoAuditServiceImpl implements IHgUserVideoAuditService {
+public class HgUserVideoAuditServiceImpl extends ServiceImpl<HgUserVideoAuditMapper, HgUserVideoAudit> implements IHgUserVideoAuditService {
 
     @Autowired
-    HgUserVideoMapper hgUserVideoMapper;
+    HgUserVideoAuditMapper hgUserVideoAuditMapper;
 
     @Autowired
     ObjectMapper objectMapper;
 
     @Override
-    public AjaxResult<List<HgUserVideo>> pageList(HgUserVideo hgUserVideo) {
-        Page<HgUserVideo> page = hgUserVideoMapper.selectPage(PageHelper.getPage(hgUserVideo), Wrappers.lambdaQuery(hgUserVideo));
+    public AjaxResult<List<HgUserVideoAudit>> pageList(HgUserVideoAudit hgUserVideoAudit) {
+        Page<HgUserVideoAudit> page = hgUserVideoAuditMapper.selectPage(PageHelper.getPage(hgUserVideoAudit),
+                Wrappers.lambdaQuery(
+                        hgUserVideoAudit));
         return AjaxResult.page(page);
     }
 
     @Override
     @Transactional
-    public void audit(HgUserVideo hgUserVideo) {
-        HgUserVideo video = hgUserVideoMapper.selectById(hgUserVideo.getId());
+    public void audit(HgUserVideoAudit hgUserVideoAudit) {
+        HgUserVideoAudit video = hgUserVideoAuditMapper.selectById(hgUserVideoAudit.getId());
         if (video != null) {
-            video.setAuditStatus(hgUserVideo.getAuditStatus());
-            hgUserVideoMapper.updateById(video);
+            video.setAuditStatus(hgUserVideoAudit.getAuditStatus());
+            hgUserVideoAuditMapper.updateById(video);
         }
     }
+
+
 }

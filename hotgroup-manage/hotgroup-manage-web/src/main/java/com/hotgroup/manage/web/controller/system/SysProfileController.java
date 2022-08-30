@@ -59,22 +59,20 @@ public class SysProfileController {
 
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         if (loginUser == null || loginUser.getUser() == null) {
-            return AjaxResult.error("修改用户'" + user.getUsername() + "'失败，用户未登陆");
+            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户未登陆");
         }
         user.setUserId(loginUser.getUser().getId());
 
-        if (StringUtils.isEmpty(user.getPhonenumber()) && StringUtils.isEmpty(user.getEmail())) {
-            return AjaxResult.error("修改用户'" + user.getUsername() + "'失败，手机号码和邮箱不能同时为空");
+        if (StringUtils.isEmpty(user.getPhonenumber())) {
+            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码为空");
         }
         if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getPhonenumber() + "'失败，手机号码已存在");
         }
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getEmail() + "'失败，邮箱账号已存在");
-        }
+
 
         //防止修改账号
-        user.setUsername(null);
+        user.setUserName(null);
         user.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
         userService.updateUserProfile(user);
         // 更新token

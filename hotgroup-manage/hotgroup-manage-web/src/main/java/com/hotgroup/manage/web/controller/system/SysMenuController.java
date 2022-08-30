@@ -8,10 +8,15 @@ import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.commons.core.utils.ServletUtils;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.ISysMenuService;
+import com.hotgroup.manage.domain.dto.SysMenuParamDto;
 import com.hotgroup.manage.domain.entity.SysMenu;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.mapstruct.BeanMapping;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -41,9 +46,11 @@ public class SysMenuController {
     @PreAuthorize("@ss.hasPermi('system:menu:list')")
     @GetMapping("list")
     @ApiOperation("列表")
-    public AjaxResult<?> list(SysMenu menu) {
+    public AjaxResult<?> list(SysMenuParamDto menuDto) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        Long userId = loginUser.getUser().getId();
+        String userId = loginUser.getUser().getId();
+        SysMenu menu = new SysMenu();
+        BeanUtils.copyProperties(menuDto, menu);
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menus);
     }
@@ -62,9 +69,11 @@ public class SysMenuController {
      */
     @GetMapping("treeselect")
     @ApiOperation("树结构")
-    public AjaxResult<?> treeselect(SysMenu menu) {
+    public AjaxResult<?> treeselect(SysMenuParamDto menuDto) {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        Long userId = loginUser.getUser().getId();
+        String userId = loginUser.getUser().getId();
+        SysMenu menu = new SysMenu();
+        BeanUtils.copyProperties(menuDto, menu);
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menuService.buildMenuTreeSelect(menus));
     }

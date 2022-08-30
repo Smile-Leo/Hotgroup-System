@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
  *
  * @author Lzw
  */
-@RestController
-@RequestMapping("/system/role")
+//@RestController
+//@RequestMapping("/system/role")
 @Api(tags = "角色管理")
 public class SysRoleController {
     @Autowired

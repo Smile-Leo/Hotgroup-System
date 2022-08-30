@@ -1,6 +1,7 @@
 package com.hotgroup.customer.api;
 
 import com.hotgroup.commons.core.domain.model.IUser;
+import com.hotgroup.manage.domain.entity.HgUser;
 
 /**
  * @author Lzw
@@ -8,5 +9,5 @@ import com.hotgroup.commons.core.domain.model.IUser;
  */
 public interface IHotgroupUserLoginService {
 
-    IUser login(IUser user);
+    IUser login(HgUser user);
 }

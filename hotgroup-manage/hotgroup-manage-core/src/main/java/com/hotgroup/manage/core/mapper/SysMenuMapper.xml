@@ -101,7 +101,7 @@
         order by m.parent_id, m.order_num
     </select>
 
-    <select id="selectMenuTreeByUserId" parameterType="Long" resultMap="SysMenuResult">
+    <select id="selectMenuTreeByUserId" parameterType="String" resultMap="SysMenuResult">
         select distinct m.menu_id,
                         m.parent_id,
                         m.menu_name,
@@ -147,7 +147,7 @@
                  left join sys_user_role ur on rm.role_id = ur.role_id
     </select>
 
-    <select id="selectMenuPermsByUserId" parameterType="Long" resultType="String">
+    <select id="selectMenuPermsByUserId" parameterType="String" resultType="String">
         select distinct m.perms
         from sys_menu m
                  left join sys_role_menu rm on m.menu_id = rm.menu_id

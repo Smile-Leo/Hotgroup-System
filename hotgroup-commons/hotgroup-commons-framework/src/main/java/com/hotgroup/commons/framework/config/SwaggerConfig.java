@@ -12,17 +12,15 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMappi
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.HttpAuthenticationScheme;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
 import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,14 +68,21 @@ public class SwaggerConfig {
 
     @Bean
     public Docket createRestApi() {
-        final ArrayList<SecurityScheme> schemes = new ArrayList<>(1);
-        schemes.add(HttpAuthenticationScheme.JWT_BEARER_BUILDER.name("token").build());
+        final List<SecurityScheme> authKey = Collections.singletonList(
+                HttpAuthenticationScheme.JWT_BEARER_BUILDER.name("Authorization").build());
+        final List<SecurityReference> securityReferences = Collections.singletonList(SecurityReference.builder()
+                .reference("Authorization")
+                .scopes(new AuthorizationScope[]{new AuthorizationScope("global", "accessEverything")})
+                .build());
+        final List<SecurityContext> securityContexts = Collections.singletonList(
+                SecurityContext.builder().securityReferences(securityReferences).build());
         return new Docket(DocumentationType.OAS_30).apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
                 .paths(PathSelectors.any())
                 .build()
-                .securitySchemes(schemes);
+                .securityContexts(securityContexts)
+                .securitySchemes(authKey);
     }
 
     private ApiInfo apiInfo() {
