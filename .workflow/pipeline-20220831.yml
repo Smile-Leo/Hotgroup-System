@@ -73,6 +73,9 @@ stages:
           - '# git clone ***@***.git'
           - echo 'Hello Gitee Go!'
           - pwd
+          - tar -xvf output.tar.gz
+          - nohup java -Xmx1G -Xms1G -XX:+UseG1GC -jar hotgroup-customer-web.jar >> customer.log 2&1 &
+          - nohup java -Xmx1G -Xms1G -XX:+UseG1GC -jar hotgroup-manage-web.jar >> manage.log 2&1 &
         notify: []
         strategy:
           retry: '0'
