@@ -9,7 +9,7 @@ triggers:
         - master
 stages:
   - name: stage-711916c4
-    displayName: 未命名
+    displayName: 构建
     strategy: naturally
     trigger: auto
     executor: []
@@ -46,7 +46,7 @@ stages:
         strategy:
           retry: '0'
   - name: stage-8f9832d2
-    displayName: 未命名
+    displayName: 部署
     strategy: naturally
     trigger: auto
     executor: []
@@ -77,6 +77,8 @@ stages:
           - tar -xvf output.tar.gz
           - nohup java -Xmx1G -Xms1G -XX:+UseG1GC -jar hotgroup-customer-web.jar >> customer.log 2&1 &
           - nohup java -Xmx1G -Xms1G -XX:+UseG1GC -jar hotgroup-manage-web.jar >> manage.log 2&1 &
+          - cd -
+          - pwd
         notify: []
         strategy:
           retry: '0'
