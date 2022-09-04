@@ -80,8 +80,8 @@ stages:
           - '# git clone ***@***.git'
           - echo 'Hello Gitee Go!'
           - cd /root/gitee_go/deploy
-          - ps -ef | grep hotgroup-customer | grep -v grep | awk '{print $2}' | xargs kill -9
-          - ps -ef | grep hotgroup-manage | grep -v grep | awk '{print $2}' | xargs kill -9
+          - echo `ps -ef | grep hotgroup-customer | grep -v grep | awk '{print $2}' | xargs kill -9`
+          - echo `ps -ef | grep hotgroup-manage | grep -v grep | awk '{print $2}' | xargs kill -9`
           - pwd
           - tar -xvf output.tar.gz
           - nohup java -Xmx1G -Xms1G -XX:+UseG1GC -jar hotgroup-customer-web.jar >> customer.log 2&1 &
