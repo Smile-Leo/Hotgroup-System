@@ -84,8 +84,9 @@ stages:
           - echo `ps -ef | grep hotgroup-manage | grep -v grep | awk '{print $2}' | xargs kill -9`
           - pwd
           - tar -xvf output.tar.gz
-          - nohup java -Xmx1G -Xms1G -XX:+UseG1GC -jar hotgroup-customer-web.jar >> customer.log 2&1 &
-          - nohup java -Xmx1G -Xms1G -XX:+UseG1GC -jar hotgroup-manage-web.jar >> manage.log 2&1 &
+          - nohup java -Xmx256m -Xms256m -XX:+UseG1GC -jar hotgroup-customer-web.jar >> customer.log 2&1 &
+          - nohup java -Xmx256m -Xms256m -XX:+UseG1GC -jar hotgroup-manage-web.jar >> manage.log 2&1 &
+          - sleep 5
           - cd -
           - pwd
         notify: []
