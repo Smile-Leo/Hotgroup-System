@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 通用配置
@@ -57,14 +58,16 @@ public class ResourcesConfig implements WebMvcConfigurer {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // 设置访问源地址
-        config.addAllowedOrigin("*");
+//        config.addAllowedOrigin("*");
+        config.addAllowedOriginPattern("*");
         // 设置访问源请求头
         config.addAllowedHeader("*");
         // 设置访问源请求方法
         config.addAllowedMethod("*");
-        config.addAllowedOriginPattern("*");
+
+        config.setMaxAge(3600L);
         // 对接口配置跨域设置
-        source.registerCorsConfiguration("*", config);
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 }
