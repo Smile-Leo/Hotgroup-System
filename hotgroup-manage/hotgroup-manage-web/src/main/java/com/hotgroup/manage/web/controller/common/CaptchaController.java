@@ -81,7 +81,7 @@ public class CaptchaController {
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("uuid", uuid);
-        map.put("img", Base64.getEncoder().encode(os.toByteArray()));
+        map.put("img", new String(Base64.getEncoder().encode(os.toByteArray())));
         return AjaxResult.success(map);
     }
 }
