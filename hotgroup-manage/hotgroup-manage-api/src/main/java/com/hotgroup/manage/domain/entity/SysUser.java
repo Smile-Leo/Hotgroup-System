@@ -79,8 +79,7 @@ public class SysUser extends BaseEntity implements IUser {
     /**
      * 密码
      */
-    @JsonIgnore
-    @JsonProperty
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(groups = {InsertGroup.class}, min = 6, max = 32, message = "密码使用6-32位字母")
     private String password;
 
