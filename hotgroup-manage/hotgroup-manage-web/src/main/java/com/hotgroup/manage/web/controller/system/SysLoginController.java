@@ -97,4 +97,14 @@ public class SysLoginController {
     }
 
 
+    /**
+     * 登出
+     *
+     * @return
+     */
+    @ApiOperation("登出")
+    @GetMapping("logout")
+    public AjaxResult<?> logout() {
+        return AjaxResult.success();
+    }
 }
