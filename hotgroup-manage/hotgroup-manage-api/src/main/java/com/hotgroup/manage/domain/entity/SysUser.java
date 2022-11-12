@@ -61,7 +61,11 @@ public class SysUser extends BaseEntity implements IUser {
      * 手机号码
      */
     @Size(min = 11, max = 11, message = "手机号码使用11位数字")
-    private String phonenumber;
+    private String phone;
+
+
+    @Email(message = "请输入email地址")
+    private String email;
 
     /**
      * 用户性别
@@ -74,7 +78,6 @@ public class SysUser extends BaseEntity implements IUser {
      */
     @Size(max = 255, message = "头像长度不能超过255个字符")
     private String avatar;
-
 
     /**
      * 密码
@@ -113,6 +116,9 @@ public class SysUser extends BaseEntity implements IUser {
     @TableField(exist = false)
     private List<SysRole> roles;
 
+    public static boolean isAdmin(String userId) {
+        return "1L".equals(userId);
+    }
 
     @Override
     public String getId() {
@@ -132,10 +138,6 @@ public class SysUser extends BaseEntity implements IUser {
     @Override
     public boolean isAdmin() {
         return isAdmin(this.userId);
-    }
-
-    public static boolean isAdmin(String userId) {
-        return "1L".equals(userId);
     }
 
     @Override

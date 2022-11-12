@@ -7,7 +7,10 @@ import com.hotgroup.commons.validator.annotation.InsertGroup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;

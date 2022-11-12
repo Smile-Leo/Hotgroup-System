@@ -6,11 +6,8 @@ import com.hotgroup.commons.core.spring.SpringUtils;
 import com.hotgroup.commons.database.datasource.DynamicDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.retry.support.RetryTemplate;
 
 import javax.sql.DataSource;
@@ -26,20 +23,20 @@ import java.util.Map;
 @Slf4j
 @ConfigurationProperties(prefix = "srping.datasource")
 public class DruidConfig {
-//    @Bean
+    //    @Bean
 //    @ConfigurationProperties("spring.datasource.druid.master")
     public DataSource masterDataSource() {
         return null;
     }
 
-//    @Bean
+    //    @Bean
 //    @ConfigurationProperties("spring.datasource.druid.slave")
 //    @ConditionalOnProperty(prefix = "spring.datasource.druid.slave", name = "enabled", havingValue = "true")
     public DataSource slaveDataSource() {
         return null;
     }
 
-//    @Bean(name = "dynamicDataSource")
+    //    @Bean(name = "dynamicDataSource")
 //    @Primary
     public DynamicDataSource dataSource(DataSource masterDataSource) {
         Map<Object, Object> targetDataSources = new HashMap<>();

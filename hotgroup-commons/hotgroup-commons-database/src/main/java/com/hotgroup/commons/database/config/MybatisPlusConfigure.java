@@ -12,18 +12,25 @@ import com.hotgroup.commons.database.plugins.SqlInjector;
 import com.hotgroup.commons.database.properties.MybatisPlusAutoProperties;
 import com.hotgroup.commons.database.typehandler.AbstractJsonTypeReferenceHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.Resource;
 
 @Slf4j
 @Configuration
 @EnableConfigurationProperties(MybatisPlusAutoProperties.class)
 public class MybatisPlusConfigure {
 
+    /**
+     * 单页分页条数限制(默认无限制,参见 插件#handlerLimit 方法)
+     */
+    private static final Long MAX_LIMIT = 1000L;
     final ObjectMapper MAPPER = new ObjectMapper();
+    @Resource
+    private MybatisPlusAutoProperties autoFillProperties;
 
     public MybatisPlusConfigure() {
         // 未知字段忽略
@@ -35,14 +42,6 @@ public class MybatisPlusConfigure {
         JacksonTypeHandler.setObjectMapper(MAPPER);
         AbstractJsonTypeReferenceHandler.setObjectMapper(MAPPER);
     }
-
-    @Autowired
-    private MybatisPlusAutoProperties autoFillProperties;
-
-    /**
-     * 单页分页条数限制(默认无限制,参见 插件#handlerLimit 方法)
-     */
-    private static final Long MAX_LIMIT = 1000L;
 
     /**
      * 新的分页插件,一缓和二缓遵循mybatis的规则,

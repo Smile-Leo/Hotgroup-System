@@ -4,8 +4,9 @@ import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.customer.api.IHotgroupUserLoginService;
 import com.hotgroup.manage.api.IHgUserService;
 import com.hotgroup.manage.domain.entity.HgUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * @author Lzw
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class HotgroupUserLoginServiceImpl implements IHotgroupUserLoginService {
-    @Autowired
+    @Resource
     IHgUserService hgUserService;
 
     @Override

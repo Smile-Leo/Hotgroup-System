@@ -3,9 +3,9 @@ package com.hotgroup.manage.framework.service;
 import com.hotgroup.manage.api.ISysMenuService;
 import com.hotgroup.manage.api.ISysRoleService;
 import com.hotgroup.manage.domain.entity.SysUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,10 +16,10 @@ import java.util.Set;
  */
 @Component
 public class SysPermissionService {
-    @Autowired
+    @Resource
     private ISysRoleService roleService;
 
-    @Autowired
+    @Resource
     private ISysMenuService menuService;
 
     /**

@@ -57,7 +57,7 @@ public class WxMaMediaController {
             try {
                 MultipartFile file = multiRequest.getFile(it.next());
                 assert file != null;
-                File newFile = Files.createTempFile(file.getName(),file.getContentType()).toFile();
+                File newFile = Files.createTempFile(file.getName(), file.getContentType()).toFile();
                 this.logger.info("filePath is ：" + newFile);
                 file.transferTo(newFile);
                 WxMediaUploadResult uploadResult = wxService.getMediaService()

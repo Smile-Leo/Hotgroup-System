@@ -1,9 +1,7 @@
 package com.hotgroup.manage.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.manage.domain.entity.HgUserInfoAudit;
-import com.hotgroup.manage.domain.entity.SysUser;
 
 import java.util.List;
 

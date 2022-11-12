@@ -4,10 +4,9 @@ import com.google.code.kaptcha.Producer;
 import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.IdUtils;
-import com.hotgroup.commons.redis.RedisCache;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.redisson.Redisson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +37,8 @@ public class CaptchaController {
     @Resource(name = "captchaProducerMath")
     private Producer captchaProducerMath;
 
-    @Autowired
-    private RedisCache redisCache;
+    @Resource
+    private Redisson redisson;
 
     // 验证码类型
     @Value("${lead.captchaType:char}")
@@ -69,7 +68,7 @@ public class CaptchaController {
             image = captchaProducer.createImage(capStr);
         }
 
-        redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        redisson.getBucket(verifyKey).set(code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try {

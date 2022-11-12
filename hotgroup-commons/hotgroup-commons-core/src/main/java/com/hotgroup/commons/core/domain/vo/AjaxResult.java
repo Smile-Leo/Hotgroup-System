@@ -19,6 +19,7 @@ public class AjaxResult<T> {
     private int code;
     @ApiModelProperty("提醒消息")
     private String msg;
+
     @ApiModelProperty("是否加密码消息：0未加密, 1已加密")
     private int encryption;
     @ApiModelProperty("数据对象")
@@ -120,7 +121,7 @@ public class AjaxResult<T> {
      * @return 警告消息
      */
     public static <T> AjaxResult<T> error(String msg, T data) {
-        return new AjaxResult<>(HttpStatus.ERROR, msg, data);
+        return new AjaxResult<>(HttpStatus.BAD_REQUEST, msg, data);
     }
 
     /**

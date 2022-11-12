@@ -63,11 +63,11 @@ public class SysProfileController {
         }
         user.setUserId(loginUser.getUser().getId());
 
-        if (StringUtils.isEmpty(user.getPhonenumber())) {
+        if (StringUtils.isEmpty(user.getPhone())) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码为空");
         }
         if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getPhonenumber() + "'失败，手机号码已存在");
+            return AjaxResult.error("修改用户'" + user.getPhone() + "'失败，手机号码已存在");
         }
 
 

@@ -3,9 +3,8 @@ package com.hotgroup.manage.framework.service;
 import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.domain.model.LoginUser;
 import com.hotgroup.commons.framework.service.TokenService;
-import com.hotgroup.commons.redis.RedisCache;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.redisson.Redisson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,14 +20,14 @@ import javax.annotation.Resource;
  */
 @Component
 public class SysLoginService {
-    @Autowired
+    @Resource
     private TokenService tokenService;
 
     @Resource
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private RedisCache redisCache;
+    @Resource
+    private Redisson redisson;
 
     @Value("${spring.profiles.active}")
     private String env;
@@ -44,8 +43,8 @@ public class SysLoginService {
      */
     public String login(String username, String password, String code, String uuid) {
         String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
-        String captcha = redisCache.getCacheObject(verifyKey);
-        redisCache.deleteObject(verifyKey);
+        String captcha = (String) redisson.getBucket(verifyKey).get();
+        redisson.getBucket(verifyKey).delete();
         //开发环境中跳过验证码校验
         if (!StringUtils.equals("dev", env)) {
             if (!code.equalsIgnoreCase(captcha)) {

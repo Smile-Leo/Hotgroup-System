@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hotgroup.customer.api.IHotgroupVideoService;
 import com.hotgroup.manage.api.IHgVideoService;
 import com.hotgroup.manage.domain.entity.HgVideo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * @author Lzw
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class HotgroupVideoServiceImpl implements IHotgroupVideoService {
 
 
-    @Autowired
+    @Resource
     IHgVideoService hgVideoService;
 
     @Override

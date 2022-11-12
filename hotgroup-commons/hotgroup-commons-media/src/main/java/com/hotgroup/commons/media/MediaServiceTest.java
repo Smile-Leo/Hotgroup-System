@@ -17,7 +17,7 @@ public class MediaServiceTest {
         commandTest();
     }
 
-    static void cppTest(){
+    static void cppTest() {
         try {
             Convert convert = new MediaServiceImpl().cppConvert(Files.newInputStream(Paths.get("d:/3.mp4")));
             do {

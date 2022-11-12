@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,12 +22,12 @@ import java.lang.reflect.Method;
  */
 @Component
 @RequiredArgsConstructor
-public abstract class RepeatSubmitInterceptor extends HandlerInterceptorAdapter {
+public abstract class RepeatSubmitInterceptor implements HandlerInterceptor {
 
     final ObjectMapper objectMapper;
 
     @Override
-    public boolean preHandle(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
@@ -39,10 +39,9 @@ public abstract class RepeatSubmitInterceptor extends HandlerInterceptorAdapter 
                     return false;
                 }
             }
-            return true;
-        } else {
-            return super.preHandle(request, response, handler);
+
         }
+        return true;
     }
 
     /**

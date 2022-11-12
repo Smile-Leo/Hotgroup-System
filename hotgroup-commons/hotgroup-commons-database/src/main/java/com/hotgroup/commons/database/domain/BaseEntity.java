@@ -48,8 +48,8 @@ public class BaseEntity implements Serializable {
      * 更新时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @TableField(value = "update_Time", fill = FieldFill.UPDATE)
-    @Column(name = "update_Time", length = 20)
+    @TableField(value = "update_time", fill = FieldFill.UPDATE)
+    @Column(name = "update_time", length = 20)
     private Date updateTime;
 
 

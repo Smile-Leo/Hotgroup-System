@@ -55,8 +55,7 @@ public class HgUser extends BaseEntity implements IUser {
     /**
      * 密码
      */
-    @JsonIgnore
-    @JsonProperty
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(groups = {InsertGroup.class}, min = 6, max = 32, message = "密码使用6-32位字母")
     @Column(length = 20)
     private String password;
@@ -145,6 +144,10 @@ public class HgUser extends BaseEntity implements IUser {
     @Column(length = 1)
     private Integer status;
 
+    public static boolean isAdmin(String userId) {
+        return "1L".equals(userId);
+    }
+
     @Override
     public String getId() {
         return id;
@@ -163,10 +166,6 @@ public class HgUser extends BaseEntity implements IUser {
     @Override
     public boolean isAdmin() {
         return isAdmin(this.id);
-    }
-
-    public static boolean isAdmin(String userId) {
-        return "1L".equals(userId);
     }
 
     @Override

@@ -15,13 +15,11 @@ import java.io.IOException;
  */
 public class JacksonLongToStringSerializer extends StdSerializer<Long> {
 
+    public static final JacksonLongToStringSerializer instance = new JacksonLongToStringSerializer(Long.class);
     /**
      *
      */
     private static final long serialVersionUID = 1L;
-
-    public static final JacksonLongToStringSerializer instance = new JacksonLongToStringSerializer(Long.class);
-
     /**
      * js支持的最大数
      */

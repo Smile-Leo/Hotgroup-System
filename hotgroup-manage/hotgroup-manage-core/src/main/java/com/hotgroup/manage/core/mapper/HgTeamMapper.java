@@ -2,7 +2,6 @@ package com.hotgroup.manage.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hotgroup.manage.domain.entity.HgTeam;
-import com.hotgroup.manage.domain.entity.HgUser;
 
 /**
  * 团队 数据层

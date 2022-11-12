@@ -17,6 +17,10 @@ public abstract class AbstractJsonTypeReferenceHandler extends AbstractJsonTypeH
         this.tTypeReference = tTypeReference;
     }
 
+    public static void setObjectMapper(ObjectMapper objectMapper) {
+        AbstractJsonTypeReferenceHandler.objectMapper = objectMapper;
+    }
+
     @Override
     protected Object parse(String json) {
         try {
@@ -33,9 +37,5 @@ public abstract class AbstractJsonTypeReferenceHandler extends AbstractJsonTypeH
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static void setObjectMapper(ObjectMapper objectMapper) {
-        AbstractJsonTypeReferenceHandler.objectMapper = objectMapper;
     }
 }

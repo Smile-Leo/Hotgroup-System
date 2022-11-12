@@ -3,13 +3,13 @@ package com.hotgroup.commons.framework.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.filter.RepeatedlyRequestWrapper;
-import com.hotgroup.commons.redis.RedisCache;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.redisson.Redisson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -31,8 +31,8 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
     // 令牌自定义标识
     @Value("${token.header:Authorization}")
     private String header;
-    @Autowired
-    private RedisCache redisCache;
+    @Resource
+    private Redisson redisson;
 
     /**
      * 间隔时间，单位:秒 默认10秒
@@ -80,7 +80,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         // 唯一标识（指定key + 消息头）
         String cache_repeat_key = Constants.REPEAT_SUBMIT_KEY + submitKey;
 
-        Object sessionObj = redisCache.getCacheObject(cache_repeat_key);
+        Object sessionObj = redisson.getBucket(cache_repeat_key).get();
         if (sessionObj != null) {
             Map<String, Object> sessionMap = (Map<String, Object>) sessionObj;
             if (sessionMap.containsKey(url)) {
@@ -92,7 +92,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         }
         Map<String, Object> cacheMap = new HashMap<String, Object>();
         cacheMap.put(url, nowDataMap);
-        redisCache.setCacheObject(cache_repeat_key, cacheMap, intervalTime, TimeUnit.SECONDS);
+        redisson.getBucket(cache_repeat_key).set(cacheMap, intervalTime, TimeUnit.SECONDS);
         return false;
     }
 

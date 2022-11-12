@@ -5,6 +5,7 @@ import com.hotgroup.commons.redis.props.RedissonProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.config.Config;
+import org.redisson.config.MasterSlaveServersConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,12 @@ public class MasterslaveRedissonConfigStrategyImpl implements RedissonConfigStra
             String[] addrTokens = address.split(",");
             String masterNodeAddr = addrTokens[0];
             // 设置主节点ip
-            config.useMasterSlaveServers().setMasterAddress(masterNodeAddr);
+            MasterSlaveServersConfig masterSlaveServersConfig = config.useMasterSlaveServers();
+            masterSlaveServersConfig.setMasterAddress(masterNodeAddr);
             if (StringUtils.isNotBlank(password)) {
-                config.useMasterSlaveServers().setPassword(password);
+                masterSlaveServersConfig.setPassword(password);
             }
-            config.useMasterSlaveServers().setDatabase(database);
+            masterSlaveServersConfig.setDatabase(database);
             // 设置从节点，移除第一个节点，默认第一个为主节点
             List<String> slaveList = new ArrayList<>();
             for (String addrToken : addrTokens) {
@@ -39,11 +41,10 @@ public class MasterslaveRedissonConfigStrategyImpl implements RedissonConfigStra
             }
             slaveList.remove(0);
 
-            config.useMasterSlaveServers().addSlaveAddress(slaveList.toArray(new String[0]));
+            masterSlaveServersConfig.addSlaveAddress(slaveList.toArray(new String[0]));
             log.info("初始化[MASTERSLAVE]方式Config,redisAddress:" + address);
         } catch (Exception e) {
             log.error("MASTERSLAVE Redisson init error", e);
-            e.printStackTrace();
         }
         return config;
     }

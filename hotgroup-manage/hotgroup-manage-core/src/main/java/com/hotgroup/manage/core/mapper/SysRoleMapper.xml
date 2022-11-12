@@ -36,8 +36,6 @@
         from sys_role r
                  left join sys_user_role ur on ur.role_id = r.role_id
                  left join sys_user u on u.user_id = ur.user_id
-                 LEFT JOIN sys_user_dept ud on ud.user_id = u.user_id
-                 LEFT JOIN sys_dept d on d.dept_id = ud.dept_id
     </sql>
 
     <select id="selectRoleList" parameterType="SysRole" resultMap="SysRoleResult">

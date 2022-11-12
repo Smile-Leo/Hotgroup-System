@@ -11,14 +11,14 @@ import java.util.Set;
  *
  * @author Lzw
  */
- public interface ISysRoleService {
+public interface ISysRoleService {
     /**
      * 根据条件分页查询角色数据
      *
      * @param role 角色信息
      * @return 角色数据集合信息
      */
-     AjaxResult<List<SysRole>> selectRoleList(SysRole role);
+    AjaxResult<List<SysRole>> selectRoleList(SysRole role);
 
     /**
      * 根据用户ID查询角色
@@ -26,14 +26,14 @@ import java.util.Set;
      * @param userId 用户ID
      * @return 权限列表
      */
-     Set<String> selectRolePermissionByUserId(String userId);
+    Set<String> selectRolePermissionByUserId(String userId);
 
     /**
      * 查询所有角色
      *
      * @return 角色列表
      */
-     List<SysRole> selectRoleAll();
+    List<SysRole> selectRoleAll();
 
     /**
      * 根据用户ID获取角色选择框列表
@@ -41,7 +41,7 @@ import java.util.Set;
      * @param userId 用户ID
      * @return 选中角色ID列表
      */
-     List<Integer> selectRoleListByUserId(String userId);
+    List<Integer> selectRoleListByUserId(String userId);
 
     /**
      * 通过角色ID查询角色
@@ -49,7 +49,7 @@ import java.util.Set;
      * @param roleId 角色ID
      * @return 角色对象信息
      */
-     SysRole selectRoleById(Long roleId);
+    SysRole selectRoleById(Long roleId);
 
     /**
      * 校验角色名称是否唯一
@@ -57,7 +57,7 @@ import java.util.Set;
      * @param role 角色信息
      * @return 结果
      */
-     String checkRoleNameUnique(SysRole role);
+    String checkRoleNameUnique(SysRole role);
 
     /**
      * 校验角色权限是否唯一
@@ -65,14 +65,14 @@ import java.util.Set;
      * @param role 角色信息
      * @return 结果
      */
-     String checkRoleKeyUnique(SysRole role);
+    String checkRoleKeyUnique(SysRole role);
 
     /**
      * 校验角色是否允许操作
      *
      * @param role 角色信息
      */
-     void checkRoleAllowed(SysRole role);
+    void checkRoleAllowed(SysRole role);
 
     /**
      * 通过角色ID查询角色使用数量
@@ -80,7 +80,7 @@ import java.util.Set;
      * @param roleId 角色ID
      * @return 结果
      */
-     int countUserRoleByRoleId(Long roleId);
+    int countUserRoleByRoleId(Long roleId);
 
     /**
      * 新增保存角色信息
@@ -88,7 +88,7 @@ import java.util.Set;
      * @param role 角色信息
      * @return 结果
      */
-     int insertRole(SysRole role);
+    int insertRole(SysRole role);
 
     /**
      * 修改保存角色信息
@@ -96,7 +96,7 @@ import java.util.Set;
      * @param role 角色信息
      * @return 结果
      */
-     int updateRole(SysRole role);
+    int updateRole(SysRole role);
 
     /**
      * 修改角色状态
@@ -104,7 +104,7 @@ import java.util.Set;
      * @param role 角色信息
      * @return 结果
      */
-     int updateRoleStatus(SysRole role);
+    int updateRoleStatus(SysRole role);
 
     /**
      * 修改数据权限信息
@@ -112,7 +112,7 @@ import java.util.Set;
      * @param role 角色信息
      * @return 结果
      */
-     int authDataScope(SysRole role);
+    int authDataScope(SysRole role);
 
     /**
      * 通过角色ID删除角色
@@ -120,7 +120,7 @@ import java.util.Set;
      * @param roleId 角色ID
      * @return 结果
      */
-     int deleteRoleById(Long roleId);
+    int deleteRoleById(Long roleId);
 
     /**
      * 批量删除角色信息
@@ -128,5 +128,5 @@ import java.util.Set;
      * @param roleIds 需要删除的角色ID
      * @return 结果
      */
-     int deleteRoleByIds(Long[] roleIds);
+    int deleteRoleByIds(Long[] roleIds);
 }

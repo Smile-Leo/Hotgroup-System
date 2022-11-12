@@ -13,8 +13,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 通用配置
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer {
-    @Autowired
+    @Resource
     private RepeatSubmitInterceptor repeatSubmitInterceptor;
     @Autowired(required = false)
     private List<AbstractHandlerInterceptorAdapterChian> chians;

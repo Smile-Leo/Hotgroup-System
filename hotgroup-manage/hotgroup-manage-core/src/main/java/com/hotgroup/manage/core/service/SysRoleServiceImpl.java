@@ -11,10 +11,10 @@ import com.hotgroup.manage.core.mapper.SysRoleMenuMapper;
 import com.hotgroup.manage.core.mapper.SysUserRoleMapper;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysRoleMenu;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -24,13 +24,13 @@ import java.util.*;
  */
 @Service
 public class SysRoleServiceImpl implements ISysRoleService {
-    @Autowired
+    @Resource
     private SysRoleMapper roleMapper;
 
-    @Autowired
+    @Resource
     private SysRoleMenuMapper roleMenuMapper;
 
-    @Autowired
+    @Resource
     private SysUserRoleMapper userRoleMapper;
 
 
@@ -238,6 +238,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public int deleteRoleById(Long roleId) {
+        roleMenuMapper.deleteRoleMenuByRoleId(roleId);
         return roleMapper.deleteRoleById(roleId);
     }
 
@@ -255,6 +256,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
             if (countUserRoleByRoleId(roleId) > 0) {
                 throw new IllegalArgumentException(String.format("%1$s已分配,不能删除", role.getRoleName()));
             }
+            roleMenuMapper.deleteRoleMenuByRoleId(roleId);
         }
         return roleMapper.deleteRoleByIds(roleIds);
     }

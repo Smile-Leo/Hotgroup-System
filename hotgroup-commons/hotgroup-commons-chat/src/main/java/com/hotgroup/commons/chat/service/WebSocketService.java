@@ -4,10 +4,10 @@ import com.hotgroup.commons.chat.dto.ChatMessageDto;
 import com.hotgroup.commons.chat.util.JsonUtil;
 import com.hotgroup.commons.core.domain.model.LoginUser;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class WebSocketService {
 
     private static ChatService chatService;
 
-    @Autowired
+    @Resource
     public void init(ChatService chatService) {
         WebSocketService.chatService = chatService;
     }

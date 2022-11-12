@@ -1,6 +1,5 @@
 package com.hotgroup.manage.core.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotgroup.commons.core.constant.UserConstants;
@@ -17,10 +16,10 @@ import com.hotgroup.manage.domain.entity.SysUser;
 import com.hotgroup.manage.domain.entity.SysUserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,13 +34,13 @@ import java.util.Objects;
 @Slf4j
 public class SysUserServiceImpl implements ISysUserService {
 
-    @Autowired
+    @Resource
     private SysUserMapper userMapper;
-    @Autowired
+    @Resource
     private SysRoleMapper roleMapper;
-    @Autowired
+    @Resource
     private SysUserRoleMapper userRoleMapper;
-    @Autowired
+    @Resource
     private ISysConfigService configService;
 
 
@@ -67,12 +66,12 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     public SysUser selectUserByUserName(String userName) {
-        return userMapper.selectOne(Wrappers.lambdaQuery(SysUser.class).eq(SysUser::getUserName,userName));
+        return userMapper.selectOne(Wrappers.lambdaQuery(SysUser.class).eq(SysUser::getUserName, userName));
     }
 
     @Override
     public SysUser selectUserByPhone(String phone) {
-        return userMapper.selectUserByPhone(phone);
+        return userMapper.selectOne(Wrappers.lambdaQuery(SysUser.class).eq(SysUser::getPhone, phone));
     }
 
     /**
@@ -83,7 +82,7 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     public SysUser selectUserById(String userId) {
-        return userMapper.selectUserById(userId);
+        return userMapper.selectById(userId);
     }
 
     /**
@@ -141,11 +140,11 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     public String checkPhoneUnique(SysUser user) {
-        if (StringUtils.isEmpty(user.getPhonenumber())) {
+        if (StringUtils.isEmpty(user.getPhone())) {
             return UserConstants.UNIQUE;
         }
         String userId = Objects.isNull(user.getUserId()) ? "1L" : user.getUserId();
-        SysUser info = userMapper.checkPhoneUnique(user.getPhonenumber());
+        SysUser info = userMapper.checkPhoneUnique(user.getPhone());
         if (Objects.nonNull(info) && !info.getUserId().equals(userId)) {
             return UserConstants.NOT_UNIQUE;
         }
@@ -179,7 +178,7 @@ public class SysUserServiceImpl implements ISysUserService {
         }
 
         // 新增用户信息
-        int rows = userMapper.insertUser(user);
+        int rows = userMapper.insert(user);
         // 新增用户与角色管理
         insertUserRole(user);
 
@@ -197,7 +196,7 @@ public class SysUserServiceImpl implements ISysUserService {
         if (StringUtils.isNotEmpty(user.getPassword())) {
             user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         }
-        return userMapper.updateUser(user);
+        return userMapper.updateById(user);
     }
 
 
@@ -207,7 +206,7 @@ public class SysUserServiceImpl implements ISysUserService {
         if (StringUtils.isNotEmpty(user.getPassword())) {
             user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         }
-        return userMapper.updateUser(user);
+        return userMapper.updateById(user);
     }
 
     /**
@@ -219,7 +218,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateUserStatus(SysUser user) {
-        return userMapper.updateUser(user);
+        return userMapper.updateById(user);
     }
 
     /**
@@ -231,7 +230,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateUserProfile(SysUser user) {
-        return userMapper.updateUser(user);
+        return userMapper.updateById(user);
     }
 
     /**
@@ -244,7 +243,11 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateUserAvatar(String userName, String avatar) {
-        return userMapper.updateUserAvatar(userName, avatar) > 0;
+        userMapper.update(null, Wrappers.lambdaUpdate(SysUser.class)
+                .eq(SysUser::getUserName, userName)
+                .set(SysUser::getAvatar, avatar)
+        );
+        return true;
     }
 
     /**
@@ -256,7 +259,12 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int resetPwd(SysUser user) {
-        return userMapper.updateUser(user);
+        user.setPassword(SecurityUtils.encryptPassword(configService.selectConfigByKey("sys.user.initPassword")));
+        userMapper.update(null, Wrappers.lambdaUpdate(SysUser.class)
+                .eq(SysUser::getUserName, user.getUserName())
+                .set(SysUser::getAvatar, user.getPassword())
+        );
+        return 1;
     }
 
     /**
@@ -269,7 +277,12 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int resetUserPwd(String userName, String password) {
-        return userMapper.resetUserPwd(userName, password);
+        password = (SecurityUtils.encryptPassword(password));
+        userMapper.update(null, Wrappers.lambdaUpdate(SysUser.class)
+                .eq(SysUser::getUserName, userName)
+                .set(SysUser::getAvatar, password)
+        );
+        return 1;
     }
 
     /**

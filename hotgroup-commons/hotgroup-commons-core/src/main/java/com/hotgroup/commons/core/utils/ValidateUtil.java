@@ -12,10 +12,10 @@ import java.util.Set;
  * @date 2021/4/19.
  */
 public class ValidateUtil {
+    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+
     private ValidateUtil() {
     }
-
-    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     public static <T> void validate(T var1, Class<?>... var2) {
         Set<ConstraintViolation<T>> validate = VALIDATOR.validate(var1, var2);

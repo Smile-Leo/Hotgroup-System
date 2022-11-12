@@ -1,9 +1,6 @@
 package com.hotgroup.commons.redis;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 
@@ -12,17 +9,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * 分布式锁实现基于Redisson
  *
- * @author pangu
- * @date 2020-10-22
+ * @author Lzw
+ * @date 2022/10/9.
  */
 @Slf4j
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@RequiredArgsConstructor
 public class RedissonLock {
 
-    RedissonManager redissonManager;
+    final RedissonManager redissonManager;
 
     /**
      * 加锁操作

@@ -28,7 +28,7 @@ public class FileInfoFactory {
     }
 
     public FileInfo ofId(@NonNull String id) {
-        String object =  StringUtils.substringAfterLast(id, defaultBucket);
+        String object = StringUtils.substringAfterLast(id, defaultBucket);
         String path = StringUtils.substringBeforeLast(object, "/");
         return new FileInfo(object, path, id);
     }

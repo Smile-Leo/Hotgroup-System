@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 
 /**
  * 分类

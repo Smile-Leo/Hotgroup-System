@@ -7,18 +7,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.RedisException;
+import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.Assert;
 
 /**
  * Redisson核心配置，用于提供初始化的redisson实例
  *
- * @author pangu Lzw
- * @date 2021-10-22
+ * @author Lzw
+ * @date 2022/10/9.
  */
 @Slf4j
-public class RedissonManager {
+public class RedissonManager implements DisposableBean {
 
     private Redisson redisson = null;
 
@@ -35,6 +37,7 @@ public class RedissonManager {
                 .build();
         redisson = retryTemplate.execute(retryContext -> {
             try {
+                config.setCodec(JsonJacksonCodec.INSTANCE);
                 RedissonClient redissonClient = Redisson.create(config);
                 return (Redisson) redissonClient;
             } catch (Exception e) {
@@ -50,26 +53,24 @@ public class RedissonManager {
         return redisson;
     }
 
+    @Override
+    public void destroy() throws Exception {
+        redisson.shutdown();
+    }
+
     /**
      * Redisson连接方式配置工厂
      * 双重检查锁
      */
     public static class RedissonConfigFactory {
 
+        private static final RedissonConfigFactory FACTORY = new RedissonConfigFactory();
+
         private RedissonConfigFactory() {
         }
 
-        private static volatile RedissonConfigFactory factory = null;
-
         public static RedissonConfigFactory getInstance() {
-            if (factory == null) {
-                synchronized (Object.class) {
-                    if (factory == null) {
-                        factory = new RedissonConfigFactory();
-                    }
-                }
-            }
-            return factory;
+            return FACTORY;
         }
 
 

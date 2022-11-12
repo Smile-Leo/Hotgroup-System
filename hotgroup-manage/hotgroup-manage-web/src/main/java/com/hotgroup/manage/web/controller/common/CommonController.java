@@ -5,13 +5,13 @@ import com.hotgroup.commons.storage.FileStorageService;
 import com.hotgroup.commons.storage.MediaTypeEnum;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.nio.file.Files;
 
 /**
@@ -26,7 +26,7 @@ import java.nio.file.Files;
 public class CommonController {
 
 
-    @Autowired
+    @Resource
     @Lazy
     FileStorageService storageService;
 

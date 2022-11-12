@@ -6,7 +6,7 @@
 
     <resultMap type="SysUser" id="SysUserResult">
         <id property="userId" column="user_id"/>
-        <result property="username" column="user_name"/>
+        <result property="userName" column="user_name"/>
         <result property="nickName" column="nick_name"/>
         <result property="email" column="email"/>
         <result property="phonenumber" column="phonenumber"/>
@@ -26,8 +26,6 @@
     </resultMap>
 
 
-
-
     <resultMap id="RoleResult" type="SysRole">
         <id property="roleId" column="role_id"/>
         <result property="roleName" column="role_name"/>
@@ -40,7 +38,7 @@
 
     <resultMap type="SysUser" id="SysUserListResult">
         <result property="userId" column="user_id"/>
-        <result property="username" column="user_name"/>
+        <result property="userName" column="user_name"/>
         <result property="nickName" column="nick_name"/>
         <result property="phonenumber" column="phonenumber"/>
         <result property="email" column="email"/>
@@ -75,15 +73,12 @@
                u.update_by,
                u.update_time,
                u.remark,
-               u.sync_switch,
-               u.sync_status,
                r.role_id,
                r.role_name,
                r.role_key,
                r.role_sort,
                r.data_scope,
                r.status as role_status,
-               u.sync_switch,
                u.address
         from sys_user u
                  left join sys_user_role ur on u.user_id = ur.user_id
@@ -111,51 +106,32 @@
 
     <select id="selectUserByAuth" resultType="SysUser" resultMap="SysUserResult">
         select u.user_id,
-        u.user_name,
-        u.nick_name,
-        u.email,
-        u.avatar,
-        u.qr_code,
-        u.phonenumber,
-        u.alias,
-        u.telephone,
-        u.sex,
-        u.status,
-        u.del_flag,
-        u.login_ip,
-        u.login_date,
-        u.create_by,
-        u.create_time,
-        u.remark,
-        u.sync_switch,
-        u.sync_status,
-        d.dept_id,
-        d.parent_id,
-        d.dept_name,
-        d.order_num,
-        d.status as dept_status,
-        r.role_id,
-        r.role_name,
-        r.role_key,
-        r.role_sort,
-        r.data_scope,
-        r.status as role_status,
-        u.sync_switch,
-        u.address,
-        dr.post_id,
-        dr.is_leader,
-        p.post_name,
-        dr.order_num AS du_order_num
+               u.user_name,
+               u.nick_name,
+               u.email,
+               u.avatar,
+               u.qr_code,
+               u.phonenumber,
+               u.alias,
+               u.telephone,
+               u.sex,
+               u.status,
+               u.del_flag,
+               u.login_ip,
+               u.login_date,
+               u.create_by,
+               u.create_time,
+               u.remark,
+               r.role_id,
+               r.role_name,
+               r.role_key,
+               r.role_sort,
+               r.data_scope,
+               r.status as role_status,
+               u.address
         from sys_user u
-        left join sys_user_dept dr on u.user_id = dr.user_id
-        <if test="params.dataScope != null">
-            <!-- 数据范围过滤 -->
-            ${params.dataScope}
-        </if>
-        left join sys_post p on p.post_id = dr.post_id
-        left join sys_dept d on d.dept_id = dr.dept_id
-        left join sys_user_role ur on u.user_id = ur.user_id
-        left join sys_role r on r.role_id = ur.role_id
+                 left join sys_user_role ur on u.user_id = ur.user_id
+                 left join sys_role r on r.role_id = ur.role_id
         where u.user_id = #{userId}
         order by dr.order_line
 
@@ -178,92 +154,6 @@
         from sys_user
     </select>
 
-    <insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true"
-            keyProperty="userId">
-        insert into sys_user(
-        <if test="userId != null and userId != 0">user_id,</if>
-        <if test="userName != null and userName != ''">user_name,</if>
-        <if test="nickName != null and nickName != ''">nick_name,</if>
-        <if test="email != null and email != ''">email,</if>
-        <if test="avatar != null and avatar != ''">avatar,</if>
-        <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
-        <if test="alias != null and alias != ''">alias,</if>
-        <if test="qrCode != null and qrCode != ''">qr_code,</if>
-        <if test="sex != null and sex != ''">sex,</if>
-        <if test="password != null and password != ''">password,</if>
-        <if test="status != null and status != ''">status,</if>
-        <if test="createBy != null and createBy != ''">create_by,</if>
-        <if test="remark != null and remark != ''">remark,</if>
-        <if test="telephone != null and telephone != ''">telephone,</if>
-        <if test="address != null and address != ''">address,</if>
-        <if test="syncSwitch != null">sync_switch,</if>
-        <if test="syncStatus != null">sync_status,</if>
-        create_time
-        )values(
-        <if test="userId != null and userId != ''">#{userId},</if>
-        <if test="userName != null and userName != ''">#{userName},</if>
-        <if test="nickName != null and nickName != ''">#{nickName},</if>
-        <if test="email != null and email != ''">#{email},</if>
-        <if test="avatar != null and avatar != ''">#{avatar},</if>
-        <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
-        <if test="alias != null and alias != ''">#{alias},</if>
-        <if test="qrCode != null and qrCode != ''">#{qrCode},</if>
-        <if test="sex != null and sex != ''">#{sex},</if>
-        <if test="password != null and password != ''">#{password},</if>
-        <if test="status != null and status != ''">#{status},</if>
-        <if test="createBy != null and createBy != ''">#{createBy},</if>
-        <if test="remark != null and remark != ''">#{remark},</if>
-        <if test="telephone != null and telephone != ''">#{telephone},</if>
-        <if test="address != null and address != ''">#{address},</if>
-        <if test="syncSwitch != null">#{syncSwitch},</if>
-        <if test="syncStatus != null">#{syncStatus},</if>
-        sysdate()
-        )
-    </insert>
-
-    <update id="updateUser" parameterType="SysUser">
-        update sys_user
-        <set>
-            <if test="userName != null and userName != ''">user_name = #{userName},</if>
-            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
-            <if test="email != null">email = #{email},</if>
-            <if test="phonenumber != null">phonenumber = #{phonenumber},</if>
-            <if test="alias != null ">alias = #{alias},</if>
-            <if test="qrCode != null and qrCode != ''">qr_code = #{qrCode},</if>
-            <if test="sex != null and sex != ''">sex = #{sex},</if>
-            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
-            <if test="password != null and password != ''">password = #{password},</if>
-            <if test="status != null and status != ''">status = #{status},</if>
-            <if test="loginIp != null and loginIp != ''">login_ip = #{loginIp},</if>
-            <if test="loginDate != null">login_date = #{loginDate},</if>
-            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
-            <if test="remark != null">remark = #{remark},</if>
-            <if test="telephone != null">telephone = #{telephone},</if>
-            <if test="address != null">address = #{address},</if>
-            <if test="syncSwitch != null">sync_switch = #{syncSwitch},</if>
-            <if test="syncStatus != null">sync_status = #{syncStatus},</if>
-            update_time = sysdate()
-        </set>
-        where user_id = #{userId}
-    </update>
-
-    <update id="updateUserAvatar" parameterType="SysUser">
-        update sys_user
-        set avatar = #{avatar}
-        where user_name = #{userName}
-    </update>
-
-    <update id="resetUserPwd" parameterType="SysUser">
-        update sys_user
-        set password = #{password}
-        where user_name = #{userName}
-    </update>
-    <update id="updataSyncStatusByUsername">
-        update sys_user
-        set sync_status = 1
-        where user_name = #{username}
-    </update>
-
     <delete id="deleteUserById" parameterType="String">
         delete
         from sys_user
@@ -279,29 +169,13 @@
 
     <select id="pageUserList" parameterType="SysUser" resultMap="SysUserListResult">
         select
-        u.user_id,u.sex,u.user_name,u.nick_name,u.alias,u.phonenumber,u.email,u.telephone,u.status,u.qr_code,
-        u.create_time,u.create_by,u.update_time,u.update_by,
-        ud2.dept_names, ud2.dept_ids, ud2.orders, ud2.is_leader_in_dept
+        u.user_id,u.sex,u.user_name,u.nick_name,u.alias,u.phonenumber,
+        u.email,u.telephone,u.status,u.qr_code,
+        u.create_time,u.create_by,u.update_time,u.update_by
         from sys_user u
-        left join sys_user_dept ud ON u.user_id=ud.user_id
-        LEFT JOIN sys_dept d on d.dept_id = ud.dept_id
         left join sys_user_role ur on u.user_id = ur.user_id
         left join sys_role r on r.role_id = ur.role_id
-        LEFT JOIN (SELECT dd.user_id,
-        GROUP_CONCAT(sd.full_name SEPARATOR ';') AS dept_names,
-        GROUP_CONCAT(dd.dept_id) AS dept_ids,
-        GROUP_CONCAT(dd.order_num) AS orders,
-        GROUP_CONCAT(dd.is_leader) AS is_leader_in_dept
-        from sys_user_dept dd LEFT JOIN sys_dept sd on sd.dept_id = dd.dept_id GROUP BY dd.user_id
-        ) ud2 on ud2.user_id = u.user_id
-        <if test="deptId != null">
-            LEFT JOIN sys_user_dept ud3 ON ud3.user_id = u.user_id AND ud3.dept_id = #{deptId}
-        </if>
         <where>
-            <if test="deptId != null">
-                and (ud.dept_id = #{deptId} or ud.dept_id in ( SELECT t.dept_id FROM sys_dept t WHERE
-                find_in_set(#{deptId}, ancestors)))
-            </if>
             <if test="searchValue != null and searchValue != ''">
                 and u.alias like concat('%', #{searchValue}, '%')
             </if>
@@ -314,15 +188,8 @@
             <if test="status != null and status != ''">
                 and u.status = #{status}
             </if>
-            <!-- 数据范围过滤 -->
-            ${params.dataScope}
         </where>
         GROUP BY u.user_id
-        ORDER BY
-        <if test="deptId != null">
-            max(ud3.dept_id) desc, max(ud3.order_num) desc,
-        </if>
-        min(d.parent_id),min(d.order_num) desc, max(ud.order_num) desc, CONVERT(u.nick_name USING gbk) ASC
     </select>
     <select id="selectUserRoleIds" resultType="java.lang.String">
         select role_id
@@ -331,5 +198,4 @@
     </select>
 
 
-
-</mapper> 
+</mapper>

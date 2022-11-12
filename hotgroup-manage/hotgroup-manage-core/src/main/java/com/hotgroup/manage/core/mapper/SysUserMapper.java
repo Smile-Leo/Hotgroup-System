@@ -2,7 +2,6 @@ package com.hotgroup.manage.core.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hotgroup.manage.domain.entity.SysUser;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -49,39 +48,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      */
     SysUser selectUserByAuth(SysUser user);
 
-    /**
-     * 新增用户信息
-     *
-     * @param user 用户信息
-     * @return 结果
-     */
-    int insertUser(SysUser user);
-
-    /**
-     * 修改用户信息
-     *
-     * @param user 用户信息
-     * @return 结果
-     */
-    int updateUser(SysUser user);
-
-    /**
-     * 修改用户头像
-     *
-     * @param userName 用户名
-     * @param avatar   头像地址
-     * @return 结果
-     */
-    int updateUserAvatar(@Param("userName") String userName, @Param("avatar") String avatar);
-
-    /**
-     * 重置用户密码
-     *
-     * @param userName 用户名
-     * @param password 密码
-     * @return 结果
-     */
-    int resetUserPwd(@Param("userName") String userName, @Param("password") String password);
 
     /**
      * 通过用户ID删除用户
@@ -114,7 +80,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @return 结果
      */
     SysUser checkPhoneUnique(String phonenumber);
-
 
 
     /**

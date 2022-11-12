@@ -7,11 +7,11 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,20 +26,17 @@ import java.util.Map;
  */
 @Component
 public class TokenService {
+    @Resource
+    UserDetailsService userDetailsService;
     // 令牌自定义标识
     @Value("${token.header:Authorization}")
     private String header;
-
     // 令牌秘钥
     @Value("${token.secret:2Avu0QmIiFmEdCQFmuRQvw==}")
     private String secret;
-
     // 令牌有效期（默认30分钟）
     @Value("${token.expireTime:30}")
     private int expireTime;
-
-    @Autowired
-    UserDetailsService userDetailsService;
 
     /**
      * 获取用户身份信息

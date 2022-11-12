@@ -4,12 +4,12 @@ import com.hotgroup.commons.core.domain.model.LoginUser;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 
 /**
@@ -22,10 +22,10 @@ import java.util.Objects;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 
-    @Autowired
+    @Resource
     private ISysUserService userService;
 
-    @Autowired
+    @Resource
     private SysPermissionService permissionService;
 
 

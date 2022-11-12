@@ -25,16 +25,6 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
 
     private static ApplicationContext applicationContext;
 
-    @Override
-    public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        SpringUtils.beanFactory = beanFactory;
-    }
-
-    @Override
-    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        SpringUtils.applicationContext = applicationContext;
-    }
-
     /**
      * 获取对象
      *
@@ -127,5 +117,15 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
     public static String getActiveProfile() {
         final String[] activeProfiles = getActiveProfiles();
         return ArrayUtils.isNotEmpty(activeProfiles) ? activeProfiles[0] : null;
+    }
+
+    @Override
+    public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        SpringUtils.beanFactory = beanFactory;
+    }
+
+    @Override
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
+        SpringUtils.applicationContext = applicationContext;
     }
 }

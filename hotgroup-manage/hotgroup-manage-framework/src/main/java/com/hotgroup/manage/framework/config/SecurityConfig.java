@@ -3,21 +3,23 @@ package com.hotgroup.manage.framework.config;
 import com.hotgroup.commons.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.hotgroup.commons.framework.security.handle.AuthenticationEntryPointImpl;
 import com.hotgroup.commons.framework.security.handle.LogoutSuccessHandlerImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.annotation.Resource;
 
 /**
  * spring security配置
@@ -29,31 +31,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 自定义用户认证逻辑
      */
-    @Autowired
+    @Resource
     private UserDetailsService userDetailsService;
 
     /**
      * 认证失败处理类
      */
-    @Autowired
+    @Resource
     private AuthenticationEntryPointImpl unauthorizedHandler;
 
     /**
      * 退出处理类
      */
-    @Autowired
+    @Resource
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     /**
      * token认证过滤器
      */
-    @Autowired
+    @Resource
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
     /**
      * 跨域过滤器
      */
-    @Autowired
+    @Resource
     private CorsFilter corsFilter;
 
     /**
@@ -113,10 +115,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable();
         httpSecurity.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
         // 添加JWT filter
-        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(authenticationTokenFilter, BasicAuthenticationFilter.class);
         // 添加CORS filter
-        httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
-        httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);
+        httpSecurity.addFilterBefore(corsFilter, CorsFilter.class);
     }
 
 

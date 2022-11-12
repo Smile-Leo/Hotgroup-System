@@ -28,10 +28,9 @@ public class FilterConfig {
     @Value("${xss.urlPatterns:/*}")
     private String urlPatterns;
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
-    public FilterRegistrationBean xssFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+    public FilterRegistrationBean<XssFilter> xssFilterRegistration() {
+        FilterRegistrationBean<XssFilter> registration = new FilterRegistrationBean<>();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new XssFilter());
         registration.addUrlPatterns(StringUtils.split(urlPatterns, ","));
@@ -44,10 +43,9 @@ public class FilterConfig {
         return registration;
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
-    public FilterRegistrationBean someFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+    public FilterRegistrationBean<RepeatableFilter> someFilterRegistration() {
+        FilterRegistrationBean<RepeatableFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new RepeatableFilter());
         registration.addUrlPatterns("/*");
         registration.setName("repeatableFilter");

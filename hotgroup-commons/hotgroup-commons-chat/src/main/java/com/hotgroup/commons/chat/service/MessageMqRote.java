@@ -11,7 +11,6 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.core.env.Environment;
 
 import javax.annotation.PreDestroy;
 import java.util.Optional;
@@ -24,10 +23,10 @@ import java.util.Optional;
 public class MessageMqRote implements MessageRoteStrategy {
 
 
+    private static final String EXCHANGE_NAME = "hotgroup.chats";
     private final ReplyService replyService;
     private final RabbitTemplate rabbitTemplate;
     private final AmqpAdmin amqpAdmin;
-    private static final String EXCHANGE_NAME = "hotgroup.chats";
 
     public MessageMqRote(ReplyService replyService, RabbitTemplate rabbitTemplate, AmqpAdmin amqpAdmin) {
         this.replyService = replyService;

@@ -1,7 +1,8 @@
 package com.hotgroup.commons.chat.service;
 
 import com.hotgroup.commons.chat.dto.ChatMessageDto;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Resource;
 
 /**
  * @author Lzw
@@ -9,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class MessageLocalRote implements MessageRoteStrategy {
 
-    @Autowired
+    @Resource
     ReplyService replyService;
 
     @Override

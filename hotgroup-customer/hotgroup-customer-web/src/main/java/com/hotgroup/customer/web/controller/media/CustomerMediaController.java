@@ -9,7 +9,6 @@ import com.hotgroup.manage.domain.entity.HgUserVideoAudit;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -31,12 +31,12 @@ import java.util.concurrent.CompletableFuture;
 @Api(tags = "用户视频")
 public class CustomerMediaController {
 
-    @Autowired
+    @Resource
     @Lazy
     FileStorageService storageService;
-    @Autowired
+    @Resource
     MediaService mediaService;
-    @Autowired
+    @Resource
     IHgUserVideoAuditService videoAuditService;
 
     @ApiOperation("上传")

@@ -3,7 +3,6 @@ package com.hotgroup.customer.framework.config;
 import com.hotgroup.commons.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.hotgroup.commons.framework.security.handle.AuthenticationEntryPointImpl;
 import com.hotgroup.commons.framework.security.handle.LogoutSuccessHandlerImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.filter.CorsFilter;
 
+import javax.annotation.Resource;
+
 /**
  * spring security配置
  *
@@ -28,31 +29,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 自定义用户认证逻辑
      */
-    @Autowired
+    @Resource
     private UserDetailsService userDetailsService;
 
     /**
      * 认证失败处理类
      */
-    @Autowired
+    @Resource
     private AuthenticationEntryPointImpl unauthorizedHandler;
 
     /**
      * 退出处理类
      */
-    @Autowired
+    @Resource
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     /**
      * token认证过滤器
      */
-    @Autowired
+    @Resource
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
     /**
      * 跨域过滤器
      */
-    @Autowired
+    @Resource
     private CorsFilter corsFilter;
 
     /**
@@ -117,7 +118,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         // 添加CORS filter
         httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
-        httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);
     }
 
 

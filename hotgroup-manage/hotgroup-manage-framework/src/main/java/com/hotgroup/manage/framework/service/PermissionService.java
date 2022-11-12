@@ -5,10 +5,10 @@ import com.hotgroup.commons.core.utils.ServletUtils;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.ISysRoleService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Set;
 
@@ -33,9 +33,9 @@ public class PermissionService {
 
     private static final String PERMISSION_DELIMETER = ",";
 
-    @Autowired
+    @Resource
     private TokenService tokenService;
-    @Autowired
+    @Resource
     private ISysRoleService roleService;
 
     /**

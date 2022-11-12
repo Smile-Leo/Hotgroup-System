@@ -13,9 +13,9 @@ public class SysMenuParamDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String menuName ;
+    private String menuName;
 
-    private String menuType  ;
+    private String menuType;
 
-    private String orderNum ;
+    private String orderNum;
 }

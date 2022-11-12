@@ -6,13 +6,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.redisson.spring.session.config.EnableRedissonWebSession;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 分布式锁解析器
  *
- * @author pangu
+ * @author Lzw
  * @date 2020-10-22
  * @link https://github.com/TaXueWWL/redis-distributed-lock
  */
@@ -21,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DistributedLockHandler {
 
-    @Autowired
+    @Resource
     RedissonLock redissonLock;
 
     /**

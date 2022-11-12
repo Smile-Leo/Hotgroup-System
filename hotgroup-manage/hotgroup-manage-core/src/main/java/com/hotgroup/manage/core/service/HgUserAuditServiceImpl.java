@@ -8,9 +8,9 @@ import com.hotgroup.manage.api.IHgUserAuditService;
 import com.hotgroup.manage.core.mapper.HgUserInfoAuditMapper;
 import com.hotgroup.manage.domain.entity.HgUserInfoAudit;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 public class HgUserAuditServiceImpl implements IHgUserAuditService {
 
-    @Autowired
+    @Resource
     HgUserInfoAuditMapper hgUserInfoAuditMapper;
 
     @Override

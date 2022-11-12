@@ -10,12 +10,14 @@ import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.annotation.Resource;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
@@ -32,9 +34,9 @@ import java.util.stream.Collectors;
 //@RequestMapping("/system/user")
 @Api(tags = "管理员管理")
 public class SysUserController {
-    @Autowired
+    @Resource
     private ISysUserService userService;
-    @Autowired
+    @Resource
     private ISysRoleService roleService;
 
     /**
@@ -97,7 +99,7 @@ public class SysUserController {
     @PostMapping("edit")
     public AjaxResult<?> edit(@Validated @RequestBody SysUser user) {
         userService.checkUserAllowed(user);
-        if (StringUtils.isEmpty(user.getPhonenumber())) {
+        if (StringUtils.isEmpty(user.getPhone())) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码为空");
         }
         if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {

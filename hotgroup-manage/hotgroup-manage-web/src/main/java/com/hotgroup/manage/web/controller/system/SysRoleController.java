@@ -3,17 +3,16 @@ package com.hotgroup.manage.web.controller.system;
 import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
-import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.ISysRoleService;
-import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysRole;
-import com.hotgroup.manage.framework.service.SysPermissionService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.annotation.Resource;
 
 /**
  * 角色信息
@@ -24,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 //@RequestMapping("/system/role")
 @Api(tags = "角色管理")
 public class SysRoleController {
-    @Autowired
+    @Resource
     private ISysRoleService roleService;
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
@@ -110,7 +109,7 @@ public class SysRoleController {
     @PreAuthorize("@ss.hasPermi('system:role:remove')")
     @PostMapping("remove")
     public AjaxResult<?> remove(Long[] roleIds) {
-        int i = roleService.deleteRoleByIds(roleIds);
+        roleService.deleteRoleByIds(roleIds);
         return AjaxResult.success();
     }
 

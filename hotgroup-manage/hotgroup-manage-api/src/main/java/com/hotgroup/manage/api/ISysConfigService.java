@@ -1,6 +1,5 @@
 package com.hotgroup.manage.api;
 
-import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.manage.domain.entity.SysConfig;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public interface ISysConfigService {
      * @param config 参数配置信息
      * @return 参数配置集合
      */
-    AjaxResult<List<SysConfig>> selectConfigList(SysConfig config);
+    List<SysConfig> selectConfigList(SysConfig config);
 
     /**
      * 新增参数配置

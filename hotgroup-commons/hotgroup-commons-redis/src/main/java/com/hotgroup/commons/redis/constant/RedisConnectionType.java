@@ -5,14 +5,12 @@ import lombok.Getter;
 
 /**
  * Redis连接方式
- * <p>
- * 包含:standalone-单节点部署方式
+ * standalone-单节点部署方式
  * sentinel-哨兵部署方式
  * cluster-集群方式
  * masterslave-主从部署方式
- * </p>
  *
- * @author xuzhanfu
+ * @author Lzw
  */
 @Getter
 @AllArgsConstructor

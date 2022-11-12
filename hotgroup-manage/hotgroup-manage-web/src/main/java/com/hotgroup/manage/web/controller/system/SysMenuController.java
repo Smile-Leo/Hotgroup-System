@@ -11,17 +11,14 @@ import com.hotgroup.manage.api.ISysMenuService;
 import com.hotgroup.manage.domain.dto.SysMenuParamDto;
 import com.hotgroup.manage.domain.entity.SysMenu;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.mapstruct.BeanMapping;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +32,9 @@ import java.util.Map;
 @RequestMapping("/system/menu")
 @Api(tags = "菜单信息")
 public class SysMenuController {
-    @Autowired
+    @Resource
     private ISysMenuService menuService;
-    @Autowired
+    @Resource
     private TokenService tokenService;
 
     /**

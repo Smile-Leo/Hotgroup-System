@@ -21,14 +21,9 @@ import java.util.concurrent.TimeUnit;
  * @date 2022/5/15.
  */
 public class FFmpegHelper implements Convert {
+    private static final int maxTime = 600;
     private static FFmpeg fFmpeg;
     private static FFprobe fFprobe;
-    private CompletableFuture<Void> runAsync;
-    private InputStream outStream;
-
-    private InputStream gifStream;
-
-    private static final int maxTime = 600;
 
     static {
         try {
@@ -39,6 +34,9 @@ public class FFmpegHelper implements Convert {
         }
     }
 
+    private CompletableFuture<Void> runAsync;
+    private InputStream outStream;
+    private InputStream gifStream;
     private double frameNumber;
     private long progressFrame;
 
@@ -67,7 +65,7 @@ public class FFmpegHelper implements Convert {
                 .addExtraArgs("-ss", "3")
                 .addExtraArgs("-t", "3")
                 .addOutput(outGif.toString())
-                .addExtraArgs("-loop","0")
+                .addExtraArgs("-loop", "0")
                 .addExtraArgs("-vf", "scale=iw/2:-1:flags=lanczos,fps=5,crop=iw/2:ih:0:0,split[s1][s2];[s1]palettegen[p];[s2][p]paletteuse")
                 .done();
         CompletableFuture.runAsync(new SinglePassFFmpegJob(fFmpeg, gifbuild)).thenAccept((v) -> {

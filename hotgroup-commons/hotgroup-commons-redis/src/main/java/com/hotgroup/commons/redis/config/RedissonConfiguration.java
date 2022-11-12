@@ -15,7 +15,7 @@ import org.springframework.core.annotation.Order;
 /**
  * Redisson自动化配置
  *
- * @author pangu
+ * @author Lzw
  * @date 2020-10-20
  */
 @Slf4j
@@ -35,13 +35,16 @@ public class RedissonConfiguration {
         return redissonManager;
     }
 
+    @Bean
+    Redisson redisson(RedissonManager manager) {
+        return manager.getRedisson();
+    }
 
     @Bean
     @ConditionalOnMissingBean
     @Order(value = 2)
     public RedissonLock redissonLock(RedissonManager redissonManager) {
-        RedissonLock redissonLock = new RedissonLock();
-        redissonLock.setRedissonManager(redissonManager);
+        RedissonLock redissonLock = new RedissonLock(redissonManager);
         log.debug("[RedissonLock]组装完毕");
         return redissonLock;
     }

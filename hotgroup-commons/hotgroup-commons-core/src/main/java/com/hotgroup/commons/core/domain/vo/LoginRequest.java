@@ -1,13 +1,11 @@
-package com.hotgroup.commons.core.domain.model;
-
-import io.swagger.annotations.ApiModelProperty;
+package com.hotgroup.commons.core.domain.vo;
 
 /**
  * 用户登录对象
  *
  * @author Lzw
  */
-public class LoginBody {
+public class LoginRequest {
     /**
      * 用户名
      */

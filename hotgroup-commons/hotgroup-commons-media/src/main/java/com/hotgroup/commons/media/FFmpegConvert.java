@@ -17,11 +17,10 @@ public class FFmpegConvert {
     private static final String DEFAULT_FORMAT = "flv";
 
     private static final int maxTime = 600 * avutil.AV_TIME_BASE;
-
-    private volatile int progress;
-    private FFmpegFrameRecorder recorder;
     private final FFmpegFrameGrabber grabber;
     private final OutputStream outputStream;
+    private volatile int progress;
+    private FFmpegFrameRecorder recorder;
 
     public FFmpegConvert(InputStream inputStream, OutputStream outputStream) {
         this.outputStream = outputStream;
