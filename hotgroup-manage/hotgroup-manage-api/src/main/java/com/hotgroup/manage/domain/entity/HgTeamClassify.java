@@ -1,6 +1,8 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
 import lombok.Data;
@@ -17,8 +19,9 @@ import javax.validation.constraints.Size;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(name = "Hg_team_classify")
+@Table
 @Entity
+@TableName
 public class HgTeamClassify extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -27,7 +30,7 @@ public class HgTeamClassify extends BaseEntity {
      * ID
      */
     @Null(message = "Id自动生成", groups = InsertGroup.class)
-    @TableId
+    @TableId(type = IdType.ASSIGN_ID)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -2,6 +2,7 @@ package com.hotgroup.manage.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +21,7 @@ import javax.validation.constraints.Size;
 @Data
 @Table
 @Entity
+@TableName
 public class HgUserVideoAudit extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -27,7 +29,7 @@ public class HgUserVideoAudit extends BaseEntity {
     /**
      * ID
      */
-    @TableId(type = IdType.ASSIGN_UUID)
+    @TableId(type = IdType.ASSIGN_ID)
     @Id
     private String id;
 

@@ -1,4 +1,4 @@
-package com.hotgroup.commons.core.annotation;
+package com.hotgroup.commons.framework.interceptor;
 
 import java.lang.annotation.*;
 
@@ -12,5 +12,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface RepeatSubmit {
-
+    long intervalTime() default 2L;
+    boolean disable() default false;
 }

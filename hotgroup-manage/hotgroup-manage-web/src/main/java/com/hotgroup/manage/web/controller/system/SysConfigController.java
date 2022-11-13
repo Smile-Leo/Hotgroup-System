@@ -1,9 +1,9 @@
 package com.hotgroup.manage.web.controller.system;
 
-import com.hotgroup.commons.core.annotation.RepeatSubmit;
 import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
+import com.hotgroup.commons.framework.interceptor.RepeatSubmit;
 import com.hotgroup.manage.api.ISysConfigService;
 import com.hotgroup.manage.domain.entity.SysConfig;
 import io.swagger.annotations.Api;
@@ -46,9 +46,10 @@ public class SysConfigController {
      * 根据参数编号获取详细信息
      */
     @ApiOperation("参数信息")
-    @PreAuthorize("@ss.hasPermi('system:config:query')")
+    @PreAuthorize("@ss.hasPermi('system:config:info')")
     @GetMapping("info")
-    public AjaxResult<?> getInfo(Long configId) {
+    public AjaxResult<?> getInfo(String configId) {
+
         return AjaxResult.success(configService.selectConfigById(configId));
     }
 
@@ -67,12 +68,10 @@ public class SysConfigController {
     @ApiOperation("新增")
     @PreAuthorize("@ss.hasPermi('system:config:add')")
     @PostMapping("add")
-    @RepeatSubmit
     public AjaxResult<?> add(@Validated @RequestBody SysConfig config) {
         if (UserConstants.NOT_UNIQUE.equals(configService.checkConfigKeyUnique(config))) {
             return AjaxResult.error("新增参数'" + config.getConfigName() + "'失败，参数键名已存在");
         }
-        config.setCreateBy(SecurityUtils.getLoginUser().getUsername());
         configService.insertConfig(config);
         return AjaxResult.success();
     }
@@ -87,7 +86,6 @@ public class SysConfigController {
         if (UserConstants.NOT_UNIQUE.equals(configService.checkConfigKeyUnique(config))) {
             return AjaxResult.error("修改参数'" + config.getConfigName() + "'失败，参数键名已存在");
         }
-        config.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
         configService.updateConfig(config);
         return AjaxResult.success();
     }
@@ -98,7 +96,7 @@ public class SysConfigController {
     @ApiOperation("删除")
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @PostMapping("remove")
-    public AjaxResult<?> remove(Long[] configIds) {
+    public AjaxResult<?> remove(String[] configIds) {
         configService.deleteConfigByIds(configIds);
         return AjaxResult.success();
     }

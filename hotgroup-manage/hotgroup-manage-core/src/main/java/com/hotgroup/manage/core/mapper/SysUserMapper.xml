@@ -9,7 +9,7 @@
         <result property="userName" column="user_name"/>
         <result property="nickName" column="nick_name"/>
         <result property="email" column="email"/>
-        <result property="phonenumber" column="phonenumber"/>
+        <result property="phone" column="phone"/>
         <result property="sex" column="sex"/>
         <result property="avatar" column="avatar"/>
         <result property="password" column="password"/>
@@ -21,7 +21,6 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
-        <result property="address" column="address"/>
         <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
     </resultMap>
 
@@ -40,11 +39,10 @@
         <result property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
         <result property="nickName" column="nick_name"/>
-        <result property="phonenumber" column="phonenumber"/>
+        <result property="phone" column="phone"/>
         <result property="email" column="email"/>
         <result property="status" column="status"/>
         <result property="sex" column="sex"/>
-        <result property="address" column="address"/>
         <result property="avatar" column="avatar"/>
         <result property="createBy" column="create_by"/>
         <result property="createTime" column="create_time"/>
@@ -59,10 +57,8 @@
                u.email,
                u.avatar,
                u.qr_code,
-               u.phonenumber,
+               u.phone,
                u.password,
-               u.alias,
-               u.telephone,
                u.sex,
                u.status,
                u.del_flag,
@@ -72,7 +68,6 @@
                u.create_time,
                u.update_by,
                u.update_time,
-               u.remark,
                r.role_id,
                r.role_name,
                r.role_key,
@@ -93,7 +88,7 @@
 
     <select id="selectUserByPhone" parameterType="String" resultMap="SysUserResult">
         <include refid="selectUserVo"/>
-        where u.phonenumber = #{phone}
+        where u.phone = #{phone}
         order by dr.order_line
     </select>
 
@@ -104,39 +99,6 @@
     </select>
 
 
-    <select id="selectUserByAuth" resultType="SysUser" resultMap="SysUserResult">
-        select u.user_id,
-               u.user_name,
-               u.nick_name,
-               u.email,
-               u.avatar,
-               u.qr_code,
-               u.phonenumber,
-               u.alias,
-               u.telephone,
-               u.sex,
-               u.status,
-               u.del_flag,
-               u.login_ip,
-               u.login_date,
-               u.create_by,
-               u.create_time,
-               u.remark,
-               r.role_id,
-               r.role_name,
-               r.role_key,
-               r.role_sort,
-               r.data_scope,
-               r.status as role_status,
-               u.address
-        from sys_user u
-                 left join sys_user_role ur on u.user_id = ur.user_id
-                 left join sys_role r on r.role_id = ur.role_id
-        where u.user_id = #{userId}
-        order by dr.order_line
-
-    </select>
-
     <select id="checkUserNameUnique" parameterType="String" resultType="int">
         select count(1)
         from sys_user
@@ -144,57 +106,32 @@
     </select>
 
     <select id="checkPhoneUnique" parameterType="String" resultMap="SysUserResult">
-        select user_id, phonenumber
+        select user_id, phone
         from sys_user
-        where phonenumber = #{phonenumber} limit 1
+        where phone = #{phone} limit 1
     </select>
 
-    <select id="getUserSize" resultType="java.lang.Integer">
-        select count(user_id)
-        from sys_user
-    </select>
-
-    <delete id="deleteUserById" parameterType="String">
-        delete
-        from sys_user
-        where user_id = #{userId}
-    </delete>
-
-    <delete id="deleteUserByIds" parameterType="String">
-        update sys_user set del_flag = '2' where user_id in
-        <foreach collection="array" item="userId" open="(" separator="," close=")">
-            #{userId}
-        </foreach>
-    </delete>
 
     <select id="pageUserList" parameterType="SysUser" resultMap="SysUserListResult">
         select
-        u.user_id,u.sex,u.user_name,u.nick_name,u.alias,u.phonenumber,
-        u.email,u.telephone,u.status,u.qr_code,
+        u.user_id,u.sex,u.user_name,u.nick_name,u.phone,
+        u.email,u.status,u.qr_code,
         u.create_time,u.create_by,u.update_time,u.update_by
         from sys_user u
         left join sys_user_role ur on u.user_id = ur.user_id
         left join sys_role r on r.role_id = ur.role_id
         <where>
-            <if test="searchValue != null and searchValue != ''">
-                and u.alias like concat('%', #{searchValue}, '%')
-            </if>
             <if test="nickName != null and nickName != ''">
                 and u.nick_name like concat('%', #{nickName}, '%')
             </if>
-            <if test="phonenumber != null and phonenumber != ''">
-                and u.phonenumber like concat('%', #{phonenumber}, '%')
+            <if test="phone != null and phone != ''">
+                and u.phone like concat('%', #{phone}, '%')
             </if>
             <if test="status != null and status != ''">
                 and u.status = #{status}
             </if>
         </where>
         GROUP BY u.user_id
-    </select>
-    <select id="selectUserRoleIds" resultType="java.lang.String">
-        select role_id
-        from sys_user_role
-        where user_id = #{userId}
     </select>
 
 

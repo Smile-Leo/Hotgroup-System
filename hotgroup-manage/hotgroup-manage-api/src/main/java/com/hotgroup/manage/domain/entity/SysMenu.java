@@ -1,7 +1,12 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
@@ -17,6 +22,8 @@ import java.util.List;
  */
 @Data
 @ToString
+@EqualsAndHashCode(callSuper = true)
+@TableName
 public class SysMenu extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -24,7 +31,8 @@ public class SysMenu extends BaseEntity {
      * 菜单ID
      */
     @Id
-    private Long menuId;
+    @TableId(type = IdType.ASSIGN_ID)
+    private String menuId;
 
     /**
      * 菜单名称
@@ -33,15 +41,11 @@ public class SysMenu extends BaseEntity {
     @Size(min = 0, max = 50, message = "菜单名称长度不能超过50个字符")
     private String menuName;
 
-    /**
-     * 父菜单名称
-     */
-    private String parentName;
 
     /**
      * 父菜单ID
      */
-    private Long parentId;
+    private String parentId;
 
     /**
      * 显示顺序
@@ -67,20 +71,10 @@ public class SysMenu extends BaseEntity {
     private String isFrame;
 
     /**
-     * 是否缓存（0缓存 1不缓存）
-     */
-    private String isCache;
-
-    /**
      * 类型（M目录 C菜单 F按钮）
      */
     @NotBlank(message = "菜单类型不能为空")
     private String menuType;
-
-    /**
-     * 显示状态（0显示 1隐藏）
-     */
-    private String visible;
 
     /**
      * 菜单状态（0显示 1隐藏）
@@ -101,6 +95,7 @@ public class SysMenu extends BaseEntity {
     /**
      * 子菜单
      */
+    @TableField(exist = false)
     private List<SysMenu> children = new ArrayList<SysMenu>();
 
 

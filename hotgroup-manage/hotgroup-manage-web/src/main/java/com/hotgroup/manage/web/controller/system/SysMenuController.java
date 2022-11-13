@@ -4,19 +4,16 @@ import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.commons.core.domain.model.LoginUser;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
-import com.hotgroup.commons.core.utils.SecurityUtils;
-import com.hotgroup.commons.core.utils.ServletUtils;
-import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.ISysMenuService;
-import com.hotgroup.manage.domain.dto.SysMenuParamDto;
 import com.hotgroup.manage.domain.entity.SysMenu;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -34,8 +31,6 @@ import java.util.Map;
 public class SysMenuController {
     @Resource
     private ISysMenuService menuService;
-    @Resource
-    private TokenService tokenService;
 
     /**
      * 获取菜单列表
@@ -43,11 +38,9 @@ public class SysMenuController {
     @PreAuthorize("@ss.hasPermi('system:menu:list')")
     @GetMapping("list")
     @ApiOperation("列表")
-    public AjaxResult<?> list(SysMenuParamDto menuDto) {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+    public AjaxResult<?> list(SysMenu menu,
+                              @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
         String userId = loginUser.getUser().getId();
-        SysMenu menu = new SysMenu();
-        BeanUtils.copyProperties(menuDto, menu);
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menus);
     }
@@ -57,8 +50,9 @@ public class SysMenuController {
      */
     @GetMapping(value = "info")
     @ApiOperation("信息")
-    public AjaxResult<?> getInfo(Long menuId) {
-        return AjaxResult.success(menuService.selectMenuById(menuId));
+    public AjaxResult<SysMenu> getInfo(String menuId) {
+        SysMenu data = menuService.selectMenuById(menuId);
+        return AjaxResult.success(data);
     }
 
     /**
@@ -66,11 +60,9 @@ public class SysMenuController {
      */
     @GetMapping("treeselect")
     @ApiOperation("树结构")
-    public AjaxResult<?> treeselect(SysMenuParamDto menuDto) {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+    public AjaxResult<?> treeselect(SysMenu menu,
+                                    @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
         String userId = loginUser.getUser().getId();
-        SysMenu menu = new SysMenu();
-        BeanUtils.copyProperties(menuDto, menu);
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menuService.buildMenuTreeSelect(menus));
     }
@@ -80,8 +72,8 @@ public class SysMenuController {
      */
     @GetMapping(value = "/roleMenuTreeselect")
     @ApiOperation("角色对应树结构")
-    public AjaxResult<?> roleMenuTreeselect(Long roleId) {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+    public AjaxResult<?> roleMenuTreeselect(String roleId,
+                                            @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
         List<SysMenu> menus = menuService.selectMenuList(loginUser.getUser().getId());
         Map<String, Object> ajax = new HashMap<String, Object>();
 
@@ -99,12 +91,12 @@ public class SysMenuController {
     public AjaxResult<?> add(@Validated @RequestBody SysMenu menu) {
         if (UserConstants.NOT_UNIQUE.equals(menuService.checkMenuNameUnique(menu))) {
             return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
-        } else if (UserConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.startsWithAny(menu.getPath(),
-                Constants.HTTP, Constants.HTTPS)) {
+        }
+        if (UserConstants.YES_FRAME.equals(menu.getIsFrame()) &&
+                !StringUtils.startsWithAny(menu.getPath(), Constants.HTTP, Constants.HTTPS)) {
             return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
         }
-        menu.setCreateBy(SecurityUtils.getLoginUser().getUsername());
-        int i = menuService.insertMenu(menu);
+        menuService.insertMenu(menu);
         return AjaxResult.success();
     }
 
@@ -117,14 +109,15 @@ public class SysMenuController {
     public AjaxResult<?> edit(@Validated @RequestBody SysMenu menu) {
         if (UserConstants.NOT_UNIQUE.equals(menuService.checkMenuNameUnique(menu))) {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
-        } else if (UserConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.startsWithAny(menu.getPath(),
+        }
+        if (UserConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.startsWithAny(menu.getPath(),
                 Constants.HTTP, Constants.HTTPS)) {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
-        } else if (menu.getMenuId().equals(menu.getParentId())) {
+        }
+        if (menu.getMenuId().equals(menu.getParentId())) {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，上级菜单不能选择自己");
         }
-        menu.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
-        int menu1 = menuService.updateMenu(menu);
+        menuService.updateMenu(menu);
         return AjaxResult.success();
     }
 
@@ -134,14 +127,14 @@ public class SysMenuController {
     @PreAuthorize("@ss.hasPermi('system:menu:remove')")
     @PostMapping("remove")
     @ApiOperation("删除")
-    public AjaxResult<?> remove(Long menuId) {
+    public AjaxResult<?> remove(String menuId) {
         if (menuService.hasChildByMenuId(menuId)) {
             return AjaxResult.error("存在子菜单,不允许删除");
         }
         if (menuService.checkMenuExistRole(menuId)) {
             return AjaxResult.error("菜单已分配,不允许删除");
         }
-        int i = menuService.deleteMenuById(menuId);
+        menuService.deleteMenuById(menuId);
         return AjaxResult.success();
     }
 }

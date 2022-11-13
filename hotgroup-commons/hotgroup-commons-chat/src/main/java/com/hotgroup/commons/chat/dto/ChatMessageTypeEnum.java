@@ -11,5 +11,5 @@ public enum ChatMessageTypeEnum {
     CHAT_JOIN,
     CHAT_CREATE,
     CHAT_EXIT,
-    CHAT_DESTORY
+    CHAT_DESTROY
 }

@@ -55,7 +55,7 @@ public class ChatServiceImpl implements ChatService {
                 Optional.ofNullable(ChatService.CHAT_LIST.get(dto.getChatId()))
                         .ifPresent(lst -> lst.removeIf(session -> session.getId().equals(dto.getSession().getId())));
                 break;
-            case CHAT_DESTORY:
+            case CHAT_DESTROY:
                 ChatService.CHAT_LIST.remove(dto.getChatId());
 
             default:

@@ -1,10 +1,10 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -16,17 +16,17 @@ import javax.persistence.Table;
 @ToString
 @Table
 @Entity
+@TableName
 public class SysUserRole {
 
     /**
      * 用户ID
      */
-    @Id
     private String userId;
 
     /**
      * 角色ID
      */
-    private Long roleId;
+    private String roleId;
 
 }

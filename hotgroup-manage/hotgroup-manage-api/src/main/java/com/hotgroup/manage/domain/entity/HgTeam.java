@@ -2,6 +2,7 @@ package com.hotgroup.manage.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
 import lombok.Data;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 @Data
 @Table(name = "hg_team")
 @Entity
+@TableName
 public class HgTeam extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -32,7 +34,7 @@ public class HgTeam extends BaseEntity {
      * ID
      */
     @Null(message = "userId自动生成", groups = InsertGroup.class)
-    @TableId(type = IdType.ASSIGN_UUID)
+    @TableId(type = IdType.ASSIGN_ID)
     @Id
     private String id;
 

@@ -2,20 +2,15 @@ package com.hotgroup.commons.framework.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotgroup.commons.core.constant.Constants;
-import com.hotgroup.commons.core.filter.RepeatedlyRequestWrapper;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.redisson.Redisson;
-import org.springframework.beans.factory.annotation.Value;
+import org.redisson.api.RMap;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.util.Objects;
 
 /**
  * 判断请求url和数据是否和上一次相同，
@@ -25,92 +20,35 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
-    public final String REPEAT_PARAMS = "repeatParams";
-    public final String REPEAT_TIME = "repeatTime";
 
-    // 令牌自定义标识
-    @Value("${token.header:Authorization}")
-    private String header;
     @Resource
     private Redisson redisson;
 
+
     /**
-     * 间隔时间，单位:秒 默认10秒
+     * 间隔时间，单位:秒 默认2秒
      * <p>
      * 两次相同参数的请求，如果间隔时间大于该参数，系统不会认定为重复提交的数据
      */
-    private int intervalTime = 10;
-
     public SameUrlDataInterceptor(ObjectMapper objectMapper) {
         super(objectMapper);
     }
 
-    public void setIntervalTime(int intervalTime) {
-        this.intervalTime = intervalTime;
-    }
-
-    @SuppressWarnings("unchecked")
     @Override
-    public boolean isRepeatSubmit(HttpServletRequest request) throws IOException {
-        String nowParams = "";
-        if (request instanceof RepeatedlyRequestWrapper) {
-            RepeatedlyRequestWrapper repeatedlyRequest = (RepeatedlyRequestWrapper) request;
-            try (ServletInputStream inputStream = repeatedlyRequest.getInputStream()) {
-                nowParams = IOUtils.toString(inputStream);
-            }
+    public boolean isRepeatSubmit(HttpServletRequest request, long intervalTime) throws IOException {
+
+        RMap<String, Long> map = redisson.getMap(Constants.REPEAT_SUBMIT_KEY + request.getSession().getId());
+        long now = System.currentTimeMillis();
+        Long last = map.get(request.getRequestURI());
+        map.put(request.getRequestURI(), now);
+        map.expire(Duration.ofSeconds(intervalTime));
+        if (Objects.isNull(last)) {
+            return false;
         }
-
-        // body参数为空，获取Parameter的数据
-        if (StringUtils.isEmpty(nowParams)) {
-            nowParams = objectMapper.writeValueAsString(request.getParameterMap());
+        if ((now - last) < (intervalTime * 1000L)) {
+            return true;
         }
-        Map<String, Object> nowDataMap = new HashMap<String, Object>();
-        nowDataMap.put(REPEAT_PARAMS, nowParams);
-        nowDataMap.put(REPEAT_TIME, System.currentTimeMillis());
-
-        // 请求地址（作为存放cache的key值）
-        String url = request.getRequestURI();
-
-        // 唯一值（没有消息头则使用请求地址）
-        String submitKey = request.getHeader(header);
-        if (StringUtils.isEmpty(submitKey)) {
-            submitKey = url;
-        }
-
-        // 唯一标识（指定key + 消息头）
-        String cache_repeat_key = Constants.REPEAT_SUBMIT_KEY + submitKey;
-
-        Object sessionObj = redisson.getBucket(cache_repeat_key).get();
-        if (sessionObj != null) {
-            Map<String, Object> sessionMap = (Map<String, Object>) sessionObj;
-            if (sessionMap.containsKey(url)) {
-                Map<String, Object> preDataMap = (Map<String, Object>) sessionMap.get(url);
-                if (compareParams(nowDataMap, preDataMap) && compareTime(nowDataMap, preDataMap)) {
-                    return true;
-                }
-            }
-        }
-        Map<String, Object> cacheMap = new HashMap<String, Object>();
-        cacheMap.put(url, nowDataMap);
-        redisson.getBucket(cache_repeat_key).set(cacheMap, intervalTime, TimeUnit.SECONDS);
         return false;
     }
 
-    /**
-     * 判断参数是否相同
-     */
-    private boolean compareParams(Map<String, Object> nowMap, Map<String, Object> preMap) {
-        String nowParams = (String) nowMap.get(REPEAT_PARAMS);
-        String preParams = (String) preMap.get(REPEAT_PARAMS);
-        return nowParams.equals(preParams);
-    }
-
-    /**
-     * 判断两次间隔时间
-     */
-    private boolean compareTime(Map<String, Object> nowMap, Map<String, Object> preMap) {
-        long time1 = (Long) nowMap.get(REPEAT_TIME);
-        long time2 = (Long) preMap.get(REPEAT_TIME);
-        return (time1 - time2) < (this.intervalTime * 1000L);
-    }
 }

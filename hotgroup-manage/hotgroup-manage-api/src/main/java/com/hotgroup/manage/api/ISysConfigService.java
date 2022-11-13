@@ -16,7 +16,7 @@ public interface ISysConfigService {
      * @param configId 参数配置ID
      * @return 参数配置信息
      */
-    SysConfig selectConfigById(Long configId);
+    SysConfig selectConfigById(String configId);
 
     /**
      * 根据键名查询参数配置信息
@@ -26,13 +26,7 @@ public interface ISysConfigService {
      */
     String selectConfigByKey(String configKey);
 
-    /**
-     * 根据id 或 键名查询
-     *
-     * @param config
-     * @return
-     */
-    SysConfig selectConfigByKey(SysConfig config);
+
 
     /**
      * 查询参数配置列表
@@ -64,7 +58,7 @@ public interface ISysConfigService {
      * @param configIds 需要删除的参数ID
      * @return 结果
      */
-    int deleteConfigByIds(Long[] configIds);
+    int deleteConfigByIds(String[] configIds);
 
     /**
      * 清空缓存数据

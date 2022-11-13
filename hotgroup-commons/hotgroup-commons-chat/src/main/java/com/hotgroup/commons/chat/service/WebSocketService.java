@@ -82,7 +82,7 @@ public class WebSocketService {
                 Optional.ofNullable(ChatService.CHAT_LIST.get(dto.getChatId()))
                         .ifPresent(sessions -> sessions.removeIf(session1 -> session1.getId().equals(session.getId())));
                 break;
-            case CHAT_DESTORY:
+            case CHAT_DESTROY:
                 ChatService.CHAT_LIST.remove(dto.getChatId());
                 break;
             default:

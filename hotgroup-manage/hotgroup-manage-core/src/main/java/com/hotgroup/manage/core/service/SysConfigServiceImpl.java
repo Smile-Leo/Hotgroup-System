@@ -1,17 +1,21 @@
 package com.hotgroup.manage.core.service;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.manage.api.ISysConfigService;
 import com.hotgroup.manage.core.mapper.SysConfigMapper;
 import com.hotgroup.manage.domain.entity.SysConfig;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 参数配置 服务层实现
@@ -31,10 +35,9 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * @return 参数配置信息
      */
     @Override
-    public SysConfig selectConfigById(Long configId) {
-        SysConfig config = new SysConfig();
-        config.setConfigId(configId);
-        return configMapper.selectConfig(config);
+    public SysConfig selectConfigById(String configId) {
+
+        return configMapper.selectById(configId);
     }
 
     /**
@@ -46,15 +49,9 @@ public class SysConfigServiceImpl implements ISysConfigService {
     @Override
     @Cacheable(key = "#configKey")
     public String selectConfigByKey(String configKey) {
-        SysConfig config = new SysConfig();
-        config.setConfigKey(configKey);
-        SysConfig retConfig = configMapper.selectConfig(config);
+        SysConfig retConfig = configMapper.selectOne(Wrappers.lambdaQuery(SysConfig.class)
+                .eq(SysConfig::getConfigKey, configKey));
         return StringUtils.trimToNull(retConfig.getConfigValue());
-    }
-
-    @Override
-    public SysConfig selectConfigByKey(SysConfig config) {
-        return configMapper.selectConfig(config);
     }
 
     /**
@@ -65,7 +62,8 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     public List<SysConfig> selectConfigList(SysConfig config) {
-        return configMapper.selectConfigList(config);
+
+        return configMapper.selectList(Wrappers.query(config));
     }
 
     /**
@@ -76,7 +74,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     public int insertConfig(SysConfig config) {
-        return configMapper.insertConfig(config);
+        return configMapper.insert(config);
     }
 
     /**
@@ -88,7 +86,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
     @Override
     @CacheEvict(key = "#config.configKey")
     public int updateConfig(SysConfig config) {
-        return configMapper.updateConfig(config);
+        return configMapper.updateById(config);
     }
 
     /**
@@ -99,14 +97,17 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     @CacheEvict(allEntries = true)
-    public int deleteConfigByIds(Long[] configIds) {
-        for (Long configId : configIds) {
+    public int deleteConfigByIds(String[] configIds) {
+        if (ArrayUtils.isEmpty(configIds)) {
+            return 1;
+        }
+        for (String configId : configIds) {
             SysConfig config = selectConfigById(configId);
             if (StringUtils.endsWithIgnoreCase(UserConstants.YES, config.getConfigType())) {
                 throw new IllegalArgumentException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
         }
-        return configMapper.deleteConfigByIds(configIds);
+        return configMapper.deleteBatchIds(Arrays.stream(configIds).collect(Collectors.toList()));
     }
 
     /**
@@ -125,9 +126,10 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     public String checkConfigKeyUnique(SysConfig config) {
-        Long configId = Objects.isNull(config.getConfigId()) ? -1L : config.getConfigId();
-        SysConfig info = configMapper.checkConfigKeyUnique(config.getConfigKey());
-        if (Objects.nonNull(info) && info.getConfigId().longValue() != configId.longValue()) {
+        String configId = Objects.isNull(config.getConfigId()) ? "1" : config.getConfigId();
+        SysConfig info = configMapper.selectOne(Wrappers.lambdaQuery(SysConfig.class)
+                .eq(SysConfig::getConfigKey, config.getConfigKey()));
+        if (Objects.nonNull(info) && !info.getConfigId().equals(configId)) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;

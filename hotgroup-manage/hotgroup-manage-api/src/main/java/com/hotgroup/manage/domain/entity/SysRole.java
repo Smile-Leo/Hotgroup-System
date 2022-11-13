@@ -1,10 +1,10 @@
 package com.hotgroup.manage.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
@@ -17,15 +17,16 @@ import javax.validation.constraints.Size;
  */
 @Data
 @ToString
-@TableName("sys_role")
+@TableName
+@EqualsAndHashCode(callSuper = true)
 public class SysRole extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
      * 角色ID
      */
-    @TableId
-    private Long roleId;
+    @TableId(type = IdType.ASSIGN_ID)
+    private String roleId;
 
     /**
      * 角色名称
@@ -71,6 +72,7 @@ public class SysRole extends BaseEntity {
      * 删除标志（0代表存在 2代表删除）
      */
     @JsonIgnore
+    @TableLogic
     private String delFlag;
 
     /**
@@ -81,24 +83,26 @@ public class SysRole extends BaseEntity {
     /**
      * 菜单组
      */
-    private Long[] menuIds;
+    @TableField(exist = false)
+    private String[] menuIds;
 
     /**
      * 部门组（数据权限）
      */
-    private Long[] deptIds;
+    @TableField(exist = false)
+    private String[] deptIds;
 
 
     public SysRole() {
 
     }
 
-    public SysRole(Long roleId) {
+    public SysRole(String roleId) {
         this.roleId = roleId;
     }
 
-    public static boolean isAdmin(Long roleId) {
-        return roleId != null && 1L == roleId;
+    public static boolean isAdmin(String roleId) {
+        return "1".equals(roleId);
     }
 
     public boolean isAdmin() {

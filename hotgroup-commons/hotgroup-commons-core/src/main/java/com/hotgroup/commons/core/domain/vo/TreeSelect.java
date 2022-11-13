@@ -18,7 +18,7 @@ public class TreeSelect implements Serializable {
     /**
      * 节点ID
      */
-    private Long id;
+    private String id;
 
     /**
      * 节点名称

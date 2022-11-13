@@ -20,7 +20,7 @@ public class ReplyServiceImpl implements ReplyService {
     public void send(ChatMessageDto dto) {
 
         switch (dto.getType()) {
-            case CHAT_DESTORY:
+            case CHAT_DESTROY:
                 ChatService.CHAT_LIST.remove(dto.getChatId());
                 break;
             case CHAT_EXIT:

@@ -12,10 +12,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
@@ -41,13 +43,8 @@ public class SysProfileController {
      */
     @GetMapping("info")
     @ApiOperation("info")
-    public AjaxResult<?> profile() {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        SysUser user = (SysUser) loginUser.getUser();
-        Map<String, Object> map = new HashMap<>();
-        map.put("user", user);
-        map.put("roleGroup", userService.selectUserRoleGroup(user.getUserId()));
-        return AjaxResult.success(map);
+    public AjaxResult<?> profile(@ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
+        return AjaxResult.success(loginUser.getUser());
     }
 
     /**
@@ -55,12 +52,9 @@ public class SysProfileController {
      */
     @PostMapping("edit")
     @ApiOperation("修改")
-    public AjaxResult<?> updateProfile(@Validated @RequestBody SysUser user) {
+    public AjaxResult<?> updateProfile(@Validated @RequestBody SysUser user,
+                                       @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
 
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        if (loginUser == null || loginUser.getUser() == null) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户未登陆");
-        }
         user.setUserId(loginUser.getUser().getId());
 
         if (StringUtils.isEmpty(user.getPhone())) {
@@ -70,13 +64,11 @@ public class SysProfileController {
             return AjaxResult.error("修改用户'" + user.getPhone() + "'失败，手机号码已存在");
         }
 
-
         //防止修改账号
         user.setUserName(null);
-        user.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
         userService.updateUserProfile(user);
         // 更新token
-        UserDetails userDetails = userDetailsService.loadUserByUsername(SecurityUtils.getLoginUser().getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginUser.getUsername());
         String token = tokenService.createToken((LoginUser) userDetails);
 
         return AjaxResult.success(token);
@@ -88,8 +80,8 @@ public class SysProfileController {
      */
     @PostMapping("updatePwd")
     @ApiOperation("重置密码")
-    public AjaxResult<?> updatePwd(String oldPassword, String newPassword) {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+    public AjaxResult<?> updatePwd(String oldPassword, String newPassword,
+                                   @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
         String userName = loginUser.getUsername();
         String password = loginUser.getPassword();
         if (!SecurityUtils.matchesPassword(oldPassword, password)) {
@@ -98,10 +90,10 @@ public class SysProfileController {
         if (SecurityUtils.matchesPassword(newPassword, password)) {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
-        if (userService.resetUserPwd(userName, SecurityUtils.encryptPassword(newPassword)) > 0) {
-            return AjaxResult.success();
-        }
-        return AjaxResult.error("修改密码异常，请联系管理员");
+        userService.resetUserPwd(userName, newPassword);
+
+        return AjaxResult.success();
+
     }
 
     /**
@@ -109,8 +101,8 @@ public class SysProfileController {
      */
     @PostMapping("avatar")
     @ApiOperation("上传头像")
-    public AjaxResult<?> avatar(@Validated @NotBlank String url) throws IOException {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+    public AjaxResult<?> avatar(@Validated @NotBlank String url,
+                                @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) throws IOException {
         userService.updateUserAvatar(loginUser.getUsername(), url);
         return AjaxResult.success();
 

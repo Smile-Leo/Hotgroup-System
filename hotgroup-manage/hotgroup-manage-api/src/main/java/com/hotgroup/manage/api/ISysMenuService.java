@@ -52,7 +52,7 @@ public interface ISysMenuService {
      * @param roleId 角色ID
      * @return 选中菜单列表
      */
-    List<Integer> selectMenuListByRoleId(Long roleId);
+    List<Integer> selectMenuListByRoleId(String roleId);
 
     /**
      * 构建前端路由所需要的菜单
@@ -84,7 +84,7 @@ public interface ISysMenuService {
      * @param menuId 菜单ID
      * @return 菜单信息
      */
-    SysMenu selectMenuById(Long menuId);
+    SysMenu selectMenuById(String menuId);
 
     /**
      * 是否存在菜单子节点
@@ -92,7 +92,7 @@ public interface ISysMenuService {
      * @param menuId 菜单ID
      * @return 结果 true 存在 false 不存在
      */
-    boolean hasChildByMenuId(Long menuId);
+    boolean hasChildByMenuId(String menuId);
 
     /**
      * 查询菜单是否存在角色
@@ -100,7 +100,7 @@ public interface ISysMenuService {
      * @param menuId 菜单ID
      * @return 结果 true 存在 false 不存在
      */
-    boolean checkMenuExistRole(Long menuId);
+    boolean checkMenuExistRole(String menuId);
 
     /**
      * 新增保存菜单信息
@@ -124,7 +124,7 @@ public interface ISysMenuService {
      * @param menuId 菜单ID
      * @return 结果
      */
-    int deleteMenuById(Long menuId);
+    int deleteMenuById(String menuId);
 
     /**
      * 校验菜单名称是否唯一

@@ -2,6 +2,7 @@ package com.hotgroup.manage.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
 import lombok.Data;
@@ -19,6 +20,7 @@ import javax.validation.constraints.Null;
 @Data
 @Table
 @Entity
+@TableName
 public class HgUserInfoAudit extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -27,7 +29,7 @@ public class HgUserInfoAudit extends BaseEntity {
      * ID
      */
     @Null(message = "Id自动生成", groups = InsertGroup.class)
-    @TableId(type = IdType.ASSIGN_UUID)
+    @TableId(type = IdType.ASSIGN_ID)
     @Id
     private String id;
 

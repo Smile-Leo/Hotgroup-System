@@ -113,7 +113,7 @@ public class TokenService {
             token = request.getParameter("token");
         }
         if (StringUtils.isNotEmpty(token) && token.startsWith(Constants.TOKEN_PREFIX)) {
-            token = token.replace(Constants.TOKEN_PREFIX, "");
+            token = token.substring(Constants.TOKEN_PREFIX.length());
         }
         return token;
     }

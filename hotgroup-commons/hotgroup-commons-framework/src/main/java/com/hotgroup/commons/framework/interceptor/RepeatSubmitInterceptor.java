@@ -1,12 +1,11 @@
 package com.hotgroup.commons.framework.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hotgroup.commons.core.annotation.RepeatSubmit;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.ServletUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -20,10 +19,11 @@ import java.lang.reflect.Method;
  *
  * @author Lzw
  */
-@Component
 @RequiredArgsConstructor
 public abstract class RepeatSubmitInterceptor implements HandlerInterceptor {
 
+    public static final AjaxResult<String> ERROR = AjaxResult.error("您操作太快了，请稍后再试");
+    public static final long DEFAULT_INTERVAL_TIME = 2L;
     final ObjectMapper objectMapper;
 
     @Override
@@ -31,14 +31,21 @@ public abstract class RepeatSubmitInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
-            RepeatSubmit annotation = method.getAnnotation(RepeatSubmit.class);
-            if (annotation != null) {
-                if (this.isRepeatSubmit(request)) {
-                    AjaxResult ajaxResult = AjaxResult.error("不允许重复提交，请稍后再试");
-                    ServletUtils.renderJson(response, objectMapper.writeValueAsString(ajaxResult));
+            if (!HttpMethod.GET.name().equalsIgnoreCase(request.getMethod())) {
+                RepeatSubmit annotation = method.getAnnotation(RepeatSubmit.class);
+                long intervalTime = DEFAULT_INTERVAL_TIME;
+                if (annotation != null) {
+                    if (annotation.disable()) {
+                        return true;
+                    }
+                    intervalTime = annotation.intervalTime();
+                }
+                if (this.isRepeatSubmit(request, intervalTime)) {
+                    ServletUtils.renderJson(response, objectMapper.writeValueAsString(ERROR));
                     return false;
                 }
             }
+
 
         }
         return true;
@@ -51,5 +58,5 @@ public abstract class RepeatSubmitInterceptor implements HandlerInterceptor {
      * @return
      * @throws Exception
      */
-    public abstract boolean isRepeatSubmit(HttpServletRequest request) throws IOException;
+    public abstract boolean isRepeatSubmit(HttpServletRequest request, long intervalTime) throws IOException;
 }

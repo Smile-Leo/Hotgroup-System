@@ -45,23 +45,6 @@ public interface ISysUserService {
 
 
     /**
-     * 带权限的用户Id查询
-     *
-     * @param userId
-     * @return
-     */
-    SysUser selectUserByAuth(String userId);
-
-    /**
-     * 根据用户ID查询用户所属角色组
-     *
-     * @param userId 用户名
-     * @return 结果
-     */
-    String selectUserRoleGroup(String userId);
-
-
-    /**
      * 校验用户名称是否唯一
      *
      * @param userName 用户名称
@@ -101,13 +84,6 @@ public interface ISysUserService {
      */
     int updateSysUser(SysUser user);
 
-    /**
-     * 修改用户信息,包含部门,用户
-     *
-     * @param user 用户信息
-     * @return 结果
-     */
-    int updateUser(SysUser user);
 
     /**
      * 修改用户状态

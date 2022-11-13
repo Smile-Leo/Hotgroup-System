@@ -7,10 +7,10 @@ import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.commons.database.page.PageHelper;
 import com.hotgroup.manage.api.ISysConfigService;
+import com.hotgroup.manage.api.ISysUserRoleService;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.core.mapper.SysRoleMapper;
 import com.hotgroup.manage.core.mapper.SysUserMapper;
-import com.hotgroup.manage.core.mapper.SysUserRoleMapper;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;
 import com.hotgroup.manage.domain.entity.SysUserRole;
@@ -18,9 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -39,9 +39,9 @@ public class SysUserServiceImpl implements ISysUserService {
     @Resource
     private SysRoleMapper roleMapper;
     @Resource
-    private SysUserRoleMapper userRoleMapper;
-    @Resource
     private ISysConfigService configService;
+    @Resource
+    private ISysUserRoleService userRoleService;
 
 
     /**
@@ -85,36 +85,7 @@ public class SysUserServiceImpl implements ISysUserService {
         return userMapper.selectById(userId);
     }
 
-    /**
-     * 带权限的用户Id查询
-     *
-     * @param userId
-     * @return
-     */
-    public SysUser selectUserByAuth(String userId) {
-        SysUser sysUser = new SysUser();
-        sysUser.setUserId(userId);
-        return userMapper.selectUserByAuth(sysUser);
-    }
 
-    /**
-     * 查询用户所属角色组
-     *
-     * @param userId 用户ID
-     * @return 结果
-     */
-    @Override
-    public String selectUserRoleGroup(String userId) {
-        List<SysRole> list = roleMapper.selectRolesByUserId(userId);
-        StringBuilder idsStr = new StringBuilder();
-        for (SysRole role : list) {
-            idsStr.append(role.getRoleName()).append(",");
-        }
-        if (StringUtils.isNotEmpty(idsStr.toString())) {
-            return idsStr.substring(0, idsStr.length() - 1);
-        }
-        return idsStr.toString();
-    }
 
 
     /**
@@ -143,7 +114,7 @@ public class SysUserServiceImpl implements ISysUserService {
         if (StringUtils.isEmpty(user.getPhone())) {
             return UserConstants.UNIQUE;
         }
-        String userId = Objects.isNull(user.getUserId()) ? "1L" : user.getUserId();
+        String userId = Objects.isNull(user.getUserId()) ? "1" : user.getUserId();
         SysUser info = userMapper.checkPhoneUnique(user.getPhone());
         if (Objects.nonNull(info) && !info.getUserId().equals(userId)) {
             return UserConstants.NOT_UNIQUE;
@@ -173,9 +144,11 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int insertUser(SysUser user) {
-        if (StringUtils.isEmpty(user.getPassword())) {
-            user.setPassword(SecurityUtils.encryptPassword(configService.selectConfigByKey("sys.user.initPassword")));
+        if (StringUtils.isBlank(user.getPassword())) {
+            String password = configService.selectConfigByKey("sys.user.initPassword");
+            user.setPassword(password);
         }
+        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
 
         // 新增用户信息
         int rows = userMapper.insert(user);
@@ -190,24 +163,13 @@ public class SysUserServiceImpl implements ISysUserService {
         String userId = user.getUserId();
 
         // 删除用户与角色关联
-        userRoleMapper.deleteUserRoleByUserId(userId);
+        userRoleService.removeUserId(userId);
         // 新增用户与角色管理
         insertUserRole(user);
-        if (StringUtils.isNotEmpty(user.getPassword())) {
-            user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        }
+
         return userMapper.updateById(user);
     }
 
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int updateUser(SysUser user) {
-        if (StringUtils.isNotEmpty(user.getPassword())) {
-            user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        }
-        return userMapper.updateById(user);
-    }
 
     /**
      * 修改用户状态
@@ -218,7 +180,10 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateUserStatus(SysUser user) {
-        return userMapper.updateById(user);
+        return userMapper.update(null, Wrappers.lambdaUpdate(SysUser.class)
+                .eq(SysUser::getUserId, user.getUserId())
+                .set(SysUser::getStatus, user.getStatus())
+        );
     }
 
     /**
@@ -259,7 +224,8 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int resetPwd(SysUser user) {
-        user.setPassword(SecurityUtils.encryptPassword(configService.selectConfigByKey("sys.user.initPassword")));
+        String password = configService.selectConfigByKey("sys.user.initPassword");
+        user.setPassword(SecurityUtils.encryptPassword(password));
         userMapper.update(null, Wrappers.lambdaUpdate(SysUser.class)
                 .eq(SysUser::getUserName, user.getUserName())
                 .set(SysUser::getAvatar, user.getPassword())
@@ -291,18 +257,13 @@ public class SysUserServiceImpl implements ISysUserService {
      * @param user 用户对象
      */
     public void insertUserRole(SysUser user) {
-        Long[] roles = user.getRoles().stream().map(SysRole::getRoleId).toArray(Long[]::new);
-        // 新增用户与角色管理
-        List<SysUserRole> list = new ArrayList<SysUserRole>();
-        for (Long roleId : roles) {
-            SysUserRole ur = new SysUserRole();
-            ur.setUserId(user.getUserId());
-            ur.setRoleId(roleId);
-            list.add(ur);
+        if (CollectionUtils.isEmpty(user.getRoles())) {
+            return;
         }
-        if (list.size() > 0) {
-            userRoleMapper.batchUserRole(list);
-        }
+        String[] roleIds = user.getRoles().stream()
+                .map(SysRole::getRoleId).toArray(String[]::new);
+        userRoleService.add(user.getUserId(), roleIds);
+
     }
 
 
@@ -316,8 +277,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Transactional(rollbackFor = Exception.class)
     public int deleteUserById(String userId) {
         // 删除用户与角色关联
-        userRoleMapper.deleteUserRoleByUserId(userId);
-
+        userRoleService.removeUserId(userId);
         return userMapper.deleteUserById(userId);
     }
 
@@ -334,7 +294,9 @@ public class SysUserServiceImpl implements ISysUserService {
             SysUser user = new SysUser();
             user.setUserId(userId);
             checkUserAllowed(user);
+            userRoleService.removeUserId(userId);
         }
+
         userMapper.deleteBatchIds(Arrays.asList(userIds));
         return userIds.length;
     }

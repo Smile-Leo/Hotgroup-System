@@ -1,4 +1,4 @@
-package com.hotgroup.customer.framework.config;
+package com.hotgroup.commons.framework.security;
 
 import com.hotgroup.commons.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.hotgroup.commons.framework.security.handle.AuthenticationEntryPointImpl;
@@ -13,9 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.annotation.Resource;
 
@@ -51,10 +52,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
     /**
-     * 跨域过滤器
+     * 跨域
      */
-    @Resource
-    private CorsFilter corsFilter;
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        // 设置访问源地址
+//        config.addAllowedOrigin("*");
+        config.addAllowedOriginPattern("*");
+        // 设置访问源请求头
+        config.addAllowedHeader("*");
+        // 设置访问源请求方法
+        config.addAllowedMethod(HttpMethod.GET);
+        config.addAllowedMethod(HttpMethod.DELETE);
+        config.addAllowedMethod(HttpMethod.PUT);
+        config.addAllowedMethod(HttpMethod.POST);
+        config.addAllowedMethod(HttpMethod.OPTIONS);
+
+        config.setMaxAge(3600L);
+        // 对接口配置跨域设置
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
     /**
      * 解决 无法直接注入 AuthenticationManager
@@ -86,7 +106,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                // CSRF禁用，因为不使用session
+                // JWT TOKEN
+                .addFilterBefore(authenticationTokenFilter, BasicAuthenticationFilter.class)
                 .csrf().disable()
                 // 认证失败处理类
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
@@ -95,29 +116,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/captchaImage", "qrLogin", "qrCodelogin").permitAll()
+                .antMatchers("/**/login", "/captchaImage", "qrLogin", "qrCodelogin").permitAll()
                 .antMatchers(
-                        HttpMethod.GET,
-                        "/*.html",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
+                        HttpMethod.GET, "/*.html", "/**/*.html", "/**/*.css", "/**/*.js"
                 ).permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/*/api-docs").permitAll()
-                .antMatchers("/wx/user/*/login").permitAll()
-                .antMatchers("/websocket/**").permitAll()
-                .antMatchers("/public/**").permitAll()
+                .antMatchers("/common/captcha/create").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()
-                .headers().frameOptions().disable();
-        httpSecurity.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
-        // 添加JWT filter
-        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        // 添加CORS filter
-        httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
+                .headers().frameOptions().disable()
+                .and()
+                .logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler)
+                .and()
+                .cors().configurationSource(corsConfigurationSource())
+        ;
     }
 
 
@@ -136,4 +151,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.hotgroup.manage.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hotgroup.commons.core.domain.model.IUser;
@@ -31,6 +32,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
+@TableName
 public class SysUser extends BaseEntity implements IUser {
 
     private static final long serialVersionUID = 1L;
@@ -39,7 +41,7 @@ public class SysUser extends BaseEntity implements IUser {
      * 用户ID
      */
     @Null(message = "userId自动生成", groups = InsertGroup.class)
-    @TableId(type = IdType.ASSIGN_UUID)
+    @TableId(type = IdType.ASSIGN_ID)
     @Id
     private String userId;
 

@@ -43,11 +43,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 
     SysUser selectUserById(String userId);
 
-    /**
-     * 带权限的用户Id查询
-     */
-    SysUser selectUserByAuth(SysUser user);
-
 
     /**
      * 通过用户ID删除用户

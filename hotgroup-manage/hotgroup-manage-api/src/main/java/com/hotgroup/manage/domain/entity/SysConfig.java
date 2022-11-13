@@ -1,10 +1,13 @@
 package com.hotgroup.manage.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
@@ -18,15 +21,17 @@ import javax.validation.constraints.Size;
 @Data
 @ToString
 @ApiModel("参数配置对象")
+@EqualsAndHashCode(callSuper = true)
+@TableName
 public class SysConfig extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
      * 参数主键
      */
-    @TableId
+    @TableId(type = IdType.ASSIGN_ID)
     @ApiModelProperty("id")
-    private Long configId;
+    private String configId;
 
     /**
      * 参数名称
