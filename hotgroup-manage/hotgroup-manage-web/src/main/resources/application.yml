@@ -27,7 +27,7 @@ server:
 logging:
   level:
     com.hotgroup: debug
-    org.springframework: warn
+#    org.springframework: warn
     net.bramp.ffmpeg: error
 
 # Spring配置
@@ -70,7 +70,9 @@ spring:
       show-sql: false
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
