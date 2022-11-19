@@ -45,13 +45,6 @@ stages:
         notify: []
         strategy:
           retry: '0'
-      - step: sc@opensca
-        name: open_sca
-        displayName: OpenSCA 开源组件检测
-        detectPath: ./
-        notify: []
-        strategy:
-          retry: '0'
   - name: stage-8f9832d2
     displayName: 部署
     strategy: naturally
@@ -80,11 +73,9 @@ stages:
           - '# git clone ***@***.git'
           - echo 'Hello Gitee Go!'
           - cd /root/gitee_go/deploy
-          - echo `ps -ef | grep hotgroup-customer | grep -v grep | awk '{print $2}' | xargs kill -9`
           - echo `ps -ef | grep hotgroup-manage | grep -v grep | awk '{print $2}' | xargs kill -9`
           - pwd
           - tar -xvf output.tar.gz
-          - nohup java -Xmx256m -Xms256m -XX:+UseG1GC -jar hotgroup-customer-web.jar >> customer.log 2&1 &
           - nohup java -Xmx256m -Xms256m -XX:+UseG1GC -jar hotgroup-manage-web.jar >> manage.log 2&1 &
           - sleep 5
           - cd -
