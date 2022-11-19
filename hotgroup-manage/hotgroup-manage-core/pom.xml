@@ -9,6 +9,12 @@
     </parent>
 
     <artifactId>hotgroup-manage-core</artifactId>
+    
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <weixin-version>4.3.2.B</weixin-version>
+    </properties>
 
     <dependencies>
 
@@ -24,6 +30,21 @@
             <version>${hotgroup.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+            <version>${weixin-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
+            <version>${weixin-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-open</artifactId>
+            <version>${weixin-version}</version>
+        </dependency>
     </dependencies>
     <build>
         <!--把Java目录中的xml文件打包到项目中-->

@@ -23,6 +23,12 @@
             <artifactId>hotgroup-commons-storage</artifactId>
             <version>${hotgroup.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-commons-media</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
