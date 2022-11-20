@@ -11,8 +11,6 @@
     <artifactId>hotgroup-manage-core</artifactId>
     
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
         <weixin-version>4.3.2.B</weixin-version>
     </properties>
 

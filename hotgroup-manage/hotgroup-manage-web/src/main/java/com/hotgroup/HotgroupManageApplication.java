@@ -9,9 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author Lzw
  */
-@SpringBootApplication(exclude = {
-//        DataSourceAutoConfiguration.class
-})
+@SpringBootApplication
 @Slf4j
 public class HotgroupManageApplication {
     public static void main(String[] args) {
