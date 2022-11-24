@@ -28,17 +28,11 @@ import java.util.stream.Collectors;
  */
 @Service
 public class SysMenuServiceImpl implements ISysMenuService {
-    public static final String PREMISSION_STRING = "perms[\"{0}\"]";
 
     @Resource
     private SysMenuMapper menuMapper;
-
-    @Resource
-    private SysRoleMapper roleMapper;
-
     @Resource
     private ISysRoleService roleService;
-
     @Resource
     private SysRoleMenuMapper roleMenuMapper;
 

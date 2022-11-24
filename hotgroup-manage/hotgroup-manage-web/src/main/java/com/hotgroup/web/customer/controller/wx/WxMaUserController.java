@@ -12,6 +12,7 @@ import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.IHotgroupUserLoginService;
 import com.hotgroup.manage.domain.entity.HgUser;
 import com.hotgroup.manage.framework.service.WxMaConfiguration;
+import com.hotgroup.manage.framework.service.WxMaProperties;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -32,7 +33,7 @@ import javax.validation.constraints.NotBlank;
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
 @RestController
-@RequestMapping("/wx/user/{appid}")
+@RequestMapping("/wx/user")
 @Api(tags = "小程序用户相关")
 public class WxMaUserController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -42,12 +43,17 @@ public class WxMaUserController {
     @Resource
     IHotgroupUserLoginService userLoginService;
 
+    private final String appid;
+
+    public WxMaUserController(WxMaProperties wxMaProperties) {
+        this.appid = wxMaProperties.getConfigs().get(0).getAppid();
+    }
 
 
     @GetMapping("login")
     @ApiOperation("小程序登陆")
     @Validated
-    public AjaxResult<?> login(@PathVariable String appid, @NotBlank String code, @NotBlank String signature,
+    public AjaxResult<?> login(@NotBlank String code, @NotBlank String signature,
                                @NotBlank String rawData, @NotBlank String encryptedData, @NotBlank String iv) {
 
         try {
@@ -87,7 +93,7 @@ public class WxMaUserController {
      * 登陆接口
      */
 //    @GetMapping("/login2")
-    public WxMaJscode2SessionResult login2(@PathVariable String appid, String code) {
+    public WxMaJscode2SessionResult login2(String code) {
 
 
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
@@ -109,7 +115,7 @@ public class WxMaUserController {
 
     @ApiOperation("获取用户信息接口")
     @GetMapping("/info")
-    public WxMaUserInfo info(@PathVariable String appid, String sessionKey,
+    public WxMaUserInfo info(String sessionKey,
                        String signature, String rawData, String encryptedData, String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
@@ -126,7 +132,7 @@ public class WxMaUserController {
 
     @GetMapping("/phone")
     @ApiOperation("获取用户绑定手机号信息")
-    public WxMaPhoneNumberInfo phone(@PathVariable String appid, String sessionKey, String signature,
+    public WxMaPhoneNumberInfo phone(String sessionKey, String signature,
                         String rawData, String encryptedData, String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 

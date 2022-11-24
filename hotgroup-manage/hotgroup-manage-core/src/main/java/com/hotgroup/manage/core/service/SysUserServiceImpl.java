@@ -13,7 +13,6 @@ import com.hotgroup.manage.core.mapper.SysRoleMapper;
 import com.hotgroup.manage.core.mapper.SysUserMapper;
 import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;
-import com.hotgroup.manage.domain.entity.SysUserRole;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -84,8 +83,6 @@ public class SysUserServiceImpl implements ISysUserService {
     public SysUser selectUserById(String userId) {
         return userMapper.selectById(userId);
     }
-
-
 
 
     /**
@@ -278,7 +275,7 @@ public class SysUserServiceImpl implements ISysUserService {
     public int deleteUserById(String userId) {
         // 删除用户与角色关联
         userRoleService.removeUserId(userId);
-        return userMapper.deleteUserById(userId);
+        return userMapper.deleteById(userId);
     }
 
     /**
@@ -301,10 +298,6 @@ public class SysUserServiceImpl implements ISysUserService {
         return userIds.length;
     }
 
-    @Override
-    public int getUserSize() {
-        return userMapper.getUserSize();
-    }
 
 
 }

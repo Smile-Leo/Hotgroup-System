@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.constant.WxMaConstants;
 import com.google.common.collect.Lists;
 import com.hotgroup.manage.framework.service.WxMaConfiguration;
+import com.hotgroup.manage.framework.service.WxMaProperties;
 import io.swagger.annotations.Api;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -30,10 +31,16 @@ import java.util.List;
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
 @RestController
-@RequestMapping("/wx/media/{appid}")
+@RequestMapping("/wx/media/")
 @Api(tags = "微信素材")
 public class WxMaMediaController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final String appid;
+
+    public WxMaMediaController(WxMaProperties wxMaProperties) {
+        this.appid = wxMaProperties.getConfigs().get(0).getAppid();
+    }
 
     /**
      * 上传临时素材
@@ -41,7 +48,7 @@ public class WxMaMediaController {
      * @return 素材的media_id列表，实际上如果有的话，只会有一个
      */
     @PostMapping("/upload")
-    public List<String> uploadMedia(@PathVariable String appid, HttpServletRequest request) throws WxErrorException {
+    public List<String> uploadMedia(HttpServletRequest request) throws WxErrorException {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
         CommonsMultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
@@ -76,7 +83,7 @@ public class WxMaMediaController {
      * 下载临时素材
      */
     @GetMapping("/download/{mediaId}")
-    public File getMedia(@PathVariable String appid, @PathVariable String mediaId) throws WxErrorException {
+    public File getMedia(@PathVariable String mediaId) throws WxErrorException {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
         return wxService.getMediaService().getMedia(mediaId);

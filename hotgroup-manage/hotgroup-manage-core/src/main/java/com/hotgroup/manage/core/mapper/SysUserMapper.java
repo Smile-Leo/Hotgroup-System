@@ -45,22 +45,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 
 
     /**
-     * 通过用户ID删除用户
-     *
-     * @param userId 用户ID
-     * @return 结果
-     */
-    int deleteUserById(String userId);
-
-    /**
-     * 批量删除用户信息
-     *
-     * @param userIds 需要删除的用户ID
-     * @return 结果
-     */
-    int deleteUserByIds(String[] userIds);
-
-    /**
      * 校验用户名称是否唯一
      *
      * @param userName 用户名称
@@ -75,22 +59,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
      * @return 结果
      */
     SysUser checkPhoneUnique(String phonenumber);
-
-
-    /**
-     * 获取用户总数
-     *
-     * @return
-     */
-    int getUserSize();
-
-    /**
-     * 查询用户的角色ids
-     *
-     * @param userId
-     * @return
-     */
-    List<String> selectUserRoleIds(String userId);
 
 
 }

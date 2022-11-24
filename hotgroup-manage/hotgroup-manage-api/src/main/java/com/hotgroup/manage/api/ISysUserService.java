@@ -143,12 +143,7 @@ public interface ISysUserService {
      */
     int deleteUserByIds(String[] userIds);
 
-    /**
-     * 获取用户总数
-     *
-     * @return
-     */
-    int getUserSize();
+
 
 
 }

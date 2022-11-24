@@ -106,7 +106,7 @@ public class WxMaConfiguration {
         return ROUTERS.get(appid);
     }
 
-//    @PostConstruct
+    @PostConstruct
     public void init() {
         List<WxMaProperties.Config> configs = this.properties.getConfigs();
         if (configs == null) {

@@ -15,6 +15,7 @@ redisson:
       type: standalone
       password: admin@123
       database: 0
+      connectionMinimumIdleSize: 2
 
 minio:
   endpoint: ${server.ip}:9000
@@ -26,3 +27,8 @@ minio:
 logging:
   level:
     com.hotgroup: debug
+wx:
+  miniapp:
+    configs:
+      - appid: wx395bde5a534e9b9b
+        secret: 9322fa4cbe6c38070760ac866d0513e2
