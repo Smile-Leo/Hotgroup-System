@@ -1,5 +1,6 @@
 package com.hotgroup.manage.core.facade;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.manage.api.IHgUserService;
 import com.hotgroup.manage.api.IHotgroupUserLoginService;
@@ -23,5 +24,12 @@ public class HotgroupUserLoginServiceImpl implements IHotgroupUserLoginService {
         hgUserService.saveOrUpdate(user);
 
         return user;
+    }
+
+    @Override
+    public IUser getUserByUnionId(String unionId) {
+
+        return hgUserService.getOne(Wrappers.lambdaQuery(HgUser.class)
+                .eq(HgUser::getUnionId, unionId));
     }
 }

@@ -10,4 +10,6 @@ import com.hotgroup.manage.domain.entity.HgUser;
 public interface IHotgroupUserLoginService {
 
     IUser login(HgUser user);
+
+    IUser getUserByUnionId(String unionId);
 }
