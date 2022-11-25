@@ -1,11 +1,14 @@
 package com.hotgroup.commons.framework.service;
 
 import com.hotgroup.commons.core.constant.Constants;
+import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.commons.core.domain.model.LoginUser;
+import com.hotgroup.commons.core.domain.model.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,8 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * token验证处理
@@ -49,8 +53,43 @@ public class TokenService {
         if (StringUtils.isNotEmpty(token)) {
             Claims claims = parseToken(token);
             // 解析对应的权限以及用户信息
-            String username = String.valueOf(claims.get(Constants.LOGIN_USER_KEY));
-            return (LoginUser) userDetailsService.loadUserByUsername(username);
+            //用户id
+            String userId = claims.getId();
+            //用户名
+            String userName = claims.getSubject();
+            //用户类型
+            UserType type = UserType.valueOf(claims.getAudience());
+            //权限
+            Set<String> permissions = Stream.of(
+                            StringUtils.split(claims.getIssuer(), ","))
+                    .collect(Collectors.toSet());
+
+            return new LoginUser(new IUser() {
+                @Override
+                public String getId() {
+                    return userId;
+                }
+
+                @Override
+                public String getPassword() {
+                    return null;
+                }
+
+                @Override
+                public String getUserName() {
+                    return userName;
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    return true;
+                }
+
+                @Override
+                public boolean isAdmin() {
+                    return "1L".equals(userId);
+                }
+            }, permissions, type);
         }
         return null;
     }
@@ -63,8 +102,15 @@ public class TokenService {
      * @return 令牌
      */
     public String createToken(LoginUser loginUser) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(Constants.LOGIN_USER_KEY, loginUser.getUsername());
+        DefaultClaims claims = new DefaultClaims();
+        //用户id
+        claims.setId(loginUser.getUser().getId());
+        //用户名
+        claims.setSubject(loginUser.getUsername());
+        //用户类型
+        claims.setAudience(loginUser.getType().name());
+        //权限
+        claims.setIssuer(String.join(",", loginUser.getPermissions()));
         return createToken(claims);
     }
 
@@ -75,7 +121,7 @@ public class TokenService {
      * @param claims 数据声明
      * @return 令牌
      */
-    private String createToken(Map<String, Object> claims) {
+    private String createToken(Claims claims) {
         LocalDateTime currentTime = LocalDateTime.now();
         return Jwts.builder()
                 .setClaims(claims)

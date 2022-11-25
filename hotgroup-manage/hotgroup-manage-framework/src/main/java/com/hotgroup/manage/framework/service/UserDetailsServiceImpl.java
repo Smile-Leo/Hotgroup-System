@@ -1,6 +1,7 @@
 package com.hotgroup.manage.framework.service;
 
 import com.hotgroup.commons.core.domain.model.LoginUser;
+import com.hotgroup.commons.core.domain.model.UserType;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public UserDetails createLoginUser(SysUser user) {
-        return new LoginUser(user, permissionService.getMenuPermission(user));
+        return new LoginUser(user, permissionService.getMenuPermission(user), UserType.SYS);
     }
 }

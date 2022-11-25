@@ -7,6 +7,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.google.common.collect.Sets;
 import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.commons.core.domain.model.LoginUser;
+import com.hotgroup.commons.core.domain.model.UserType;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.IHotgroupUserLoginService;
@@ -17,8 +18,6 @@ import com.hotgroup.web.vo.WxMaLoginVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +36,6 @@ import java.util.Objects;
 @RequestMapping("/wx/user")
 @Api(tags = "小程序用户相关")
 public class WxMaUserController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Resource
     TokenService tokenService;
@@ -65,7 +63,7 @@ public class WxMaUserController {
         IUser user = userLoginService.getUserByUnionId(session.getUnionid());
 
         if (Objects.nonNull(user)) {
-            String token = tokenService.createToken(new LoginUser(user, Sets.newHashSet()));
+            String token = tokenService.createToken(new LoginUser(user, Sets.newHashSet(), UserType.WX));
             wxMaLoginVO.setToken(token);
         }
         wxMaLoginVO.setSessionKey(session.getSessionKey());
@@ -101,7 +99,7 @@ public class WxMaUserController {
 
         IUser login = userLoginService.login(hgUser);
         WxMaLoginVO wxMaLoginVO = new WxMaLoginVO();
-        String token = tokenService.createToken(new LoginUser(login, Sets.newHashSet()));
+        String token = tokenService.createToken(new LoginUser(login, Sets.newHashSet(), UserType.WX));
         wxMaLoginVO.setToken(token);
         return AjaxResult.success(wxMaLoginVO);
 

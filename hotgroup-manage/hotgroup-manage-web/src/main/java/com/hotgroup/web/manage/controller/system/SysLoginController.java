@@ -1,13 +1,16 @@
 package com.hotgroup.web.manage.controller.system;
 
+import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.commons.core.domain.model.LoginUser;
+import com.hotgroup.commons.core.domain.model.UserType;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.domain.vo.LoginRequest;
+import com.hotgroup.manage.api.IHgUserService;
 import com.hotgroup.manage.api.ISysMenuService;
+import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysMenu;
-import com.hotgroup.manage.domain.entity.SysUser;
+import com.hotgroup.manage.domain.vo.RouterVo;
 import com.hotgroup.manage.framework.service.SysLoginService;
-import com.hotgroup.manage.framework.service.SysPermissionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +40,8 @@ import java.util.Set;
 public class SysLoginController {
     private final SysLoginService loginService;
     private final ISysMenuService menuService;
-    private final SysPermissionService permissionService;
+    private final ISysUserService sysUserService;
+    private final IHgUserService hgUserService;
 
 
     /**
@@ -66,15 +71,18 @@ public class SysLoginController {
     @ApiOperation("用户信息")
     @GetMapping("getInfo")
     public AjaxResult<?> getInfo(@ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
-        SysUser user = (SysUser) loginUser.getUser();
-        // 角色集合
-        Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合
-        Set<String> permissions = permissionService.getMenuPermission(user);
+        Set<String> permissions = loginUser.getPermissions();
+        IUser user = null;
+        if (loginUser.getType().equals(UserType.SYS)) {
+            user = sysUserService.selectUserById(loginUser.getUser().getId());
+        }
+        if (loginUser.getType().equals(UserType.WX)) {
+            user = hgUserService.getById(loginUser.getUser().getId());
+        }
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("user", user);
-        map.put("roles", roles);
         map.put("permissions", permissions);
         return AjaxResult.success(map);
     }
@@ -86,11 +94,13 @@ public class SysLoginController {
      */
     @ApiOperation("用户菜单")
     @GetMapping("getRouters")
-    public AjaxResult<?> getRouters(@ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
-        // 用户信息
-        SysUser user = (SysUser) loginUser.getUser();
-        List<SysMenu> menus = menuService.selectMenuTreeByUserId(user.getUserId());
-        return AjaxResult.success(menuService.buildMenus(menus));
+    public AjaxResult<List<RouterVo>> getRouters(@ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
+        if (loginUser.getType().equals(UserType.SYS)) {
+            // 用户信息
+            List<SysMenu> menus = menuService.selectMenuTreeByUserId(loginUser.getUser().getId());
+            return AjaxResult.success(menuService.buildMenus(menus));
+        }
+        return AjaxResult.success(Collections.emptyList());
     }
 
 

@@ -18,23 +18,19 @@ import java.util.Set;
 public class LoginUser implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 权限列表
-     */
     private Set<String> permissions;
 
-    /**
-     * 用户信息
-     */
     private IUser user;
 
+    private UserType type;
 
     public LoginUser() {
     }
 
-    public LoginUser(IUser user, Set<String> permissions) {
+    public LoginUser(IUser user, Set<String> permissions, UserType type) {
         this.user = user;
         this.permissions = permissions;
+        this.type = type;
     }
 
     @JsonIgnore
