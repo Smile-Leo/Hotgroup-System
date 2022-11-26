@@ -128,8 +128,8 @@ public class SysUser extends BaseEntity implements IUser {
     }
 
     @Override
-    public String getUserName() {
-        return userName;
+    public String getNickName() {
+        return nickName;
     }
 
     @Override
@@ -140,6 +140,11 @@ public class SysUser extends BaseEntity implements IUser {
     @Override
     public boolean isAdmin() {
         return isAdmin(this.userId);
+    }
+
+    @Override
+    public String getPhoto() {
+        return avatar;
     }
 
     @Override

@@ -10,7 +10,9 @@ public interface IUser {
 
     String getPassword();
 
-    String getUserName();
+    String getNickName();
+
+    String getPhoto();
 
     boolean isEnabled();
 

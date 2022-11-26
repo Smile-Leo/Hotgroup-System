@@ -4,7 +4,6 @@ import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.commons.core.domain.model.LoginUser;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
-import com.hotgroup.commons.core.utils.ServletUtils;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysUser;
@@ -21,8 +20,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 个人信息 业务处理
@@ -58,7 +55,7 @@ public class SysProfileController {
         user.setUserId(loginUser.getUser().getId());
 
         if (StringUtils.isEmpty(user.getPhone())) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码为空");
+            return AjaxResult.error("修改用户'" + user.getNickName() + "'失败，手机号码为空");
         }
         if (UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getPhone() + "'失败，手机号码已存在");
@@ -103,7 +100,7 @@ public class SysProfileController {
     @ApiOperation("上传头像")
     public AjaxResult<?> avatar(@Validated @NotBlank String url,
                                 @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) throws IOException {
-        userService.updateUserAvatar(loginUser.getUsername(), url);
+        userService.updateUserAvatar(loginUser.getUser().getId(), url);
         return AjaxResult.success();
 
     }

@@ -204,9 +204,9 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateUserAvatar(String userName, String avatar) {
+    public boolean updateUserAvatar(String userId, String avatar) {
         userMapper.update(null, Wrappers.lambdaUpdate(SysUser.class)
-                .eq(SysUser::getUserName, userName)
+                .eq(SysUser::getNickName, userId)
                 .set(SysUser::getAvatar, avatar)
         );
         return true;
@@ -224,7 +224,7 @@ public class SysUserServiceImpl implements ISysUserService {
         String password = configService.selectConfigByKey("sys.user.initPassword");
         user.setPassword(SecurityUtils.encryptPassword(password));
         userMapper.update(null, Wrappers.lambdaUpdate(SysUser.class)
-                .eq(SysUser::getUserName, user.getUserName())
+                .eq(SysUser::getUserId, user.getUserId())
                 .set(SysUser::getAvatar, user.getPassword())
         );
         return 1;
@@ -239,10 +239,10 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int resetUserPwd(String userName, String password) {
+    public int resetUserPwd(String userId, String password) {
         password = (SecurityUtils.encryptPassword(password));
         userMapper.update(null, Wrappers.lambdaUpdate(SysUser.class)
-                .eq(SysUser::getUserName, userName)
+                .eq(SysUser::getUserId, userId)
                 .set(SysUser::getAvatar, password)
         );
         return 1;

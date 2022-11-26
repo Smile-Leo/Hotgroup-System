@@ -104,11 +104,11 @@ public interface ISysUserService {
     /**
      * 修改用户头像
      *
-     * @param userName 用户名
+     * @param userId 用户名
      * @param avatar   头像地址
      * @return 结果
      */
-    boolean updateUserAvatar(String userName, String avatar);
+    boolean updateUserAvatar(String userId, String avatar);
 
     /**
      * 重置用户密码

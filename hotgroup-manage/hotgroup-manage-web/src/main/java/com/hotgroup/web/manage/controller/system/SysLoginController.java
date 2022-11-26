@@ -2,6 +2,7 @@ package com.hotgroup.web.manage.controller.system;
 
 import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.commons.core.domain.model.LoginUser;
+import com.hotgroup.commons.core.domain.model.StandardUser;
 import com.hotgroup.commons.core.domain.model.UserType;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.domain.vo.LoginRequest;
@@ -24,9 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 登录验证
@@ -70,9 +69,7 @@ public class SysLoginController {
      */
     @ApiOperation("用户信息")
     @GetMapping("getInfo")
-    public AjaxResult<?> getInfo(@ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
-        // 权限集合
-        Set<String> permissions = loginUser.getPermissions();
+    public AjaxResult<StandardUser> getInfo(@ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
         IUser user = null;
         if (loginUser.getType().equals(UserType.SYS)) {
             user = sysUserService.selectUserById(loginUser.getUser().getId());
@@ -80,11 +77,8 @@ public class SysLoginController {
         if (loginUser.getType().equals(UserType.WX)) {
             user = hgUserService.getById(loginUser.getUser().getId());
         }
-
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("user", user);
-        map.put("permissions", permissions);
-        return AjaxResult.success(map);
+        Assert.notNull(user, "未知用户");
+        return AjaxResult.success(new StandardUser(user.getId(), user.getNickName(), user.getPhoto()));
     }
 
     /**

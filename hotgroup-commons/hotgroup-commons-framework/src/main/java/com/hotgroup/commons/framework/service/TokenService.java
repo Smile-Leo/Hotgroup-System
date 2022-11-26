@@ -1,8 +1,8 @@
 package com.hotgroup.commons.framework.service;
 
 import com.hotgroup.commons.core.constant.Constants;
-import com.hotgroup.commons.core.domain.model.IUser;
 import com.hotgroup.commons.core.domain.model.LoginUser;
+import com.hotgroup.commons.core.domain.model.StandardUser;
 import com.hotgroup.commons.core.domain.model.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -63,33 +63,8 @@ public class TokenService {
             Set<String> permissions = Stream.of(
                             StringUtils.split(claims.getIssuer(), ","))
                     .collect(Collectors.toSet());
-
-            return new LoginUser(new IUser() {
-                @Override
-                public String getId() {
-                    return userId;
-                }
-
-                @Override
-                public String getPassword() {
-                    return null;
-                }
-
-                @Override
-                public String getUserName() {
-                    return userName;
-                }
-
-                @Override
-                public boolean isEnabled() {
-                    return true;
-                }
-
-                @Override
-                public boolean isAdmin() {
-                    return "1L".equals(userId);
-                }
-            }, permissions, type);
+            StandardUser standardUser = new StandardUser(userId, userName);
+            return new LoginUser(standardUser, permissions, type);
         }
         return null;
     }
@@ -111,6 +86,7 @@ public class TokenService {
         claims.setAudience(loginUser.getType().name());
         //权限
         claims.setIssuer(String.join(",", loginUser.getPermissions()));
+
         return createToken(claims);
     }
 

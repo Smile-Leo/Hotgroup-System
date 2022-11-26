@@ -3,24 +3,18 @@ package com.hotgroup.web.manage.controller.system;
 import com.hotgroup.commons.core.constant.UserConstants;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
-import com.hotgroup.manage.api.ISysRoleService;
 import com.hotgroup.manage.api.ISysUserService;
-import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 管理用户信息

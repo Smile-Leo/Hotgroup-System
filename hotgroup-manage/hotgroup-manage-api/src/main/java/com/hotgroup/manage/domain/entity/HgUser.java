@@ -156,8 +156,13 @@ public class HgUser extends BaseEntity implements IUser {
     }
 
     @Override
-    public String getUserName() {
+    public String getNickName() {
         return userName;
+    }
+
+    @Override
+    public String getPhoto() {
+        return headImg;
     }
 
     @Override
