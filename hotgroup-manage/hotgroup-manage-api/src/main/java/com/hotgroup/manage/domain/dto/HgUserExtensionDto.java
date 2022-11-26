@@ -45,7 +45,7 @@ public class HgUserExtensionDto implements Serializable {
     private Integer level = 0;
 
     @Schema(title = "经验值")
-    private Integer experience = 0;
+    private Integer currentExperience = 0;
 
     @Schema(title = "升级所需经验值")
     private Integer levelUpExperience = 0;
