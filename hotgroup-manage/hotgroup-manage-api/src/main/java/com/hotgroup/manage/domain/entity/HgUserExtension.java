@@ -56,4 +56,13 @@ public class HgUserExtension extends BaseEntity {
      */
     @Column(length = 11)
     private Integer points;
+
+    public HgUserExtension getEmptyInstance() {
+        this.userId = "";
+        this.concernNum = 0;
+        this.dynamicNum = 0;
+        this.followersNum = 0;
+        this.points = 0;
+        return this;
+    }
 }
