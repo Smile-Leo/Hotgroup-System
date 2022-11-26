@@ -63,6 +63,24 @@ public class HgUserExtension extends BaseEntity {
     @Column(length = 255)
     private String background;
 
+    /**
+     * 等级
+     */
+    @Column(length = 11)
+    private Integer level;
+
+    /**
+     * 经验值
+     */
+    @Column(length = 11)
+    private Long currentExperience;
+
+    /**
+     * 星钻数
+     */
+    @Column(length = 11)
+    private Integer starDiamondNum;
+
     public static HgUserExtension getEmptyInstance() {
         HgUserExtension hgUserExtension = new HgUserExtension();
         hgUserExtension.setUserId("");
@@ -70,6 +88,10 @@ public class HgUserExtension extends BaseEntity {
         hgUserExtension.setDynamicNum(0);
         hgUserExtension.setFollowersNum(0);
         hgUserExtension.setPoints(0);
+        hgUserExtension.setBackground("");
+        hgUserExtension.setLevel(0);
+        hgUserExtension.setCurrentExperience(0L);
+        hgUserExtension.setStarDiamondNum(0);
         return hgUserExtension;
     }
 }

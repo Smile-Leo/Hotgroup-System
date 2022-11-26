@@ -37,4 +37,19 @@ public class HgUserExtensionDto implements Serializable {
 
     @Schema(title = "头像")
     private String headImg = "";
+
+    @Schema(title = "背景")
+    private String background = "";
+
+    @Schema(title = "等级")
+    private Integer level = 0;
+
+    @Schema(title = "经验值")
+    private Integer experience = 0;
+
+    @Schema(title = "升级所需经验值")
+    private Integer levelUpExperience = 0;
+
+    @Schema(title = "星钻数")
+    private Integer starDiamondNum = 0;
 }
