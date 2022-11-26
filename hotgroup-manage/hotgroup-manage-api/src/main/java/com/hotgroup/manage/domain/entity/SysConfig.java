@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.hotgroup.commons.database.domain.BaseEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -20,7 +19,7 @@ import javax.validation.constraints.Size;
  */
 @Data
 @ToString
-@ApiModel("参数配置对象")
+@Schema(title = "参数配置对象")
 @EqualsAndHashCode(callSuper = true)
 @TableName
 public class SysConfig extends BaseEntity {
@@ -30,7 +29,7 @@ public class SysConfig extends BaseEntity {
      * 参数主键
      */
     @TableId(type = IdType.ASSIGN_ID)
-    @ApiModelProperty("id")
+    @Schema(title = "id")
     private String configId;
 
     /**
@@ -38,7 +37,7 @@ public class SysConfig extends BaseEntity {
      */
     @NotBlank(message = "参数名称不能为空")
     @Size(min = 0, max = 100, message = "参数名称不能超过100个字符")
-    @ApiModelProperty("配置名")
+    @Schema(title = "配置名")
     private String configName;
 
     /**
@@ -46,7 +45,7 @@ public class SysConfig extends BaseEntity {
      */
     @NotBlank(message = "参数键名长度不能为空")
     @Size(min = 0, max = 100, message = "参数键名长度不能超过100个字符")
-    @ApiModelProperty("配置主键")
+    @Schema(title = "配置主键")
     private String configKey;
 
     /**
@@ -55,13 +54,13 @@ public class SysConfig extends BaseEntity {
 
     @NotBlank(message = "参数键值不能为空")
     @Size(min = 0, max = 500, message = "参数键值长度不能超过500个字符")
-    @ApiModelProperty("配置值")
+    @Schema(title = "配置值")
     private String configValue;
 
     /**
      * 系统内置（Y是 N否）
      */
-    @ApiModelProperty("是否系统内置")
+    @Schema(title = "是否系统内置")
     private String configType;
 
 

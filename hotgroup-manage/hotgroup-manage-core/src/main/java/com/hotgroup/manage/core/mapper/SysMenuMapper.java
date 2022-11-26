@@ -33,7 +33,7 @@ public interface SysMenuMapper extends BaseMapper<SysMenu> {
      * @param menu 菜单信息
      * @return 菜单列表
      */
-    List<SysMenu> selectMenuListByUserId(SysMenu menu);
+    List<SysMenu> selectMenuListByUserId(@Param("menu") SysMenu menu, @Param("userId") String userId);
 
     /**
      * 根据用户ID查询权限

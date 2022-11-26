@@ -1,7 +1,6 @@
 package com.hotgroup.commons.core.domain.model;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
@@ -9,7 +8,7 @@ import lombok.Data;
  * @date 2022/11/26.
  */
 @Data
-@ApiModel
+@Schema
 public class StandardUser implements IUser {
     private String id;
     private String nickName;

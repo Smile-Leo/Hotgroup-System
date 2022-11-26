@@ -15,8 +15,8 @@ import com.hotgroup.manage.domain.entity.HgUser;
 import com.hotgroup.manage.framework.service.WxMaConfiguration;
 import com.hotgroup.manage.framework.service.WxMaProperties;
 import com.hotgroup.web.vo.WxMaLoginVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +34,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/wx/user")
-@Api(tags = "小程序用户相关")
+@Tag(name = "小程序用户相关")
 public class WxMaUserController {
 
     @Resource
@@ -53,7 +53,7 @@ public class WxMaUserController {
      * 登陆接口
      */
     @GetMapping("login")
-    @ApiOperation("code登陆")
+    @Operation(summary ="code登陆")
     public AjaxResult<WxMaLoginVO> login2(String code) throws WxErrorException {
 
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
@@ -73,7 +73,7 @@ public class WxMaUserController {
     }
 
 
-    @ApiOperation("注册用户信息并登陆")
+    @Operation(summary ="注册用户信息并登陆")
     @GetMapping("regedit/login")
     @Validated
     public AjaxResult<WxMaLoginVO> regedit(@NotBlank String sessionKey, @NotBlank String signature,
@@ -107,7 +107,7 @@ public class WxMaUserController {
 
 
     @GetMapping("phone")
-    @ApiOperation("获取用户绑定手机号信息")
+    @Operation(summary ="获取用户绑定手机号信息")
     public WxMaPhoneNumberInfo phone(String sessionKey, String signature,
                                      String rawData, String encryptedData, String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);

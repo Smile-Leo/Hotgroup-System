@@ -6,8 +6,8 @@ import com.hotgroup.commons.media.MediaService;
 import com.hotgroup.commons.storage.FileStorageService;
 import com.hotgroup.manage.api.IHgUserVideoAuditService;
 import com.hotgroup.manage.domain.entity.HgUserVideoAudit;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.validation.annotation.Validated;
@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @RequestMapping("us/media")
 @Slf4j
-@Api(tags = "用户视频")
+@Tag(name = "用户视频")
 public class CustomerMediaController {
 
     @Resource
@@ -39,7 +39,7 @@ public class CustomerMediaController {
     @Resource
     IHgUserVideoAuditService videoAuditService;
 
-    @ApiOperation("上传")
+    @Operation(summary ="上传")
     @PostMapping("uplaod")
     public AjaxResult<?> upload(MultipartFile file, @Validated @NotBlank String name) throws IOException {
 

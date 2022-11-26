@@ -5,7 +5,7 @@ import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysUser;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/system/user")
-@Api(tags = "管理员管理")
+@Tag(name = "管理员管理")
 public class SysUserController {
     @Resource
     private ISysUserService userService;

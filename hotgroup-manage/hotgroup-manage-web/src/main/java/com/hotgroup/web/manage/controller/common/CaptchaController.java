@@ -4,8 +4,8 @@ import com.google.code.kaptcha.Producer;
 import com.hotgroup.commons.core.constant.Constants;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.IdUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.redisson.Redisson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.FastByteArrayOutputStream;
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @author Lzw
  */
 @RestController
-@Api(tags = "验证码")
+@Tag(name = "验证码")
 @RequestMapping("common/captcha")
 public class CaptchaController {
     @Resource(name = "captchaProducer")
@@ -48,7 +48,7 @@ public class CaptchaController {
      * 生成验证码
      */
     @GetMapping("create")
-    @ApiOperation("生成base64验证码")
+    @Operation(summary ="生成base64验证码")
     public AjaxResult<?> getCode(HttpServletResponse response) {
 
         // 保存验证码信息

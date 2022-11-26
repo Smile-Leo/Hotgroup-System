@@ -5,7 +5,7 @@ import cn.binarywang.wx.miniapp.constant.WxMaConstants;
 import com.google.common.collect.Lists;
 import com.hotgroup.manage.framework.service.WxMaConfiguration;
 import com.hotgroup.manage.framework.service.WxMaProperties;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/wx/media/")
-@Api(tags = "微信素材")
+@Tag(name = "微信素材")
 public class WxMaMediaController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

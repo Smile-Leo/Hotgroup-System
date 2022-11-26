@@ -5,7 +5,7 @@ import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.manage.api.ISysRoleService;
 import com.hotgroup.manage.domain.entity.SysRole;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/system/role")
-@Api(tags = "角色管理")
+@Tag(name = "角色管理")
 public class SysRoleController {
     @Resource
     private ISysRoleService roleService;

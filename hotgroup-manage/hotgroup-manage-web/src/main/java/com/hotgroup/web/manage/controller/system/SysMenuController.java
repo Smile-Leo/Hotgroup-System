@@ -6,14 +6,14 @@ import com.hotgroup.commons.core.domain.model.LoginUser;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.manage.api.ISysMenuService;
 import com.hotgroup.manage.domain.entity.SysMenu;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
+import io.swagger.v3.oas.annotations.Parameter;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/system/menu")
-@Api(tags = "菜单信息")
+@Tag(name = "菜单信息")
 public class SysMenuController {
     @Resource
     private ISysMenuService menuService;
@@ -37,9 +37,9 @@ public class SysMenuController {
      */
     @PreAuthorize("@ss.hasPermi('system:menu:list')")
     @GetMapping("list")
-    @ApiOperation("列表")
+    @Operation(summary ="列表")
     public AjaxResult<?> list(SysMenu menu,
-                              @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
+                              @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
         String userId = loginUser.getUser().getId();
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menus);
@@ -49,7 +49,7 @@ public class SysMenuController {
      * 根据菜单编号获取详细信息
      */
     @GetMapping(value = "info")
-    @ApiOperation("信息")
+    @Operation(summary ="信息")
     public AjaxResult<SysMenu> getInfo(String menuId) {
         SysMenu data = menuService.selectMenuById(menuId);
         return AjaxResult.success(data);
@@ -59,9 +59,9 @@ public class SysMenuController {
      * 获取菜单下拉树列表
      */
     @GetMapping("treeselect")
-    @ApiOperation("树结构")
+    @Operation(summary ="树结构")
     public AjaxResult<?> treeselect(SysMenu menu,
-                                    @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
+                                    @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
         String userId = loginUser.getUser().getId();
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return AjaxResult.success(menuService.buildMenuTreeSelect(menus));
@@ -71,9 +71,9 @@ public class SysMenuController {
      * 加载对应角色菜单列表树
      */
     @GetMapping(value = "/roleMenuTreeselect")
-    @ApiOperation("角色对应树结构")
+    @Operation(summary ="角色对应树结构")
     public AjaxResult<?> roleMenuTreeselect(String roleId,
-                                            @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
+                                            @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
         List<SysMenu> menus = menuService.selectMenuList(loginUser.getUser().getId());
         Map<String, Object> ajax = new HashMap<String, Object>();
 
@@ -87,7 +87,7 @@ public class SysMenuController {
      */
     @PreAuthorize("@ss.hasPermi('system:menu:add')")
     @PostMapping("add")
-    @ApiOperation("新增")
+    @Operation(summary ="新增")
     public AjaxResult<?> add(@Validated @RequestBody SysMenu menu) {
         if (UserConstants.NOT_UNIQUE.equals(menuService.checkMenuNameUnique(menu))) {
             return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
@@ -105,7 +105,7 @@ public class SysMenuController {
      */
     @PreAuthorize("@ss.hasPermi('system:menu:edit')")
     @PostMapping("edit")
-    @ApiOperation("修改")
+    @Operation(summary ="修改")
     public AjaxResult<?> edit(@Validated @RequestBody SysMenu menu) {
         if (UserConstants.NOT_UNIQUE.equals(menuService.checkMenuNameUnique(menu))) {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
@@ -126,7 +126,7 @@ public class SysMenuController {
      */
     @PreAuthorize("@ss.hasPermi('system:menu:remove')")
     @PostMapping("remove")
-    @ApiOperation("删除")
+    @Operation(summary ="删除")
     public AjaxResult<?> remove(String menuId) {
         if (menuService.hasChildByMenuId(menuId)) {
             return AjaxResult.error("存在子菜单,不允许删除");

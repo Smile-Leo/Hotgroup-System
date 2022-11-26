@@ -7,7 +7,6 @@ import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.manage.api.ISysMenuService;
 import com.hotgroup.manage.api.ISysRoleService;
 import com.hotgroup.manage.core.mapper.SysMenuMapper;
-import com.hotgroup.manage.core.mapper.SysRoleMapper;
 import com.hotgroup.manage.core.mapper.SysRoleMenuMapper;
 import com.hotgroup.manage.domain.entity.SysMenu;
 import com.hotgroup.manage.domain.entity.SysRole;
@@ -60,8 +59,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
         if (SysUser.isAdmin(userId)) {
             menuList = menuMapper.selectMenuList(menu);
         } else {
-            menu.getParams().put("userId", userId);
-            menuList = menuMapper.selectMenuListByUserId(menu);
+            menuList = menuMapper.selectMenuListByUserId(menu, userId);
         }
         return menuList;
     }

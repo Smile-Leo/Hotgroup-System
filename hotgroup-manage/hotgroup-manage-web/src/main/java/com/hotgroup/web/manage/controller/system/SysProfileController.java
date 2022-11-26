@@ -7,8 +7,9 @@ import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.ISysUserService;
 import com.hotgroup.manage.domain.entity.SysUser;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/system/user/profile")
 @RequiredArgsConstructor
-@Api(tags = "个人信息")
+@Tag(name = "个人信息")
 public class SysProfileController {
     private final ISysUserService userService;
     private final TokenService tokenService;
@@ -39,8 +39,8 @@ public class SysProfileController {
      * 个人信息
      */
     @GetMapping("info")
-    @ApiOperation("info")
-    public AjaxResult<?> profile(@ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
+    @Operation(summary ="info")
+    public AjaxResult<?> profile(@Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
         return AjaxResult.success(loginUser.getUser());
     }
 
@@ -48,9 +48,9 @@ public class SysProfileController {
      * 修改用户
      */
     @PostMapping("edit")
-    @ApiOperation("修改")
+    @Operation(summary ="修改")
     public AjaxResult<?> updateProfile(@Validated @RequestBody SysUser user,
-                                       @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
+                                       @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
 
         user.setUserId(loginUser.getUser().getId());
 
@@ -76,9 +76,9 @@ public class SysProfileController {
      * 重置密码
      */
     @PostMapping("updatePwd")
-    @ApiOperation("重置密码")
+    @Operation(summary ="重置密码")
     public AjaxResult<?> updatePwd(String oldPassword, String newPassword,
-                                   @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) {
+                                   @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) {
         String userName = loginUser.getUsername();
         String password = loginUser.getPassword();
         if (!SecurityUtils.matchesPassword(oldPassword, password)) {
@@ -97,9 +97,9 @@ public class SysProfileController {
      * 头像上传
      */
     @PostMapping("avatar")
-    @ApiOperation("上传头像")
+    @Operation(summary = "上传头像")
     public AjaxResult<?> avatar(@Validated @NotBlank String url,
-                                @ApiIgnore @AuthenticationPrincipal LoginUser loginUser) throws IOException {
+                                @Parameter(hidden = true) @AuthenticationPrincipal LoginUser loginUser) throws IOException {
         userService.updateUserAvatar(loginUser.getUser().getId(), url);
         return AjaxResult.success();
 

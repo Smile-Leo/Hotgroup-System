@@ -27,29 +27,13 @@ import javax.annotation.Resource;
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
-
-
-    /**
-     * 认证失败处理类
-     */
     @Resource
     private AuthenticationEntryPointImpl unauthorizedHandler;
-
-    /**
-     * 退出处理类
-     */
     @Resource
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
-
-    /**
-     * token认证过滤器
-     */
     @Resource
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
-    /**
-     * 跨域
-     */
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
@@ -119,7 +103,7 @@ public class SecurityConfig {
                 ).permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
-                .antMatchers("/*/api-docs").permitAll()
+                .antMatchers("/*/api-docs/**").permitAll()
                 .antMatchers("/common/captcha/create").permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()

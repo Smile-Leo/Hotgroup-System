@@ -2,8 +2,8 @@ package com.hotgroup.web.customer.controller.index;
 
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.manage.api.IHotgroupVideoService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * @author Lzw
  * @date 2022/6/19.
  */
-@Api(tags = "首页")
+@Tag(name = "首页")
 @RestController
 @RequestMapping("public/index")
 @Slf4j
@@ -25,7 +25,7 @@ public class PublicMediaController {
     IHotgroupVideoService videoService;
 
     @GetMapping("media")
-    @ApiOperation("视频推荐")
+    @Operation(summary ="视频推荐")
     public AjaxResult<?> getMedia() {
 
         return AjaxResult.success(videoService.getSuggerVideo());

@@ -24,9 +24,6 @@ public class ResourcesConfig implements WebMvcConfigurer {
     @Autowired(required = false)
     private List<AbstractHandlerInterceptorAdapterChian> chians;
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    }
 
     /**
      * 自定义拦截规则

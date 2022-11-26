@@ -3,7 +3,7 @@ package com.hotgroup.web.manage.controller.common;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.storage.FileStorageService;
 import com.hotgroup.commons.storage.MediaTypeEnum;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,7 @@ import java.nio.file.Files;
  * @author Lzw
  */
 @RestController
-@Api(tags = "文件操作")
+@Tag(name = "文件操作")
 @RequestMapping("common/file")
 @Slf4j
 public class CommonController {

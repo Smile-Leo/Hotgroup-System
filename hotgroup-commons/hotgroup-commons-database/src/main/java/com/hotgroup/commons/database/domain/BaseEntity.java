@@ -10,8 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Lzw
@@ -61,8 +59,5 @@ public class BaseEntity implements Serializable {
     @TableField(exist = false)
     private transient Integer pageSize = 20;
 
-    @JsonIgnore
-    @TableField(exist = false)
-    private transient Map<String, Object> params = new HashMap<>();
 
 }
