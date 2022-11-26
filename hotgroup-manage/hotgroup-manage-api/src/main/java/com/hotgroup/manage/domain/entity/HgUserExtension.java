@@ -57,12 +57,19 @@ public class HgUserExtension extends BaseEntity {
     @Column(length = 11)
     private Integer points;
 
-    public HgUserExtension getEmptyInstance() {
-        this.userId = "";
-        this.concernNum = 0;
-        this.dynamicNum = 0;
-        this.followersNum = 0;
-        this.points = 0;
-        return this;
+    /**
+     * 背景
+     */
+    @Column(length = 255)
+    private String background;
+
+    public static HgUserExtension getEmptyInstance() {
+        HgUserExtension hgUserExtension = new HgUserExtension();
+        hgUserExtension.setUserId("");
+        hgUserExtension.setConcernNum(0);
+        hgUserExtension.setDynamicNum(0);
+        hgUserExtension.setFollowersNum(0);
+        hgUserExtension.setPoints(0);
+        return hgUserExtension;
     }
 }

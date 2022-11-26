@@ -32,7 +32,7 @@ public class HotgroupUserLoginServiceImpl implements IHotgroupUserLoginService {
         //生成扩展表
         HgUserExtension hgUserExtension = hgUserExtensionMapper.selectById(user.getId());
         if (Objects.isNull(hgUserExtension)) {
-            hgUserExtension = new HgUserExtension().getEmptyInstance();
+            hgUserExtension = HgUserExtension.getEmptyInstance();
             hgUserExtensionMapper.insert(hgUserExtension);
         }
 
