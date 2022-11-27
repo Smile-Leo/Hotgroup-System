@@ -33,8 +33,7 @@ public class JsonUtil {
         try {
             return JSON.readValue(message, tClass);
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("json格式有误");
         }
     }
 
@@ -42,8 +41,7 @@ public class JsonUtil {
         try {
             return JSON.readValue(message, valueTypeRef);
         } catch (JsonProcessingException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException("json格式有误");
         }
     }
 }

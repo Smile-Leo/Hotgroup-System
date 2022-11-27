@@ -32,13 +32,10 @@ import java.util.stream.Stream;
 public class TokenService {
     @Resource
     UserDetailsService userDetailsService;
-    // 令牌自定义标识
     @Value("${token.header:Authorization}")
     private String header;
-    // 令牌秘钥
     @Value("${token.secret:2Avu0QmIiFmEdCQFmuRQvw==}")
     private String secret;
-    // 令牌有效期（默认30分钟）
     @Value("${token.expireTime:30}")
     private int expireTime;
 
@@ -63,7 +60,9 @@ public class TokenService {
             Set<String> permissions = Stream.of(
                             StringUtils.split(claims.getIssuer(), ","))
                     .collect(Collectors.toSet());
-            StandardUser standardUser = new StandardUser(userId, userName);
+            //等级
+            Integer level = claims.get("level", Integer.class);
+            StandardUser standardUser = new StandardUser(userId, userName, level);
             return new LoginUser(standardUser, permissions, type);
         }
         return null;
@@ -86,6 +85,8 @@ public class TokenService {
         claims.setAudience(loginUser.getType().name());
         //权限
         claims.setIssuer(String.join(",", loginUser.getPermissions()));
+        //等级
+        claims.put("level", loginUser.getUser().getLevel());
 
         return createToken(claims);
     }

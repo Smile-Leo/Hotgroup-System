@@ -5,9 +5,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.google.common.collect.Sets;
-import com.hotgroup.commons.core.domain.model.IUser;
-import com.hotgroup.commons.core.domain.model.LoginUser;
-import com.hotgroup.commons.core.domain.model.UserType;
+import com.hotgroup.commons.core.domain.model.*;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.IHotgroupUserLoginService;
@@ -15,8 +13,8 @@ import com.hotgroup.manage.domain.entity.HgUser;
 import com.hotgroup.manage.framework.service.WxMaConfiguration;
 import com.hotgroup.manage.framework.service.WxMaProperties;
 import com.hotgroup.web.vo.WxMaLoginVO;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,7 +51,7 @@ public class WxMaUserController {
      * 登陆接口
      */
     @GetMapping("login")
-    @Operation(summary ="code登陆")
+    @Operation(summary = "code登陆")
     public AjaxResult<WxMaLoginVO> login2(String code) throws WxErrorException {
 
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
@@ -63,7 +61,9 @@ public class WxMaUserController {
         IUser user = userLoginService.getUserByUnionId(session.getUnionid());
 
         if (Objects.nonNull(user)) {
-            String token = tokenService.createToken(new LoginUser(user, Sets.newHashSet(), UserType.WX));
+            IUserExt userExtension = userLoginService.getUserExtension(user.getId());
+            LoginUser loginUser = new LoginUser(user, userExtension, Sets.newHashSet(), UserType.WX);
+            String token = tokenService.createToken(loginUser);
             wxMaLoginVO.setToken(token);
         }
         wxMaLoginVO.setSessionKey(session.getSessionKey());
@@ -73,7 +73,7 @@ public class WxMaUserController {
     }
 
 
-    @Operation(summary ="注册用户信息并登陆")
+    @Operation(summary = "注册用户信息并登陆")
     @GetMapping("regedit/login")
     @Validated
     public AjaxResult<WxMaLoginVO> regedit(@NotBlank String sessionKey, @NotBlank String signature,
@@ -99,7 +99,9 @@ public class WxMaUserController {
 
         IUser login = userLoginService.login(hgUser);
         WxMaLoginVO wxMaLoginVO = new WxMaLoginVO();
-        String token = tokenService.createToken(new LoginUser(login, Sets.newHashSet(), UserType.WX));
+        IUserExt userExtension = userLoginService.getUserExtension(login.getId());
+        LoginUser loginUser = new LoginUser(login, userExtension, Sets.newHashSet(), UserType.WX);
+        String token = tokenService.createToken(loginUser);
         wxMaLoginVO.setToken(token);
         return AjaxResult.success(wxMaLoginVO);
 
@@ -107,7 +109,7 @@ public class WxMaUserController {
 
 
     @GetMapping("phone")
-    @Operation(summary ="获取用户绑定手机号信息")
+    @Operation(summary = "获取用户绑定手机号信息")
     public WxMaPhoneNumberInfo phone(String sessionKey, String signature,
                                      String rawData, String encryptedData, String iv) {
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);

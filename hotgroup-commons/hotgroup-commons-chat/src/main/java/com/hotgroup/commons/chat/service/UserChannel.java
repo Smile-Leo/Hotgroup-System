@@ -5,6 +5,7 @@ import com.hotgroup.commons.chat.dto.MessageDTO;
 import com.hotgroup.commons.chat.dto.MessageEnum;
 import com.hotgroup.commons.chat.dto.UserDTO;
 import com.hotgroup.commons.chat.util.JsonUtil;
+import com.hotgroup.commons.core.domain.model.LoginUser;
 
 import javax.websocket.Session;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class UserChannel {
 
     private static final Map<String, List<Session>> USERS = new ConcurrentHashMap<>();
+    public static final String ME = "我";
 
     public static void login(String userId, String nickName, Session session) {
         USERS.putIfAbsent(userId, new CopyOnWriteArrayList<>());
@@ -38,14 +40,26 @@ public class UserChannel {
         });
     }
 
-    public static void sendToUser(String userId, String message) {
+    public static void sendToUser(Session send, String userId, String message) {
+        LoginUser user = (LoginUser) send.getUserPrincipal();
         for (Session session : USERS.getOrDefault(userId, Collections.emptyList())) {
             ChatDTO chatDTO = new ChatDTO();
             chatDTO.setId(userId);
-            chatDTO.setMsg(message);
+            String name = send.getId().equals(session.getId()) ? ME : user.getUsername();
+            chatDTO.setMsg(formatMessage(user.getUser().getLevel(), name, message));
             session.getAsyncRemote().sendText(
-                    JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_CHAT, chatDTO)));
+                    JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_USER, chatDTO)));
         }
+    }
+
+    private static String formatMessage(Integer level, String name, String message) {
+        return new StringBuilder()
+                .append(level)
+                .append(":")
+                .append(name)
+                .append(":")
+                .append(message)
+                .toString();
     }
 
 }

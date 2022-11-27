@@ -2,6 +2,7 @@ package com.hotgroup.manage.core.facade;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.hotgroup.commons.core.domain.model.IUser;
+import com.hotgroup.commons.core.domain.model.IUserExt;
 import com.hotgroup.manage.api.IHgUserService;
 import com.hotgroup.manage.api.IHotgroupUserLoginService;
 import com.hotgroup.manage.core.mapper.HgUserExtensionMapper;
@@ -44,5 +45,9 @@ public class HotgroupUserLoginServiceImpl implements IHotgroupUserLoginService {
 
         return hgUserService.getOne(Wrappers.lambdaQuery(HgUser.class)
                 .eq(HgUser::getUnionId, unionId));
+    }
+
+    public IUserExt getUserExtension(String userId){
+        return hgUserExtensionMapper.selectById(userId);
     }
 }

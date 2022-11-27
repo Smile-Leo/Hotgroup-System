@@ -3,6 +3,7 @@ package com.hotgroup.manage.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.hotgroup.commons.core.domain.model.IUserExt;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,7 +23,7 @@ import javax.persistence.Table;
 @Table(name = "hg_user_extension")
 @Entity
 @TableName
-public class HgUserExtension extends BaseEntity {
+public class HgUserExtension extends BaseEntity implements IUserExt {
 
     private static final long serialVersionUID = 1L;
 

@@ -8,16 +8,26 @@ import lombok.Data;
  * @date 2022/11/26.
  */
 @Data
-@Schema
-public class StandardUser implements IUser {
+@Schema(title = "标准登陆用户信息")
+public class StandardUser implements IUser, IUserExt {
+    @Schema(title = "用户Id")
     private String id;
+    @Schema(title = "用户呢称")
     private String nickName;
+    @Schema(title = "头像")
     private String photo;
-    private String password;
+    @Schema(title = "等级")
+    private Integer level;
 
     public StandardUser(String id, String nickName) {
         this.id = id;
         this.nickName = nickName;
+    }
+
+    public StandardUser(String id, String nickName, Integer level) {
+        this.id = id;
+        this.nickName = nickName;
+        this.level = level;
     }
 
     public StandardUser(String id, String nickName, String photo) {
@@ -33,7 +43,7 @@ public class StandardUser implements IUser {
 
     @Override
     public String getPassword() {
-        return password;
+        return null;
     }
 
     @Override
@@ -54,5 +64,10 @@ public class StandardUser implements IUser {
     @Override
     public boolean isAdmin() {
         return "1L".equals(id);
+    }
+
+    @Override
+    public Integer getLevel() {
+        return level;
     }
 }
