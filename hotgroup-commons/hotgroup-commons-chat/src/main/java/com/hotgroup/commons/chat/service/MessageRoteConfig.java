@@ -16,12 +16,14 @@ import org.springframework.context.annotation.Configuration;
 public class MessageRoteConfig {
 
 
-    @Bean
     @ConditionalOnClass({RabbitTemplate.class, Channel.class})
-    MessageRoteStrategy mqMessageRote(ReplyService replyService, RabbitTemplate rabbitTemplate, AmqpAdmin amqpAdmin) {
-        return new MessageMqRote(replyService, rabbitTemplate, amqpAdmin);
+    @Configuration
+    static class MqMessageRoteConfig {
+        @Bean
+        MessageRoteStrategy mqMessageRote(ReplyService replyService, RabbitTemplate rabbitTemplate, AmqpAdmin amqpAdmin) {
+            return new MessageMqRote(replyService, rabbitTemplate, amqpAdmin);
+        }
     }
-
 
     @Bean
     @ConditionalOnMissingBean(value = MessageRoteStrategy.class)

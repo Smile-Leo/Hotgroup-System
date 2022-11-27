@@ -1,6 +1,6 @@
 package com.hotgroup.commons.chat.service;
 
-import com.hotgroup.commons.chat.dto.ChatMessageDto;
+import com.hotgroup.commons.chat.dto.MessageDTO;
 
 import javax.annotation.Resource;
 
@@ -14,7 +14,7 @@ public class MessageLocalRote implements MessageRoteStrategy {
     ReplyService replyService;
 
     @Override
-    public void send(ChatMessageDto dto) {
+    public <T> void send(MessageDTO<T> dto) {
         replyService.send(dto);
     }
 }

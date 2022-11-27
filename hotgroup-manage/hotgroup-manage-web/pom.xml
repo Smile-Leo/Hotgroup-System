@@ -28,6 +28,12 @@
             <artifactId>hotgroup-commons-media</artifactId>
             <version>${hotgroup.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-commons-chat</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

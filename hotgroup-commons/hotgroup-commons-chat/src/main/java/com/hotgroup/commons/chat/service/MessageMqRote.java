@@ -1,6 +1,6 @@
 package com.hotgroup.commons.chat.service;
 
-import com.hotgroup.commons.chat.dto.ChatMessageDto;
+import com.hotgroup.commons.chat.dto.MessageDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -45,7 +45,7 @@ public class MessageMqRote implements MessageRoteStrategy {
 
     @RabbitListener(bindings = @QueueBinding(value = @Queue(durable = "false", autoDelete = "true"),
             exchange = @Exchange(value = EXCHANGE_NAME, type = ExchangeTypes.FANOUT, durable = "false")))
-    public void listener(ChatMessageDto dto) {
+    public void listener(MessageDTO<?> dto) {
 
         try {
             replyService.send(dto);
@@ -56,7 +56,7 @@ public class MessageMqRote implements MessageRoteStrategy {
     }
 
     @Override
-    public void send(ChatMessageDto dto) {
+    public <T> void send(MessageDTO<T> dto) {
         try {
             rabbitTemplate.convertAndSend(EXCHANGE_NAME, "", dto);
         } catch (AmqpException e) {

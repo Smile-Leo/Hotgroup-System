@@ -1,20 +1,19 @@
 package com.hotgroup.commons.chat.service;
 
-import com.hotgroup.commons.chat.dto.ChatMessageDto;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.hotgroup.commons.chat.dto.ChatDTO;
+import com.hotgroup.commons.chat.dto.MessageDTO;
 import com.hotgroup.commons.chat.util.JsonUtil;
 import com.hotgroup.commons.core.domain.model.LoginUser;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
-import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.List;
+import java.security.Principal;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Lzw
@@ -25,24 +24,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 public class WebSocketService {
 
-    private static ChatService chatService;
-
-    @Resource
-    public void init(ChatService chatService) {
-        WebSocketService.chatService = chatService;
-    }
 
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) {
-        Authentication userPrincipal = (Authentication) session.getUserPrincipal();
-        if (Objects.nonNull(userPrincipal)) {
-            LoginUser loginUser = (LoginUser) userPrincipal.getPrincipal();
-        }
-
-        ChatService.USER_LIST.putIfAbsent(session.getId(), new CopyOnWriteArrayList<>());
-        ChatService.USER_LIST.get(session.getId()).add(session);
         session.getAsyncRemote()
-                .sendText(JsonUtil.toJson(ChatMessageDto.builder().message("welcoming").build()));
+                .sendText(JsonUtil.toJson(MessageDTO.success("welcoming")));
     }
 
     @OnError
@@ -56,13 +42,8 @@ public class WebSocketService {
     }
 
     private void removeSession(Session session) throws IOException {
-        for (List<Session> sessions : ChatService.USER_LIST.values()) {
-            sessions.removeIf(v -> session.getId().equals(v.getId()));
-        }
-        for (List<Session> sessions : ChatService.CHAT_LIST.values()) {
-            sessions.removeIf(v -> session.getId().equals(v.getId()));
-        }
-        ChatService.USER_LIST.remove(session.getId());
+        ChatChannel.exit(session);
+        UserChannel.exit(session);
         session.close();
     }
 
@@ -70,26 +51,64 @@ public class WebSocketService {
     @OnMessage
     public void onMessage(String message, Session session) {
 
-        ChatMessageDto dto = JsonUtil.toObject(message, ChatMessageDto.class);
-
-        switch (dto.getType()) {
-            case CHAT_CREATE:
-            case CHAT_JOIN:
-                ChatService.CHAT_LIST.putIfAbsent(dto.getChatId(), new CopyOnWriteArrayList<>());
-                ChatService.CHAT_LIST.get(dto.getChatId()).add(session);
-                break;
-            case CHAT_EXIT:
-                Optional.ofNullable(ChatService.CHAT_LIST.get(dto.getChatId()))
-                        .ifPresent(sessions -> sessions.removeIf(session1 -> session1.getId().equals(session.getId())));
-                break;
-            case CHAT_DESTROY:
-                ChatService.CHAT_LIST.remove(dto.getChatId());
-                break;
-            default:
-
+        try {
+            MessageDTO dto = JsonUtil.toObject(message, MessageDTO.class);
+            Principal userPrincipal = session.getUserPrincipal();
+            switch (dto.getType()) {
+                case CHAT_JOIN:
+                    MessageDTO<ChatDTO> chatDTOMessageDTO = JsonUtil.toObject(message, new TypeReference<MessageDTO<ChatDTO>>() {
+                    });
+                    String chatId = chatDTOMessageDTO.getData().getId();
+                    Assert.hasText(chatId, "id不能为空");
+                    ChatChannel.join(chatId, session);
+                    String name = userPrincipal instanceof LoginUser ? ((LoginUser) userPrincipal).getUsername() : "游客" + session.getId();
+                    ChatChannel.sendToChat(chatId, name + " 进入了");
+                    break;
+                case CHAT_EXIT:
+                    ChatChannel.exit(session);
+                    MessageDTO<ChatDTO> exitDto = JsonUtil.toObject(message, new TypeReference<MessageDTO<ChatDTO>>() {
+                    });
+                    String exitChatId = exitDto.getData().getId();
+                    Assert.hasText(exitChatId, "id不能为空");
+                    String name2 = userPrincipal instanceof LoginUser ? ((LoginUser) userPrincipal).getUsername() : "游客" + session.getId();
+                    ChatChannel.sendToChat(exitChatId, name2 + " 离开了");
+                    break;
+                case USER_LOGIN:
+                    Assert.isTrue(Objects.nonNull(userPrincipal) && userPrincipal instanceof LoginUser, "请先登陆");
+                    LoginUser loginUser = (LoginUser) userPrincipal;
+                    String userId = UserIdCreate.getId(loginUser);
+                    UserChannel.login(userId, loginUser.getUsername(), session);
+                    break;
+                case SEND_USER:
+                    Assert.isTrue(Objects.nonNull(userPrincipal) && userPrincipal instanceof LoginUser, "请先登陆");
+                    MessageDTO<ChatDTO> toUser = JsonUtil.toObject(message, new TypeReference<MessageDTO<ChatDTO>>() {
+                    });
+                    Assert.notNull(toUser.getData(), "数据结构有误");
+                    Assert.hasText(toUser.getData().getId(), "id不能为空");
+                    Assert.hasText(toUser.getData().getMsg(), "msg不能为空");
+                    UserChannel.sendToUser(toUser.getData().getId(), toUser.getData().getMsg());
+                    break;
+                case SEND_CHAT:
+                    MessageDTO<ChatDTO> toChat = JsonUtil.toObject(message, new TypeReference<MessageDTO<ChatDTO>>() {
+                    });
+                    Assert.notNull(toChat.getData(), "数据结构有误");
+                    Assert.hasText(toChat.getData().getId(), "id不能为空");
+                    Assert.hasText(toChat.getData().getMsg(), "msg不能为空");
+                    ChatChannel.sendToChat(toChat.getData().getId(), toChat.getData().getMsg());
+                    break;
+                default:
+            }
+            session.getAsyncRemote()
+                    .sendText(JsonUtil.toJson(MessageDTO.success()));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            session.getAsyncRemote()
+                    .sendText(JsonUtil.toJson(MessageDTO.error(e.getMessage())));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            session.getAsyncRemote()
+                    .sendText(JsonUtil.toJson(MessageDTO.fail(e.getMessage())));
         }
 
-        chatService.send(dto);
 
     }
 

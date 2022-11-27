@@ -25,7 +25,7 @@ public class AjaxResult<T> {
     private T data;
 
     @Schema(title = "分页总数")
-    private long total;
+    private Long total;
 
     public AjaxResult() {
     }
@@ -157,7 +157,7 @@ public class AjaxResult<T> {
         return success;
     }
 
-    public static <T> AjaxResult<List<T>> page(Integer total, List<T> data) {
+    public static <T> AjaxResult<List<T>> page(Long total, List<T> data) {
         AjaxResult<List<T>> success = AjaxResult.success(data);
         success.setTotal(total);
         return success;

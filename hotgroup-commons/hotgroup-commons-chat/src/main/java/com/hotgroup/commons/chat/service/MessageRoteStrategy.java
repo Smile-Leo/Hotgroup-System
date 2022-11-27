@@ -1,6 +1,6 @@
 package com.hotgroup.commons.chat.service;
 
-import com.hotgroup.commons.chat.dto.ChatMessageDto;
+import com.hotgroup.commons.chat.dto.MessageDTO;
 
 /**
  * @author Lzw
@@ -8,5 +8,5 @@ import com.hotgroup.commons.chat.dto.ChatMessageDto;
  */
 public interface MessageRoteStrategy {
 
-    void send(ChatMessageDto dto);
+    <T>  void send(MessageDTO<T> dto);
 }
