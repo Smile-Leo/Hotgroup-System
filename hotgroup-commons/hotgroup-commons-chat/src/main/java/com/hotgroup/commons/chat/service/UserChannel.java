@@ -5,7 +5,6 @@ import com.hotgroup.commons.chat.dto.MessageDTO;
 import com.hotgroup.commons.chat.dto.MessageEnum;
 import com.hotgroup.commons.chat.dto.UserDTO;
 import com.hotgroup.commons.chat.util.JsonUtil;
-import com.hotgroup.commons.core.domain.model.LoginUser;
 
 import javax.websocket.Session;
 import java.util.Collections;
@@ -41,25 +40,15 @@ public class UserChannel {
     }
 
     public static void sendToUser(Session send, String userId, String message) {
-        LoginUser user = (LoginUser) send.getUserPrincipal();
+        ChatDTO chatDTO = new ChatDTO();
+        chatDTO.setId(userId);
         for (Session session : USERS.getOrDefault(userId, Collections.emptyList())) {
-            ChatDTO chatDTO = new ChatDTO();
-            chatDTO.setId(userId);
-            String name = send.getId().equals(session.getId()) ? ME : user.getUsername();
-            chatDTO.setMsg(formatMessage(user.getUser().getLevel(), name, message));
+            String msg = MessageCreate.to(send, message, session);
+            chatDTO.setMsg(msg);
             session.getAsyncRemote().sendText(
                     JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_USER, chatDTO)));
         }
     }
 
-    private static String formatMessage(Integer level, String name, String message) {
-        return new StringBuilder()
-                .append(level)
-                .append(":")
-                .append(name)
-                .append(":")
-                .append(message)
-                .toString();
-    }
 
 }

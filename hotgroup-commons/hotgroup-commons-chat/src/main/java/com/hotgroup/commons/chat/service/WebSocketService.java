@@ -3,6 +3,8 @@ package com.hotgroup.commons.chat.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.hotgroup.commons.chat.dto.ChatDTO;
 import com.hotgroup.commons.chat.dto.MessageDTO;
+import com.hotgroup.commons.chat.service.extend.ChatJoinWrapper;
+import com.hotgroup.commons.chat.service.extend.SendChatWrapper;
 import com.hotgroup.commons.chat.util.JsonUtil;
 import com.hotgroup.commons.core.domain.model.LoginUser;
 import lombok.extern.slf4j.Slf4j;
@@ -56,13 +58,7 @@ public class WebSocketService {
             Principal userPrincipal = session.getUserPrincipal();
             switch (dto.getType()) {
                 case CHAT_JOIN:
-                    MessageDTO<ChatDTO> chatDTOMessageDTO = JsonUtil.toObject(message, new TypeReference<MessageDTO<ChatDTO>>() {
-                    });
-                    Assert.notNull(chatDTOMessageDTO.getData(), "数据格式有误");
-                    String chatId = chatDTOMessageDTO.getData().getId();
-                    Assert.hasText(chatId, "id不能为空");
-                    ChatChannel.sendToChat(session, chatId, "进来了");
-                    ChatChannel.join(chatId, session);
+                    ChatJoinWrapper.handle(dto.getType(), message, session);
                     break;
                 case CHAT_EXIT:
                     ChatChannel.exit(session);
@@ -89,12 +85,7 @@ public class WebSocketService {
                     UserChannel.sendToUser(session, toUser.getData().getId(), toUser.getData().getMsg());
                     break;
                 case SEND_CHAT:
-                    MessageDTO<ChatDTO> toChat = JsonUtil.toObject(message, new TypeReference<MessageDTO<ChatDTO>>() {
-                    });
-                    Assert.notNull(toChat.getData(), "数据结构有误");
-                    Assert.hasText(toChat.getData().getId(), "id不能为空");
-                    Assert.hasText(toChat.getData().getMsg(), "msg不能为空");
-                    ChatChannel.sendToChat(session, toChat.getData().getId(), toChat.getData().getMsg());
+                    SendChatWrapper.handle(dto.getType(), message, session);
                     break;
                 default:
             }

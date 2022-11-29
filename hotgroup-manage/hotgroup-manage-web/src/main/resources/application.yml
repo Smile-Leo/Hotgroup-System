@@ -56,7 +56,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
-      minimum-idle: 3
+      minimum-idle: 1
       auto-commit: true
       idle-timeout: 10000
       pool-name: DatebookHikariCP
