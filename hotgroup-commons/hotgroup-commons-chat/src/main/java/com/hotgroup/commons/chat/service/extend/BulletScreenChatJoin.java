@@ -34,13 +34,10 @@ public class BulletScreenChatJoin implements ChatJoinInterceptor {
     public void preHandle(MessageEnum type, MessageDTO<ChatDTO> message, Session session) throws Exception {
         String chatId = message.getData().getId();
 
-        RDeque<String> deque = redisson.getDeque("CHAT:" + chatId, StringCodec.INSTANCE);
-        ChatDTO chatDTO = new ChatDTO();
-        chatDTO.setId(chatId);
-        for (String msg : deque) {
-            chatDTO.setMsg(msg);
+        RDeque<ChatDTO> deque = redisson.getDeque("CHAT:" + chatId);
+        for (ChatDTO msg : deque) {
             session.getAsyncRemote().sendText(
-                    JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_CHAT, chatDTO)));
+                    JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_CHAT, msg)));
         }
 
     }

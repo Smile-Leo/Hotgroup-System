@@ -28,7 +28,7 @@ public class BulletScreenSendChat implements SendChatInterceptor {
     private final Integer max;
 
     public BulletScreenSendChat(RedissonManager manager,
-                                @Value("hotgroup.bullet_screen:50") Integer max) {
+                                @Value("${hotgroup.bullet_screen:50}") Integer max) {
         this.redisson = manager.getRedisson();
         this.max = max;
     }
@@ -39,9 +39,9 @@ public class BulletScreenSendChat implements SendChatInterceptor {
         String msg = message.getData().getMsg();
 
 
-        RDeque<String> deque = redisson.getDeque("CHAT:" + chatId, StringCodec.INSTANCE);
+        RDeque<ChatDTO> deque = redisson.getDeque("CHAT:" + chatId);
 
-        String to = MessageCreate.to(session, msg, null);
+        ChatDTO to = MessageCreate.to(session, msg, null);
         deque.addLast(to);
         while (deque.size() > max) {
             deque.removeFirst();

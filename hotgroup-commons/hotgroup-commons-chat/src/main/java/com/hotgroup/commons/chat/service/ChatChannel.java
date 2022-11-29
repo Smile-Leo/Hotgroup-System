@@ -34,13 +34,10 @@ public class ChatChannel {
     }
 
     public static void sendToChat(Session send, String chatId, String message) {
-        ChatDTO chatDTO = new ChatDTO();
-        chatDTO.setId(chatId);
         for (Session session : CHATS.getOrDefault(chatId, Collections.emptyList())) {
-            String msg = MessageCreate.to(send, message, session);
-            chatDTO.setMsg(msg);
+            ChatDTO msg = MessageCreate.to(send, message, session);
             session.getAsyncRemote().sendText(
-                    JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_CHAT, chatDTO)));
+                    JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_CHAT, msg)));
         }
     }
 

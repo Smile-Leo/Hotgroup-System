@@ -40,13 +40,10 @@ public class UserChannel {
     }
 
     public static void sendToUser(Session send, String userId, String message) {
-        ChatDTO chatDTO = new ChatDTO();
-        chatDTO.setId(userId);
         for (Session session : USERS.getOrDefault(userId, Collections.emptyList())) {
-            String msg = MessageCreate.to(send, message, session);
-            chatDTO.setMsg(msg);
+            ChatDTO msg = MessageCreate.to(send, message, session);
             session.getAsyncRemote().sendText(
-                    JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_USER, chatDTO)));
+                    JsonUtil.toJson(MessageDTO.success(MessageEnum.SEND_USER, msg)));
         }
     }
 
