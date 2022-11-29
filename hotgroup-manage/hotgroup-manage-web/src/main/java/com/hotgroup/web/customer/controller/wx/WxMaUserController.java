@@ -5,7 +5,10 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.google.common.collect.Sets;
-import com.hotgroup.commons.core.domain.model.*;
+import com.hotgroup.commons.core.domain.model.IUser;
+import com.hotgroup.commons.core.domain.model.IUserExt;
+import com.hotgroup.commons.core.domain.model.LoginUser;
+import com.hotgroup.commons.core.domain.model.UserType;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.framework.service.TokenService;
 import com.hotgroup.manage.api.IHotgroupUserLoginService;
@@ -16,6 +19,7 @@ import com.hotgroup.web.vo.WxMaLoginVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.chanjar.weixin.common.error.WxErrorException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,7 +62,9 @@ public class WxMaUserController {
 
         WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
         WxMaLoginVO wxMaLoginVO = new WxMaLoginVO();
-        IUser user = userLoginService.getUserByUnionId(session.getUnionid());
+        IUser user = StringUtils.isNotBlank(session.getUnionid()) ?
+                userLoginService.getUserByUnionId(session.getUnionid()) :
+                userLoginService.getUserByOpenid(session.getOpenid());
 
         if (Objects.nonNull(user)) {
             IUserExt userExtension = userLoginService.getUserExtension(user.getId());

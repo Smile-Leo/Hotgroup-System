@@ -47,6 +47,12 @@ public class HotgroupUserLoginServiceImpl implements IHotgroupUserLoginService {
                 .eq(HgUser::getUnionId, unionId));
     }
 
+    @Override
+    public IUser getUserByOpenid(String Openid) {
+        return hgUserService.getOne(Wrappers.lambdaQuery(HgUser.class)
+                .eq(HgUser::getOpenId, Openid));
+    }
+
     public IUserExt getUserExtension(String userId){
         return hgUserExtensionMapper.selectById(userId);
     }

@@ -14,5 +14,7 @@ public interface IHotgroupUserLoginService {
 
     IUser getUserByUnionId(String unionId);
 
+    IUser getUserByOpenid(String Openid);
+
     IUserExt getUserExtension(String userId);
 }
