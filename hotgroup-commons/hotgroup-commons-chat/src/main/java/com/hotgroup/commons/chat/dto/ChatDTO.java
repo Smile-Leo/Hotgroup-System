@@ -12,6 +12,11 @@ import lombok.Data;
 public class ChatDTO {
     @Schema(title = "userId或chatId")
     private String id;
+
+    private Integer level;
+
+    private String name;
+
     @Schema(title = "消息内容")
     private String msg;
 }

@@ -26,5 +26,10 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.hotgroup</groupId>
+            <artifactId>hotgroup-commons-redis</artifactId>
+            <version>${hotgroup.version}</version>
+        </dependency>
     </dependencies>
 </project>
