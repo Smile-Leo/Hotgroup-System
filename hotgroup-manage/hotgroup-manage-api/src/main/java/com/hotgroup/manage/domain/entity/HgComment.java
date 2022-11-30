@@ -46,7 +46,7 @@ public class HgComment extends BaseEntity {
      * 用户id
      */
     @Column(length = 11)
-    private Integer userId;
+    private String userId;
 
     /**
      * 评论类型 1动态 2...
@@ -57,12 +57,18 @@ public class HgComment extends BaseEntity {
     /**
      * 数据来源id
      */
-    @Column(length = 1)
-    private Integer dataId;
+    @Column(length = 20)
+    private String dataId;
+
+    /**
+     * 数据来源id
+     */
+    @Column(length = 20)
+    private String parentId;
 
     /**
      * 转发数
      */
     @Column(length = 11)
-    private Integer LikeNum;
+    private Integer likeNum;
 }

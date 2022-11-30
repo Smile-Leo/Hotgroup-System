@@ -46,8 +46,8 @@ public class HgDynamic extends BaseEntity {
     /**
      * 用户id
      */
-    @Column(length = 11)
-    private Integer userId;
+    @Column(length = 20)
+    private String userId;
 
     /**
      * 动态数
@@ -60,6 +60,12 @@ public class HgDynamic extends BaseEntity {
      */
     @Column(length = 11)
     private Integer likeNum;
+
+    /**
+     * 浏览数
+     */
+    @Column(length = 11)
+    private Integer viewNum;
 
     /**
      * 转发数
