@@ -79,8 +79,7 @@ public class WxMaUserController {
 
     @Operation(summary = "注册用户信息并登陆")
     @PostMapping("regedit/login")
-    @Validated
-    public AjaxResult<WxMaLoginVo> regedit(@RequestBody WxUserInfoVo vo) {
+    public AjaxResult<WxMaLoginVo> regedit(@Validated @RequestBody WxUserInfoVo vo) {
         String sessionKey = vo.getSessionKey();
         String rawData = vo.getRawData();
         String signature = vo.getSignature();
@@ -117,7 +116,7 @@ public class WxMaUserController {
 
     @PostMapping("phone")
     @Operation(summary = "获取用户绑定手机号信息")
-    public WxMaPhoneNumberInfo phone(@RequestBody WxUserInfoVo vo) {
+    public WxMaPhoneNumberInfo phone(@Validated @RequestBody WxUserInfoVo vo) {
         String sessionKey = vo.getSessionKey();
         String rawData = vo.getRawData();
         String signature = vo.getSignature();

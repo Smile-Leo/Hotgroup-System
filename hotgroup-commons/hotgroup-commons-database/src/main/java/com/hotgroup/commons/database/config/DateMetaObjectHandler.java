@@ -52,8 +52,7 @@ public class DateMetaObjectHandler implements MetaObjectHandler {
             strictInsertFill(metaObject, autoFillProperties.getCreateTimeField(), Date.class, new Date());
         }
         if (null == createBy && SecurityUtils.isLogin()) {
-            strictInsertFill(metaObject, autoFillProperties.getCreateByField(), String.class,
-                    SecurityUtils.getLoginUser().getUsername());
+            strictInsertFill(metaObject, autoFillProperties.getCreateByField(), String.class, SecurityUtils.getUsername());
         }
     }
 
@@ -68,8 +67,7 @@ public class DateMetaObjectHandler implements MetaObjectHandler {
             setFieldValByName(autoFillProperties.getUpdateTimeField(), new Date(), metaObject);
             Object updateField = getFieldValByName(autoFillProperties.getUpdateByField(), metaObject);
             if (updateField == null && SecurityUtils.isLogin()) {
-                setFieldValByName(autoFillProperties.getUpdateByField(), SecurityUtils.getLoginUser().getUsername(),
-                        metaObject);
+                setFieldValByName(autoFillProperties.getUpdateByField(), SecurityUtils.getUsername(), metaObject);
             }
         }
 
