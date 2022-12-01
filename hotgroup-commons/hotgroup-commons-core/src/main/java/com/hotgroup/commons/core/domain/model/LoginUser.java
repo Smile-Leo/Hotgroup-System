@@ -35,13 +35,13 @@ public class LoginUser implements UserDetails {
 
     public LoginUser(IUser user, Set<String> permissions, UserType type) {
         this.permissions = permissions;
-        this.user = new StandardUser(user.getId(), user.getNickName());
+        this.user = new StandardUser(user.getId(), user.getNickName(), user.getPassword());
         this.type = type;
     }
 
     public LoginUser(IUser user, IUserExt ext, Set<String> permissions, UserType type) {
         this.permissions = permissions;
-        this.user = new StandardUser(user.getId(), user.getNickName(), ext.getLevel());
+        this.user = new StandardUser(user.getId(), user.getNickName(), ext.getLevel(), user.getPhoto());
         this.type = type;
     }
 

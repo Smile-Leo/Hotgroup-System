@@ -19,18 +19,21 @@ public class StandardUser implements IUser, IUserExt {
     @Schema(title = "等级")
     private Integer level;
 
-    public StandardUser(String id, String nickName) {
+    private String password;
+
+    public StandardUser(String id, String nickName, String password) {
         this.id = id;
         this.nickName = nickName;
+        this.password = password;
     }
 
-    public StandardUser(String id, String nickName, Integer level) {
+    public StandardUser(String id, String nickName, Integer level, String photo) {
         this.id = id;
         this.nickName = nickName;
         this.level = level;
     }
 
-    public StandardUser(String id, String nickName, String photo) {
+    public StandardUser(String id, String nickName, Integer level) {
         this.id = id;
         this.nickName = nickName;
         this.photo = photo;
@@ -43,7 +46,7 @@ public class StandardUser implements IUser, IUserExt {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override

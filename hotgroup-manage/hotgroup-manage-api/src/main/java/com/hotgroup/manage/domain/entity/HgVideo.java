@@ -3,14 +3,16 @@ package com.hotgroup.manage.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.hotgroup.commons.core.domain.model.UserType;
+import com.hotgroup.commons.core.enums.StatusEnum;
 import com.hotgroup.commons.database.domain.BaseEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 /**
  * @author Lzw
@@ -24,54 +26,27 @@ import javax.validation.constraints.Size;
 public class HgVideo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * ID
-     */
     @TableId(type = IdType.ASSIGN_ID)
     @Id
     private String id;
 
-    /**
-     * 用户id
-     */
+    @Schema(title = "用户类型")
+    private UserType userType;
+
+    @Schema(title = "用户Id")
     private String userId;
 
-    /**
-     * 外键
-     */
-    private String userVideoId;
-    /**
-     * url
-     */
+    @Schema(title = "视频地址")
     private String url;
 
-    /**
-     * 视频名称
-     */
+    @Schema(title = "视频标题")
     private String name;
 
-    /**
-     * 视频封面
-     */
+    @Schema(title = "视频封面")
     private String coverImg;
 
-    /**
-     * 视频播放量
-     */
-    private Long pvCount;
+    @Schema(title = "状态（1正常 0停用）")
+    private StatusEnum status;
 
-
-    private Long likesCount;
-
-    /**
-     * 状态（1正常 0停用）
-     */
-    @Size(min = 1, max = 1, message = "状态有误")
-    private Integer status;
-
-    /**
-     * 状态（0待审核 1审核成功 2审核失败）
-     */
-    private Integer auditStatus;
 
 }
