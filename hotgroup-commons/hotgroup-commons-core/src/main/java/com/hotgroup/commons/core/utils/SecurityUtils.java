@@ -6,6 +6,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Objects;
+
 /**
  * 安全服务工具类
  *
@@ -31,6 +33,15 @@ public class SecurityUtils {
      */
     public static Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    /**
+     * 是否系统用户登陆
+     *
+     * @return
+     */
+    public static boolean isLogin() {
+        return Objects.nonNull(getAuthentication()) && getAuthentication().getPrincipal() instanceof LoginUser;
     }
 
     /**

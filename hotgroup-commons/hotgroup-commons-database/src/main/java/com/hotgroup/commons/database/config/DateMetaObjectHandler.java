@@ -6,7 +6,6 @@ import com.hotgroup.commons.database.properties.MybatisPlusAutoProperties;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * 自定义填充公共字段
@@ -52,7 +51,7 @@ public class DateMetaObjectHandler implements MetaObjectHandler {
         if (createTime == null) {
             strictInsertFill(metaObject, autoFillProperties.getCreateTimeField(), Date.class, new Date());
         }
-        if (null == createBy && Objects.nonNull(SecurityUtils.getAuthentication())) {
+        if (null == createBy && SecurityUtils.isLogin()) {
             strictInsertFill(metaObject, autoFillProperties.getCreateByField(), String.class,
                     SecurityUtils.getLoginUser().getUsername());
         }
@@ -67,7 +66,8 @@ public class DateMetaObjectHandler implements MetaObjectHandler {
         if (null == isAutoUpdate) {
             //修复更新字段不更新问题
             setFieldValByName(autoFillProperties.getUpdateTimeField(), new Date(), metaObject);
-            if (Objects.nonNull(SecurityUtils.getAuthentication())) {
+            Object updateField = getFieldValByName(autoFillProperties.getUpdateByField(), metaObject);
+            if (updateField == null && SecurityUtils.isLogin()) {
                 setFieldValByName(autoFillProperties.getUpdateByField(), SecurityUtils.getLoginUser().getUsername(),
                         metaObject);
             }
