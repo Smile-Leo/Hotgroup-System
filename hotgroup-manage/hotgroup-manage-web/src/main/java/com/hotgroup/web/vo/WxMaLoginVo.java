@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2022/11/25.
  */
 @Data
-public class WxMaLoginVO extends WxMaJscode2SessionResult {
+public class WxMaLoginVo extends WxMaJscode2SessionResult {
 
     private String token;
 }
