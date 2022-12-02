@@ -3,6 +3,7 @@ package com.hotgroup.commons.framework.security;
 import com.hotgroup.commons.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.hotgroup.commons.framework.security.handle.AuthenticationEntryPointImpl;
 import com.hotgroup.commons.framework.security.handle.LogoutSuccessHandlerImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -84,6 +85,7 @@ public class SecurityConfig {
      */
 
     @Bean
+    @ConditionalOnBean(HttpSecurity.class)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http // JWT TOKEN
                 .addFilterBefore(authenticationTokenFilter, BasicAuthenticationFilter.class)

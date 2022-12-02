@@ -1,8 +1,10 @@
 package com.hotgroup.web.customer.controller.index;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.manage.api.IHotgroupVideoService;
 import com.hotgroup.manage.domain.vo.HgIndexVo;
+import com.hotgroup.manage.domain.vo.HomepageVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +43,8 @@ public class PublicMediaController {
 
     @GetMapping("homepage")
     @Operation(summary = "首页接口")
-    public AjaxResult<?> homepage(@RequestParam(defaultValue = "0") Integer pageNo,
-                                  @RequestParam(defaultValue = "10") Integer pageSize) {
+    public AjaxResult<Page<HomepageVo>> homepage(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                 @RequestParam(defaultValue = "10") Integer pageSize) {
         return AjaxResult.success(videoService.homepage(pageNo, pageSize));
     }
 }

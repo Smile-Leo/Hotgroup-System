@@ -19,6 +19,7 @@ import com.hotgroup.web.vo.WxMaLoginVo;
 import com.hotgroup.web.vo.WxUserInfoVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +36,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/wx/user")
 @Tag(name = "小程序用户相关")
+@Slf4j
 public class WxMaUserController {
 
     @Resource
@@ -94,6 +96,7 @@ public class WxMaUserController {
         // 解密用户信息
         WxMaUserInfo userInfo = wxService.getUserService()
                 .getUserInfo(sessionKey, encryptedData, iv);
+        log.debug("userInfo->{}",userInfo.toString());
         HgUser hgUser = HgUser.builder()
 //                .phone(phoneNoInfo.getPurePhoneNumber())
                 .headImg(userInfo.getAvatarUrl())
