@@ -1,9 +1,12 @@
 package com.hotgroup.manage.core.service;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.hotgroup.manage.api.IHgDynamicService;
 import com.hotgroup.manage.core.mapper.HgDynamicMapper;
+import com.hotgroup.manage.core.mapping.HgCommentMapping;
 import com.hotgroup.manage.core.mapping.HgDynamicMapping;
 import com.hotgroup.manage.domain.dto.HgDynamicDto;
 import com.hotgroup.manage.domain.entity.HgDynamic;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,10 +31,21 @@ public class HgDynamicServiceImpl implements IHgDynamicService {
     @Resource
     HgDynamicMapper hgDynamicMapper;
 
+    @Resource
+    IHgCommentService iHgCommentService;
+
     @Override
     public Page<HgDynamic> page(String userId, Integer pageNo, Integer pageSize) {
+        List<HgDynamicDto> records = new ArrayList<>();
         Page<HgDynamic> page = new Page<>(pageNo, pageSize);
         hgDynamicMapper.selectPage(page, Wrappers.lambdaQuery(HgDynamic.class).eq(HgDynamic::getUserId,userId));
+        if (!CollectionUtils.isEmpty(page.getRecords())) {
+            HgDynamicMapping hgDynamicMapping = HgDynamicMapping.INSTANCE;
+            page.getRecords().forEach(d -> {
+                HgDynamicDto hgDynamicDto = hgDynamicMapping.toDTO(d);
+                records.add(hgDynamicDto);
+            });
+        }
         return page;
     }
 
