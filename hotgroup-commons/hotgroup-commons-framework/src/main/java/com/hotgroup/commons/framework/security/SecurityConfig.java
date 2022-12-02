@@ -83,9 +83,7 @@ public class SecurityConfig {
      * rememberMe          |   允许通过remember-me登录的用户访问
      * authenticated       |   用户登录后可访问
      */
-
     @Bean
-    @ConditionalOnBean(HttpSecurity.class)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http // JWT TOKEN
                 .addFilterBefore(authenticationTokenFilter, BasicAuthenticationFilter.class)

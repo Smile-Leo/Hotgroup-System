@@ -12,7 +12,9 @@ import com.hotgroup.manage.domain.vo.HomepageVo;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -64,7 +66,7 @@ public class HotgroupVideoServiceImpl implements IHotgroupVideoService {
             return vo;
         }).collect(Collectors.toList());
 
-        Page<HomepageVo> of = Page.of(pageNo, pageSize);
+        Page<HomepageVo> of = Page.of(pageNo, pageSize, page.getSize());
         return of.setRecords(voList);
 
 
