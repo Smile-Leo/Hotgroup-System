@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface HgCommentMapping {
 
-    HgCommentMapper INSTANCE = Mappers.getMapper(HgCommentMapper.class);
+    HgCommentMapping INSTANCE = Mappers.getMapper(HgCommentMapping.class);
 
     HgCommentDto toDTO(HgComment hgComment);
 
