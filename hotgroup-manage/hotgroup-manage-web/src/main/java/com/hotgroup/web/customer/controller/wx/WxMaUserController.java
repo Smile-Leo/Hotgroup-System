@@ -95,8 +95,8 @@ public class WxMaUserController {
         HgUser hgUser = HgUser.builder()
 //                .phone(phoneNoInfo.getPurePhoneNumber())
                 .headImg(userInfo.getAvatarUrl())
-                .openId(userInfo.getOpenId())
-                .unionId(userInfo.getUnionId())
+                .openId(session.getOpenid())
+                .unionId(session.getUnionid())
                 .gender(Integer.parseInt(userInfo.getGender()))
                 .userName(userInfo.getNickName())
                 .build();
