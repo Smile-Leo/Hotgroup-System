@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -38,6 +39,9 @@ public class HotgroupVideoServiceImpl implements IHotgroupVideoService {
     @Override
     public HgIndexVo index() {
         HgVideo video = getSuggerVideo();
+        if (Objects.isNull(video)) {
+            return null;
+        }
         String userId = video.getUserId();
         HgUser user = hgUserService.getById(userId);
         HgIndexVo vo = new HgIndexVo();
@@ -53,6 +57,9 @@ public class HotgroupVideoServiceImpl implements IHotgroupVideoService {
     @Override
     public Page<HomepageVo> homepage(Integer pageNo, Integer pageSize) {
         Page<HgVideo> page = hgVideoService.page(Page.of(pageNo, pageSize), Wrappers.lambdaQuery(HgVideo.class).last("ORDER BY RAND()"));
+        if (page.getRecords().isEmpty()) {
+            return Page.of(pageNo, pageSize);
+        }
         Set<String> userIds = page.getRecords().stream().map(HgVideo::getUserId).collect(Collectors.toSet());
 
         Map<String, HgUser> userMap = hgUserService.listByIds(userIds)

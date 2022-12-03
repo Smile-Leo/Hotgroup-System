@@ -11,7 +11,10 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class WxUserInfoVo {
 
+
     @NotBlank
+    private String code;
+
     private String sessionKey;
     @NotBlank
     private String signature;

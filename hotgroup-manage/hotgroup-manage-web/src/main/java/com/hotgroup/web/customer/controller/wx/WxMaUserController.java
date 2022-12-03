@@ -22,8 +22,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -54,14 +58,20 @@ public class WxMaUserController {
     /**
      * 登陆接口
      */
-    @GetMapping("login")
-    @Operation(summary = "code登陆")
-    public AjaxResult<WxMaLoginVo> login2(String code) throws WxErrorException {
-
+    @PostMapping("login")
+    @Operation(summary = "code注册并登陆")
+    public AjaxResult<WxMaLoginVo> login(@Validated @RequestBody WxUserInfoVo vo) throws WxErrorException {
+        String code = vo.getCode();
+        String rawData = vo.getRawData();
+        String signature = vo.getSignature();
+        String encryptedData = vo.getEncryptedData();
+        String iv = vo.getIv();
         final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
         WxMaJscode2SessionResult session = wxService.getUserService().getSessionInfo(code);
         WxMaLoginVo wxMaLoginVO = new WxMaLoginVo();
+        String sessionKey = session.getSessionKey();
+        wxMaLoginVO.setSessionKey(sessionKey);
         IUser user = StringUtils.isNotBlank(session.getUnionid()) ?
                 userLoginService.getUserByUnionId(session.getUnionid()) :
                 userLoginService.getUserByOpenid(session.getOpenid());
@@ -71,23 +81,8 @@ public class WxMaUserController {
             LoginUser loginUser = new LoginUser(user, userExtension, Sets.newHashSet(), UserType.WX);
             String token = tokenService.createToken(loginUser);
             wxMaLoginVO.setToken(token);
+            return AjaxResult.success(wxMaLoginVO);
         }
-        wxMaLoginVO.setSessionKey(session.getSessionKey());
-        wxMaLoginVO.setOpenid(session.getOpenid());
-        wxMaLoginVO.setUnionid(session.getUnionid());
-        return AjaxResult.success(wxMaLoginVO);
-    }
-
-
-    @Operation(summary = "注册用户信息并登陆")
-    @PostMapping("regedit/login")
-    public AjaxResult<WxMaLoginVo> regedit(@Validated @RequestBody WxUserInfoVo vo) {
-        String sessionKey = vo.getSessionKey();
-        String rawData = vo.getRawData();
-        String signature = vo.getSignature();
-        String encryptedData = vo.getEncryptedData();
-        String iv = vo.getIv();
-        final WxMaService wxService = WxMaConfiguration.getMaService(appid);
 
         // 用户信息校验
         if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
@@ -96,7 +91,7 @@ public class WxMaUserController {
         // 解密用户信息
         WxMaUserInfo userInfo = wxService.getUserService()
                 .getUserInfo(sessionKey, encryptedData, iv);
-        log.debug("userInfo->{}",userInfo.toString());
+        log.debug("userInfo->{}", userInfo.toString());
         HgUser hgUser = HgUser.builder()
 //                .phone(phoneNoInfo.getPurePhoneNumber())
                 .headImg(userInfo.getAvatarUrl())
@@ -107,13 +102,12 @@ public class WxMaUserController {
                 .build();
 
         IUser login = userLoginService.login(hgUser);
-        WxMaLoginVo wxMaLoginVO = new WxMaLoginVo();
         IUserExt userExtension = userLoginService.getUserExtension(login.getId());
         LoginUser loginUser = new LoginUser(login, userExtension, Sets.newHashSet(), UserType.WX);
         String token = tokenService.createToken(loginUser);
         wxMaLoginVO.setToken(token);
-        return AjaxResult.success(wxMaLoginVO);
 
+        return AjaxResult.success(wxMaLoginVO);
     }
 
 
@@ -121,6 +115,7 @@ public class WxMaUserController {
     @Operation(summary = "获取用户绑定手机号信息")
     public WxMaPhoneNumberInfo phone(@Validated @RequestBody WxUserInfoVo vo) {
         String sessionKey = vo.getSessionKey();
+        Assert.hasText(sessionKey,"sessionKey不能为空");
         String rawData = vo.getRawData();
         String signature = vo.getSignature();
         String encryptedData = vo.getEncryptedData();
