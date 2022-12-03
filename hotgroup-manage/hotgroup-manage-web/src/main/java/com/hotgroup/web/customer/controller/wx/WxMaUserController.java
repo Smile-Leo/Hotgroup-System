@@ -76,34 +76,27 @@ public class WxMaUserController {
                 userLoginService.getUserByUnionId(session.getUnionid()) :
                 userLoginService.getUserByOpenid(session.getOpenid());
 
-        if (Objects.nonNull(user)) {
-            IUserExt userExtension = userLoginService.getUserExtension(user.getId());
-            LoginUser loginUser = new LoginUser(user, userExtension, Sets.newHashSet(), UserType.WX);
-            String token = tokenService.createToken(loginUser);
-            wxMaLoginVO.setToken(token);
-            return AjaxResult.success(wxMaLoginVO);
+        if (Objects.isNull(user)) {
+            // 用户信息校验
+            if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
+                throw new IllegalArgumentException("user check failed");
+            }
+            // 解密用户信息
+            WxMaUserInfo userInfo = wxService.getUserService()
+                    .getUserInfo(sessionKey, encryptedData, iv);
+            log.debug("userInfo->{}", userInfo.toString());
+            HgUser hgUser = HgUser.builder()
+                    .headImg(userInfo.getAvatarUrl())
+                    .openId(session.getOpenid())
+                    .unionId(session.getUnionid())
+                    .gender(Integer.parseInt(userInfo.getGender()))
+                    .userName(userInfo.getNickName())
+                    .build();
+            user = userLoginService.login(hgUser);
         }
 
-        // 用户信息校验
-        if (!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-            throw new IllegalArgumentException("user check failed");
-        }
-        // 解密用户信息
-        WxMaUserInfo userInfo = wxService.getUserService()
-                .getUserInfo(sessionKey, encryptedData, iv);
-        log.debug("userInfo->{}", userInfo.toString());
-        HgUser hgUser = HgUser.builder()
-//                .phone(phoneNoInfo.getPurePhoneNumber())
-                .headImg(userInfo.getAvatarUrl())
-                .openId(session.getOpenid())
-                .unionId(session.getUnionid())
-                .gender(Integer.parseInt(userInfo.getGender()))
-                .userName(userInfo.getNickName())
-                .build();
-
-        IUser login = userLoginService.login(hgUser);
-        IUserExt userExtension = userLoginService.getUserExtension(login.getId());
-        LoginUser loginUser = new LoginUser(login, userExtension, Sets.newHashSet(), UserType.WX);
+        IUserExt userExtension = userLoginService.getUserExtension(user.getId());
+        LoginUser loginUser = new LoginUser(user, userExtension, Sets.newHashSet(), UserType.WX);
         String token = tokenService.createToken(loginUser);
         wxMaLoginVO.setToken(token);
 
@@ -115,7 +108,7 @@ public class WxMaUserController {
     @Operation(summary = "获取用户绑定手机号信息")
     public WxMaPhoneNumberInfo phone(@Validated @RequestBody WxUserInfoVo vo) {
         String sessionKey = vo.getSessionKey();
-        Assert.hasText(sessionKey,"sessionKey不能为空");
+        Assert.hasText(sessionKey, "sessionKey不能为空");
         String rawData = vo.getRawData();
         String signature = vo.getSignature();
         String encryptedData = vo.getEncryptedData();
