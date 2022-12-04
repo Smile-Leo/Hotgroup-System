@@ -3,6 +3,7 @@ package com.hotgroup.commons.database.config;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.commons.database.properties.MybatisPlusAutoProperties;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.util.Date;
@@ -50,6 +51,10 @@ public class DateMetaObjectHandler implements MetaObjectHandler {
         Object createBy = getFieldValByName(autoFillProperties.getCreateByField(), metaObject);
         if (createTime == null) {
             strictInsertFill(metaObject, autoFillProperties.getCreateTimeField(), Date.class, new Date());
+        }
+        String dtype = "dtype";
+        if (metaObject.hasGetter(dtype)) {
+            strictInsertFill(metaObject, dtype, String.class, StringUtils.EMPTY);
         }
         if (null == createBy && SecurityUtils.isLogin()) {
             strictInsertFill(metaObject, autoFillProperties.getCreateByField(), String.class, SecurityUtils.getUsername());

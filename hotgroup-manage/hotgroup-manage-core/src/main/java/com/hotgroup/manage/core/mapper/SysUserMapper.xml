@@ -83,19 +83,16 @@
     <select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
         <include refid="selectUserVo"/>
         where u.user_name = #{userName}
-        order by dr.order_line
     </select>
 
     <select id="selectUserByPhone" parameterType="String" resultMap="SysUserResult">
         <include refid="selectUserVo"/>
         where u.phone = #{phone}
-        order by dr.order_line
     </select>
 
     <select id="selectUserById" parameterType="String" resultMap="SysUserResult">
         <include refid="selectUserVo"/>
         where u.user_id = #{userId}
-        order by dr.order_line
     </select>
 
 

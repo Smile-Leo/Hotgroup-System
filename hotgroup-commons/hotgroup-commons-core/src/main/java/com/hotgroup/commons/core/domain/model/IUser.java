@@ -4,7 +4,7 @@ package com.hotgroup.commons.core.domain.model;
  * @author Lzw
  * @date 2022/4/16.
  */
-public interface IUser {
+public interface IUser  {
 
     String getId();
 

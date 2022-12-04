@@ -81,13 +81,13 @@ public class WxMaUserController {
             // 解密用户信息
             WxMaUserInfo userInfo = wxService.getUserService()
                     .getUserInfo(sessionKey, encryptedData, iv);
-            HgUser hgUser = HgUser.builder()
-                    .headImg(userInfo.getAvatarUrl())
-                    .openId(session.getOpenid())
-                    .unionId(session.getUnionid())
-                    .gender(Integer.parseInt(userInfo.getGender()))
-                    .userName(userInfo.getNickName())
-                    .build();
+            HgUser hgUser = new HgUser();
+            hgUser.setUserType(UserType.WX);
+            hgUser.setOpenId(session.getOpenid());
+            hgUser.setUnionId(session.getUnionid());
+            hgUser.setAvatar(userInfo.getAvatarUrl());
+            hgUser.setSex(userInfo.getGender());
+            hgUser.setNickName(userInfo.getNickName());
             user = userLoginService.login(hgUser);
         }
 

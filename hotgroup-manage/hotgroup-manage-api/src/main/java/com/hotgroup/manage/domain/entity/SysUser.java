@@ -1,19 +1,19 @@
 package com.hotgroup.manage.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hotgroup.commons.core.domain.model.IUser;
+import com.hotgroup.commons.core.domain.model.UserType;
 import com.hotgroup.commons.database.domain.BaseEntity;
 import com.hotgroup.commons.validator.annotation.InsertGroup;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -86,21 +86,35 @@ public class SysUser extends BaseEntity implements IUser {
      */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Size(groups = {InsertGroup.class}, min = 6, max = 32, message = "密码使用6-32位字母")
+    @Column(name = "`password`")
     private String password;
+
+
+    @Column(nullable = false, columnDefinition = "char(10) default 'SYS'")
+    @Schema(type = "用户类型")
+    private UserType userType;
+
 
     /**
      * 帐号状态（0正常 1停用）
      */
     @Size(min = 1, max = 1, message = "用户状态有误")
+    @Column(columnDefinition = "char(1) default '0'", nullable = false, name = "`status`")
     private String status;
 
     /**
-     * 删除标志（0代表存在 2代表删除）
+     * 删除标志（0代表存在 1代表删除）
      */
     @Size(max = 1, message = "删除状态有误")
     @JsonIgnore
+    @TableLogic
+    @Column(columnDefinition = "char(1) default '0'", nullable = false)
     private String delFlag;
 
+    @Column(insertable = false, updatable = false)
+    @TableField(fill = FieldFill.INSERT)
+    @Schema(type = "jpa自动生成的字段，忽略它")
+    private String dtype;
     /**
      * 最后登录IP
      */

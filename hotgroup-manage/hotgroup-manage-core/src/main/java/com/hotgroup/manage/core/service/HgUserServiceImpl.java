@@ -34,9 +34,9 @@ public class HgUserServiceImpl extends ServiceImpl<HgUserMapper, HgUser> impleme
             if (Objects.nonNull(hgUserExtension)) {
                 dto = HgUserExtensionMapping.INSTANCE.toDTO(hgUserExtension);
             }
-            dto.setAccount(hgUser.getAccount());
-            dto.setUserName(hgUser.getUserName());
-            dto.setHeadImg(hgUser.getHeadImg());
+            dto.setAccount(hgUser.getUserName());
+            dto.setUserName(hgUser.getNickName());
+            dto.setHeadImg(hgUser.getAvatar());
         }
         return dto;
     }

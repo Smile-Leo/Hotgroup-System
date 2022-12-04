@@ -3,6 +3,7 @@ package com.hotgroup.manage.core.service;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotgroup.commons.core.constant.UserConstants;
+import com.hotgroup.commons.core.domain.model.UserType;
 import com.hotgroup.commons.core.domain.vo.AjaxResult;
 import com.hotgroup.commons.core.utils.SecurityUtils;
 import com.hotgroup.commons.database.page.PageHelper;
@@ -15,6 +16,8 @@ import com.hotgroup.manage.domain.entity.SysRole;
 import com.hotgroup.manage.domain.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -31,7 +34,7 @@ import java.util.Objects;
  */
 @Service
 @Slf4j
-public class SysUserServiceImpl implements ISysUserService {
+public class SysUserServiceImpl implements ISysUserService, CommandLineRunner {
 
     @Resource
     private SysUserMapper userMapper;
@@ -42,6 +45,19 @@ public class SysUserServiceImpl implements ISysUserService {
     @Resource
     private ISysUserRoleService userRoleService;
 
+    @Override
+    public void run(String... args) throws Exception {
+        SysUser sysUser = userMapper.selectUserById("1L");
+        if(Objects.isNull(sysUser)){
+            SysUser sysUser1 = new SysUser();
+            sysUser1.setUserId("1L");
+            sysUser1.setUserType(UserType.SYS);
+            sysUser1.setUserName("admin");
+            sysUser1.setNickName("超管admin");
+            sysUser1.setPassword("123456");
+            insertUser(sysUser1);
+        }
+    }
 
     /**
      * 根据条件分页查询用户列表
@@ -198,7 +214,7 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 修改用户头像
      *
-     * @param userName 用户名
+     * @param userId 用户名
      * @param avatar   头像地址
      * @return 结果
      */
@@ -233,7 +249,7 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 重置用户密码
      *
-     * @param userName 用户名
+     * @param userId 用户名
      * @param password 密码
      * @return 结果
      */
