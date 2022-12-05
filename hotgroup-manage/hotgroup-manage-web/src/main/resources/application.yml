@@ -121,6 +121,9 @@ xss:
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 
+springdoc:
+  default-flat-paramObject: true
+
 
 
 
