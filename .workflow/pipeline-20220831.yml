@@ -17,7 +17,7 @@ stages:
       - step: build@maven
         name: build_maven
         displayName: Maven 构建
-        jdkVersion: '17'
+        jdkVersion: '8'
         mavenVersion: 3.6.3
         commands:
           - '# 功能：打包'
@@ -28,8 +28,8 @@ stages:
           - '#    -B：以batch模式运行，可避免日志打印时出现ArrayIndexOutOfBoundsException异常'
           - '# 使用场景：打包项目且不需要执行单元测试时使用'
           - mvn clean package -Dmaven.test.skip=true -U -e -X -B
-          - cd hotgroup-manage-web
-          - mvn -Dmaven.test.skip=true spring-boot:build-image
+          - '# cd hotgroup-manage-web'
+          - '# mvn -Dmaven.test.skip=true spring-boot:build-image'
           - '# 功能：自定义settings配置'
           - '# 使用场景：如需手工指定settings.xml，可使用如下方式'
           - '# 注意事项：如无需自定义settings配置且需要私有依赖仓库，可在该任务配置《私有仓库》处添加私有依赖'
