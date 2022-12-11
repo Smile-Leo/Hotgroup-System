@@ -26,14 +26,9 @@ public class Test1 {
 
     @Test
     public void test1(){
-        HgUser hgUser = HgUser.builder()
+        HgUser hgUser = new HgUser();
 //                .phone(phoneNoInfo.getPurePhoneNumber())
-                .headImg("userInfo.getAvatarUrl()")
-                .openId("userInfo.getOpenId()")
-                .unionId("userInfo.getUnionId()")
-                .gender(Integer.parseInt("1"))
-                .userName("userInfo.getNickName()")
-                .build();
+
 
         IUser login = userLoginService.login(hgUser);
 

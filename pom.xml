@@ -16,6 +16,9 @@
         <spring-boot.version>2.7.5</spring-boot.version>
         <hotgroup.version>0.0.1</hotgroup.version>
 
+        <repackage.classifier/>
+        <spring-native.version>0.12.1</spring-native.version>
+
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
@@ -34,6 +37,12 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.experimental</groupId>
+                <artifactId>spring-native</artifactId>
+                <version>${spring-native.version}</version>
             </dependency>
 
             <!--MyBatis Plus -->
@@ -176,6 +185,27 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.2</version>
             </plugin>
+
+
+           <!-- <plugin>
+                <groupId>org.springframework.experimental</groupId>
+                <artifactId>spring-aot-maven-plugin</artifactId>
+                <version>${spring-native.version}</version>
+                <executions>
+                    <execution>
+                        <id>test-generate</id>
+                        <goals>
+                            <goal>test-generate</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
         </plugins>
     </build>
 
